@@ -7,3 +7,15 @@ TABLAS:<br>
 Usuarios: ID | Email | Contraseña | Rango (Administrador/Técnico) | Fecha de ingreso<br>
 Clientes: ID | Email | Contraseña | Fecha de ingreso<br>
 Equipos: ID | Marca | Modelo | Numero de serie | ID del cliente | ID del técnico | Estado (Nuevo ingreso/En reparación/Reparado/No reparado) | Fecha de ingreso
+
+Para crear la base de datos usamos postgreesql usamos los comandos 
+sudo apt install postgresql<br>
+sudo -u postgre createuser --createdb --pwprompt main<br>
+sudo -u postgres creaedb --owner=main main<br>
+psql --host localhost --user main <br>
+
+creamos tablas y las definimos en el archivo database.py 
+relacionamos esto con el backend con el archivo app.py
+
+vamos ahora a definir los enpoints que va a tener el  
+
