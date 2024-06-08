@@ -1,7 +1,7 @@
 # TP1---IDS---CAMEJO
 El dia 8/6/2024 se empieza el trabajo.
 Nosotros vamos a crear una página web que permita gestionar diferentes equipos que se llevan a arreglar a una empresa. La base de datos nace con un usuario al que se le llama Administrador. Él se encarga de añadir nuevos usuarios (llamados técnicos) capaces de gestionar esos equipos.
-------------------------------
+
 TABLAS:
 Usuarios: ID | Email | Contraseña | Rango (Administrador/Técnico) | Fecha de ingreso
 Clientes: ID | Email | Contraseña | Fecha de ingreso
