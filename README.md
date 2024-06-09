@@ -1,4 +1,4 @@
-# TP1---IDS---CAMEJO
+# TP1 - INTRODUCCIÓN AL DESARROLLO DE SOFTWARE
 *Integrantes: Facundo Matías Cardogna, Jesús Miguel Fernández, Valentín Angrigiani*<br><br>
 **El dia 8/6/2024 se empieza el trabajo.**<br>
 Nosotros vamos a crear una página web que permita gestionar diferentes equipos que se llevan a arreglar a una empresa.<br>
