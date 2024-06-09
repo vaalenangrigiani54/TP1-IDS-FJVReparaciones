@@ -1,5 +1,5 @@
 # TP1---IDS---CAMEJO
-*Integrantes: Facundo Matías Cardogna, Jesús Fernández, Valentín Angrigiani*<br><br>
+*Integrantes: Facundo Matías Cardogna, Jesús Miguel Fernández, Valentín Angrigiani*<br><br>
 **El dia 8/6/2024 se empieza el trabajo.**<br>
 Nosotros vamos a crear una página web que permita gestionar diferentes equipos que se llevan a arreglar a una empresa.<br>
 La base de datos nace con un usuario al que se le llama Administrador. Él se encarga de añadir nuevos usuarios (llamados técnicos) capaces de gestionar esos equipos. A su vez, los técnicos van registrando los clientes y los equipos que van arreglando y les da estados: Si recien llegó, si esta en reparación, y si lo pudo reparar o no.<br>
