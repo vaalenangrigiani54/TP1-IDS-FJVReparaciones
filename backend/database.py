@@ -5,25 +5,29 @@ db = SQLAlchemy()
 
 class Usuarios(db.Model):
     __name__ = "usuarios"
-    ID = db.Column(db.Integer, primary_key=True)
-    Email = db.Column(db.String(255), unique=True, nullable=False)
-    Contrasenia = db.Column(db.String(255), nullable=False)
-    Rango = db.Column(db.String(15), nullable=False)
-    Fecha_Ingreso = db.Column(db.DateTime, default=dt.datetime.now())
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    contrasenia = db.Column(db.String(15), nullable=False) #15 caracteres como máximo
+    rango = db.Column(db.String(15), nullable=False)
+    fecha_ingreso = db.Column(db.DateTime, default=dt.datetime.now())
 
 class Clientes(db.Model):
     __name__ = "clientes"
-    ID = db.Column(db.Integer, primary_key=True)
-    Nombre_Cliente = db.Column(db.String(255), unique=True, nullable=False)
-    Fecha_Ingreso = db.Column(db.DateTime, default=dt.datetime.now())
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    codigo_ingreso = db.Column(db.String(8), unique=True, nullable=False) #8 dígitos y no se puede repetir
+    fecha_inscripcion = db.Column(db.DateTime, default=dt.datetime.now())
 
 class Equipos(db.Model):
     __name__ = "equipos"
-    ID = db.Column(db.Integer, primary_key=True)
-    Tipo_Equipo = db.Column(db.String(255), nullable=False)
-    Marca = db.Column(db.String(255), nullable=False)
-    Modelo = db.Column(db.String(255), nullable=False)
-    Num_Serie = db.Column(db.String(255), nullable=False)
-    ID_Cliente = db.Column(db.Integer, db.ForeignKey("clientes.ID"))
-    ID_Tecnico = db.Column(db.Integer, db.ForeignKey("usuarios.ID"))
-    Fecha_Ingreso = db.Column(db.DateTime, default=dt.datetime.now())
+    id = db.Column(db.Integer, primary_key=True)
+    tipo_equipo = db.Column(db.String(255), nullable=False)
+    marca = db.Column(db.String(255), nullable=False)
+    modelo = db.Column(db.String(255), nullable=False)
+    num_serie = db.Column(db.String(255), nullable=False)
+    observaciones = db.Column(db.String(255)) #Esto es para que el técnico le explique al cliente lo que pudo reparar y/o lo que no
+    id_cliente = db.Column(db.Integer, db.ForeignKey("clientes.id"))
+    id_tecnico = db.Column(db.Integer, db.ForeignKey("usuarios.id"))
+    fecha_ingreso = db.Column(db.DateTime, default=dt.datetime.now())
