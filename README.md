@@ -18,7 +18,7 @@ sudo -u postgres createdb --owner=usuario nombre_base_de_datos<br>
 Y luego, para acceder a la base de datos con el usuario, usamos el comando:<br>
 sudo -u usuario psql nombre_base_de_datos
 
-creamos tablas y las definimos en el archivo database.py 
+creamos tablas y las definimos en el archivo database.py<br>
 relacionamos esto con el backend con el archivo app.py
 
 vamos ahora a definir los endpoints que va a tener el backend
