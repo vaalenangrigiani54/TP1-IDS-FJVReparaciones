@@ -10,11 +10,12 @@ Usuarios: ID | Email | Contraseña | Rango (Administrador/Técnico) | Fecha de i
 Clientes: ID | Nombre | Email | Código de ingreso (8 dígitos) | Fecha de inscripción<br>
 Equipos: ID | Marca | Modelo | Numero de serie | ID del cliente | ID del técnico | Estado (Nuevo ingreso/En reparación/Reparado/No reparado) | Fecha de ingreso
 
-Para crear la base de datos usamos postgreesql usamos los comandos 
+Para crear la base de datos usamos postgreesql usamos los comandos:<br>
 sudo apt install postgresql<br>
 sudo -u postgres createuser --createdb --pwprompt usuario<br>
 sudo -u postgres createdb --owner=usuario nombre_base_de_datos<br>
-Y luego, para acceder a la base de datos con el usuario, usamos el comando:
+
+Y luego, para acceder a la base de datos con el usuario, usamos el comando:<br>
 sudo -u usuario psql nombre_base_de_datos
 
 creamos tablas y las definimos en el archivo database.py 
