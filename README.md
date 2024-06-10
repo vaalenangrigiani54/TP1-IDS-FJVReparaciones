@@ -12,9 +12,10 @@ Equipos: ID | Marca | Modelo | Numero de serie | ID del cliente | ID del técnic
 
 Para crear la base de datos usamos postgreesql usamos los comandos 
 sudo apt install postgresql<br>
-sudo -u postgre createuser --createdb --pwprompt main<br>
-sudo -u postgres creaedb --owner=main main<br>
-psql --host localhost --user main <br>
+sudo -u postgres createuser --createdb --pwprompt usuario<br>
+sudo -u postgres createdb --owner=usuario nombre_base_de_datos<br>
+Y luego, para acceder a la base de datos con el usuario, usamos el comando:
+sudo -u usuario psql nombre_base_de_datos
 
 creamos tablas y las definimos en el archivo database.py 
 relacionamos esto con el backend con el archivo app.py
