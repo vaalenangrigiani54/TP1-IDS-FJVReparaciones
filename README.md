@@ -6,7 +6,7 @@ La base de datos nace con un usuario al que se le llama Administrador. Él se en
 Por otra parte, el cliente, si tiene una cuenta registrada en la página web, puede iniciar sesión y ver los estados de el/los equipo/s que él mandó a arreglar.
 
 TABLAS:<br>
-Usuarios: ID | Email | Contraseña | Rango (Administrador/Técnico) | Fecha de ingreso<br>
+Usuarios: ID | Nombre | Email | Contraseña | Rango (Administrador/Técnico) | Fecha de ingreso<br>
 Clientes: ID | Nombre | Email | Código de ingreso (8 dígitos) | Fecha de inscripción<br>
 Equipos: ID | Marca | Modelo | Numero de serie | ID del cliente | ID del técnico | Estado (Nuevo ingreso/En reparación/Reparado/No reparado) | Fecha de ingreso
 
