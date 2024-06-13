@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión Usuario</title>
+</head>
+<body>
+    <h1>FJVREPARACIONES</h1>
+    <h2>Iniciar sesión como un usuario:</h2>
+
+    <form>
+        <label for="email">*Correo electrónico:</label><br>
+        <input name="Correo" type="email" placeholder="ejemplo@gmail.com" id="email" required><br><br>
+
+        <label for="contrasenia">*Contraseña:</label><br>
+        <input name="Contraseña" type="password" id="contrasenia", required><br><br>
+
+        <button type="submit">Iniciar sesión</button>
+    </form>
+
+    <script>
+        function parse_data(data) {
+            console.log(data)
+            return data
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+
+        fetch(`http://127.0.0.1:5000/usuario/${id}`)
+        .then((response) => response.json())
+        .then(parse_data)
+        .catch((error) => console.log("ERROR: ", error))
+    </script>
+</body>
+</html>
