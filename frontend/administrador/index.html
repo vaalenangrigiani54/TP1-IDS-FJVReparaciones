@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página del Administrador</title>
+</head>
+<body>
+    <h1>FJVREPARACIONES</h1>
+    <h2 id="bienvenida">BIENVENIDO/A: session_username</h2> <!-- Esto se actualiza después en la función show_data() -->
+
+    <script>
+        const session_id = new URLSearchParams(window.location.search).get("id")
+        
+        fetch(`http://127.0.0.1:5000/administrador/${session_id}`)
+        .then((res) => res.json())
+        .then(handle_response)
+        .catch((error) => console.log(`ERROR: ${error}`))
+
+        function handle_response(data) {
+            // Las listas vacías están dadas porque no se han realizado las querys al iniciar mal la sesión
+            if (data["usuarios"].length == 0 && data["equipos"].length == 0) {
+                window.location.href = "http://localhost:8000/main/loginUsuario"
+            } else {
+                show_data(data)
+            }
+        }
+
+        function show_data(data) {
+            console.log(data)
+            session_username = ""
+            let i = 0
+
+            // Búsqueda secuencial para el nombre del usuario de la sesión
+            while (i < data["usuarios"].length) {
+                if (data["usuarios"][i]["id"] == session_id) {
+                    session_username = data["usuarios"][i]["nombre_usuario"]
+                    break
+                }
+                i++
+            }
+
+            bienvenido = document.getElementById("bienvenida")
+            bienvenido.innerText = `BIENVENIDO/A: ${session_username}`
+        }
+    </script>
+</body>
+</html>
