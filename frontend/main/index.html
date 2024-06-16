@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FJVReparaciones Inicio</title>
+</head>
+<body>
+    <h1>FJVREPARACIONES</h1>
+
+    <h2>Bienvenido a la empresa de reparaciones de dispositivos más grande del país</h2>
+    
+    <h3>¿Eres un cliente o un usuario de la empresa?</h3>
+    <button onclick="location.href='loginCliente'">Cliente</button>
+    <button onclick="location.href='loginUsuario'">Usuario</button>
+
+    <script>
+        //Esto manda a reiniciar las variables globales de session_id a 0
+        fetch("http://127.0.0.1:5000/reset_session").catch((error) => console.log(`ERROR: ${error}`))
+    </script>
+</body>
+</html>

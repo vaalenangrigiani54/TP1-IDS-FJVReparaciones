@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión Usuario</title>
+</head>
+<body>
+    <h1>FJVREPARACIONES</h1>
+    <h2>Iniciar sesión como un usuario:</h2>
+
+    <form id="form_user">
+        <label for="email">*Correo electrónico:</label><br>
+        <input id="email" type="email" placeholder="ejemplo@gmail.com" required><br><br>
+
+        <label for="contrasenia">*Contraseña:</label><br>
+        <input id="contrasenia" type="password", required><br><br>
+
+        <input type="button" value="Iniciar sesión" onclick=login()>
+    </form>
+
+    <script>
+        //Esto manda a reiniciar las variables globales SESSION_ID a 0
+        fetch("http://127.0.0.1:5000/reset_session").catch((error) => console.log(`ERROR: ${error}`))
+        
+        function login() {
+            let elementos = document.getElementById("form_user").elements
+            let emailIngresado = elementos.email.value
+            let contraseniaIngresada = elementos.contrasenia.value
+
+            fetch(`http://127.0.0.1:5000/loginUsuario/${emailIngresado},${contraseniaIngresada}`)
+            .then((res) => res.json())
+            .then(handle_response)
+            .catch((error) => console.log(`ERROR: ${error}`))
+        }
+
+        function handle_response(data) {
+            if (data.length == 0) { 
+                alert("El correo y/o la contrasenia son incorrectos")
+            } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo
+                alert("Algo ha fallado. Vuelva a intentarlo más tarde")
+            } else if (data[0]["rango"] == "Administrador") { //Se distingue entre la página del administrador y la página del técnico
+                window.location.href = `http://localhost:8000/administrador?id=${data[0]["id"]}`
+            } else {
+                window.location.href = `http://localhost:8000/tecnico?id=${data[0]["id"]}`
+            }
+        }
+    </script>
+</body>
+</html>
