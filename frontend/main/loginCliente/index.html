@@ -8,5 +8,43 @@
 <body>
     <h1>FJVREPARACIONES</h1>
     <h2>Iniciar sesión como un cliente:</h2>
+
+    <form id="form_client">
+        <label for="email">*Correo electrónico:</label><br>
+        <input id="email" type="email" placeholder="ejemplo@gmail.com" required><br><br>
+
+        <label for="codigo">*Código de acceso (8 dígitos):</label><br>
+        <input id="codigo" type="number", required><br><br>
+
+        <input type="button" value="Iniciar sesión" onclick=login()>
+    </form>
+
+    <h3>Si no tienes un código de acceso, debes ir a cualquiera de las sucursales y pedirle a un técnico que te registre y te lo dé.</h3>
+
+    <script>
+        //Esto manda a reiniciar las variables globales SESSION_ID a 0
+        fetch("http://127.0.0.1:5000/reset_session").catch((error) => console.log(`ERROR: ${error}`))
+        
+        function login() {
+            let elementos = document.getElementById("form_client").elements
+            let emailIngresado = elementos.email.value
+            let codigoIngresado = elementos.codigo.value
+
+            fetch(`http://127.0.0.1:5000/loginCliente/${emailIngresado},${codigoIngresado}`)
+            .then((res) => res.json())
+            .then(handle_response)
+            .catch((error) => console.log(`ERROR: ${error}`))
+        }
+
+        function handle_response(data) {
+            if (data.length == 0) { 
+                alert("El correo y/o el código de ingreso son incorrectos")
+            } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo
+                alert("Algo ha fallado. Vuelva a intentarlo más tarde")
+            } else {
+                window.location.href = `http://localhost:8000/cliente?id=${data[0]["id"]}`
+            }
+        }
+    </script>
 </body>
 </html>

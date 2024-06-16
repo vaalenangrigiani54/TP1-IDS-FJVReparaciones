@@ -9,29 +9,42 @@
     <h1>FJVREPARACIONES</h1>
     <h2>Iniciar sesión como un usuario:</h2>
 
-    <form>
+    <form id="form_user">
         <label for="email">*Correo electrónico:</label><br>
-        <input name="Correo" type="email" placeholder="ejemplo@gmail.com" id="email" required><br><br>
+        <input id="email" type="email" placeholder="ejemplo@gmail.com" required><br><br>
 
         <label for="contrasenia">*Contraseña:</label><br>
-        <input name="Contraseña" type="password" id="contrasenia", required><br><br>
+        <input id="contrasenia" type="password", required><br><br>
 
-        <button type="submit">Iniciar sesión</button>
+        <input type="button" value="Iniciar sesión" onclick=login()>
     </form>
 
     <script>
-        function parse_data(data) {
-            console.log(data)
-            return data
+        //Esto manda a reiniciar las variables globales SESSION_ID a 0
+        fetch("http://127.0.0.1:5000/reset_session").catch((error) => console.log(`ERROR: ${error}`))
+        
+        function login() {
+            let elementos = document.getElementById("form_user").elements
+            let emailIngresado = elementos.email.value
+            let contraseniaIngresada = elementos.contrasenia.value
+
+            fetch(`http://127.0.0.1:5000/loginUsuario/${emailIngresado},${contraseniaIngresada}`)
+            .then((res) => res.json())
+            .then(handle_response)
+            .catch((error) => console.log(`ERROR: ${error}`))
         }
 
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get("id");
-
-        fetch(`http://127.0.0.1:5000/usuario/${id}`)
-        .then((response) => response.json())
-        .then(parse_data)
-        .catch((error) => console.log("ERROR: ", error))
+        function handle_response(data) {
+            if (data.length == 0) { 
+                alert("El correo y/o la contrasenia son incorrectos")
+            } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo
+                alert("Algo ha fallado. Vuelva a intentarlo más tarde")
+            } else if (data[0]["rango"] == "Administrador") { //Se distingue entre la página del administrador y la página del técnico
+                window.location.href = `http://localhost:8000/administrador?id=${data[0]["id"]}`
+            } else {
+                window.location.href = `http://localhost:8000/tecnico?id=${data[0]["id"]}`
+            }
+        }
     </script>
 </body>
 </html>
