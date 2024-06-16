@@ -6,6 +6,32 @@
     <title>Página del cliente</title>
 </head>
 <body>
-    
+    <h1>FJVREPARACIONES</h1>
+    <h2 id="bienvenida">BIENVENIDO/A: session_clientname</h2> <!-- Esto se actualiza después en la función show_data() -->
+
+
+    <script>
+        const session_id = new URLSearchParams(window.location.search).get("id")
+        
+        fetch(`http://127.0.0.1:5000/cliente/${session_id}`)
+        .then((res) => res.json())
+        .then(handle_response)
+        .catch((error) => console.log(`ERROR: ${error}`))
+
+        function handle_response(data) {
+            // El nombre vacío está dado porque no se han realizado las querys al iniciar mal la sesión
+            if (data["nombre_cliente"] == "") {
+                window.location.href = "http://localhost:8000/main/loginCliente"
+            } else {
+                show_data(data)
+            }
+        }
+
+        function show_data(data) {
+            session_clientname = data["nombre_cliente"]
+            bienvenido = document.getElementById("bienvenida")
+            bienvenido.innerText = `BIENVENIDO/A: ${session_clientname}`
+        }
+    </script>
 </body>
 </html>
