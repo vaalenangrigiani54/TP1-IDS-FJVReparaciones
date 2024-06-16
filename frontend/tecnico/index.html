@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página del Técnico</title>
+</head>
+<body>
+    <h1>FJVREPARACIONES</h1>
+    <h2 id="bienvenida">BIENVENIDO/A: session_username</h2> <!-- Esto se actualiza después en la función show_data() -->
+
+    <script>
+        const session_id = new URLSearchParams(window.location.search).get("id")
+        
+        fetch(`http://127.0.0.1:5000/tecnico/${session_id}`)
+        .then((res) => res.json())
+        .then(handle_response)
+        .catch((error) => console.log(`ERROR: ${error}`))
+
+        function handle_response(data) {
+            // El nombre vacío está dado porque no se han realizado las querys al iniciar mal la sesión
+            if (data["nombre_usuario"] == "") {
+                window.location.href = "http://localhost:8000/main/loginUsuario"
+            } else { // El diccionario que no contiene a esas claves está dado por la condición en el endpoint '/{rango}/<id>', no se han realizado las querys
+                show_data(data)
+            }
+        }
+
+        function show_data(data) {
+            session_username = data["nombre_usuario"]
+            bienvenido = document.getElementById("bienvenida")
+            bienvenido.innerText = `BIENVENIDO/A: ${session_username}`
+        }
+    </script>
+</body>
+</html>
