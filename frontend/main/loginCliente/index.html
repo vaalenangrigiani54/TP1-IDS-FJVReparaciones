@@ -38,7 +38,7 @@
 
         function handle_response(data) {
             if (data.length == 0) { 
-                alert("El correo y/o el código de ingreso son incorrectos")
+                alert("El correo y/o el código de ingreso son incorrectos...")
             } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo
                 alert("Algo ha fallado. Vuelva a intentarlo más tarde")
             } else {

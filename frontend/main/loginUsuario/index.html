@@ -36,7 +36,7 @@
 
         function handle_response(data) {
             if (data.length == 0) { 
-                alert("El correo y/o la contrasenia son incorrectos")
+                alert("El correo y/o la contrasenia son incorrectos...")
             } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo
                 alert("Algo ha fallado. Vuelva a intentarlo más tarde")
             } else if (data[0]["rango"] == "Administrador") { //Se distingue entre la página del administrador y la página del técnico
