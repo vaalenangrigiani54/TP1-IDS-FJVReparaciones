@@ -1,7 +1,10 @@
 body {
-    overflow-y: scroll;
+    overflow-y: auto;
+    /* background: linear-gradient(135deg, #EA98DA, #5B6CF9); */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
-
 .header {
     min-width: 100%;
     min-height: 100%;
@@ -42,18 +45,87 @@ h4 {
 }
 
 .formularios {
-    
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 1em;
+}
+
+.div-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: .1em solid rgb(200,200,200);
+    background-color: #ebf2fa;
+    border-radius: 2em;
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2em;
+    margin-bottom: 1em;
+    margin-top: 3em;
+}
+.form-input {
+    background: transparent;
+    height: 50px;
+    color: rgb(134, 131, 131) !important;
+    border: 1px solid black;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    -webkit-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+    margin-top: .7em;
+    margin-bottom: .7em;
+}
+.div-buttons{
+    margin-top: 1em;
 }
 
 .footer {
     background-color: black;
     color: white;
-    position: fixed;
-    bottom: 0;
-    min-width: 100%;
+    text-align: center;
     padding: 15px;
+    margin-top: auto;
 
     #info{
         font-size: 1em;
     }
 }
+
+/* footer {
+    background-color: darkgray;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    clear: both;
+    margin-top: auto;
+  }
+  
+  .contact-info {
+    margin-bottom: 10px;
+  }
+  
+  .contact-info p {
+    margin: 0;
+  }
+  
+  .contact-info span {
+    margin: 0 10px;
+  }
+  
+  .company-info {
+    font-size: 0.8em;
+    color: #666;
+  }
+  
+  .company-info p {
+    margin: 0;
+  } */
