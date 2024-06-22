@@ -1,13 +1,20 @@
 
-#btn-cliente{
-    background-color: #3a0ca3;
+.btn-inicio {
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: .5em;
 }
 
-#btn-usuario{
-    background-color: #7209b7;
+#btn-cliente {
+    background-color: #6a0ca3;
 }
 
-#div-h2{
+#btn-usuario {
+    background-color: #A209b7;
+}
+
+.div-h2 {
     border-top: .2em solid rgba(200,200,200);
     border-bottom: .2em solid rgba(200,200,200);
     margin: 1em 0;
