@@ -1,43 +1,59 @@
+body {
+    overflow-y: scroll;
+}
 
-.footer{
+.header {
+    min-width: 100%;
+    min-height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+h2 {
+    font-weight: bold;
+    font-size: 2.05em;
+    font-family: "Poppins", sans-serif;
+}
+
+.div-h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 100%;
+    max-width: 100%;
+}
+
+h3 {
+    display: flex;
+    justify-content: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 1.9em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+h4 {
+    display: flex;
+    justify-content: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.formularios {
+    
+}
+
+.footer {
     background-color: black;
     color: white;
     position: fixed;
     bottom: 0;
     min-width: 100%;
-    padding: 20px;
+    padding: 15px;
 
     #info{
-        font-size: 25px;
+        font-size: 1em;
     }
 }
-
-
-.main-div{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-height: 100px;
-    max-width: 1000px;
-}
-h3{
-    display: flex;
-    justify-content: center;
-    font-family: "Roboto", sans-serif;
-    font-size: 40px;
-    margin-bottom: 1em;
-}
-
-.btn-inicio{
-    font-family: "Roboto", sans-serif;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: .5em;
-}
-
-h2{
-    font-weight: bold;
-    font-size: 45px;
-    font-family:  "Poppins", sans-serif;
-}
-
