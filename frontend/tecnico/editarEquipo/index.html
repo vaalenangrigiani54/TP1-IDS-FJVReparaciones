@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar un equipo</title>
+</head>
+<body>
+    <h1>FJVReparaciones</h1>
+    <button class="button-go-back" onclick=GO_BACK()>Atrás</button>
+    <button class="button-close-session" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+    <br>
+    <h2>Editar la información del equipo:</h2>
+
+    <form id="editDevice">
+        <label for="client_email">*Correo electrónico del cliente:</label>
+        <input type="email" id="client_email" placeholder="ejemplo@example.com" required><br><br>
+
+        <label for="equipo">Seleccione el tipo del equipo:</label>
+        <select id="equipo">
+            <option value="Computadora de escritorio">Computadora de escritorio</option>
+            <option value="Computadora portátil">Computadora portátil</option>
+            <option value="Celular">Celular</option>
+            <option value="Tablet">Tablet</option>
+            <option value="Impresora">Impresora</option>
+        </select><br><br>
+
+        <label for="marca">*Marca:</label>
+        <input type="text" id="marca" required><br><br>
+
+        <label for="modelo">*Modelo:</label>
+        <input type="text" id="modelo" required><br><br>
+
+        <label for="serie">*Número de serie:</label>
+        <input type="text" id="serie" required><br><br>
+
+        <label for="estado">Seleccione el estado del equipo:</label>
+        <select id="estado">
+            <option value="Nuevo Ingreso">Nuevo Ingreso</option>
+            <option value="En revisión/reparación">En Revisión/Reparación</option>
+            <option value="Reparado">Reparado</option>
+            <option value="No Reparado">No Reparado</option>
+        </select><br><br>
+
+        <label for="observaciones">Añadir una descripción/observación:</label>
+        <textarea id="observaciones" placeholder="-"></textarea>
+
+        <br><br>
+        <input type="button" value="Actualizar equipo" onclick=edit_device()>
+    </form>
+
+    <script>
+        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
+        let id_equipo_a_editar = new URLSearchParams(window.location.search).get("id")
+
+        if (sessionID == null) {
+            sessionID = -2147483648
+        }
+
+        if (id_equipo_a_editar == null) {
+            id_equipo_a_editar = -2147483648
+        }
+
+        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/tecnico`)
+        .then((res) => res.json())
+        .then(verify_session)
+        .catch((error) => console.log(`ERROR: ${error}`))
+
+        function verify_session(login) {
+            if (login["Logged"] == false) {
+                window.location.href = "http://localhost:8000/main/loginUsuario"
+            } else {
+                fetch(`http://127.0.0.1:5000/acciones_equipo/${id_equipo_a_editar}`, {method: "GET"})
+                .then((res) => res.json())
+                .then(show_data)
+                .catch((error) => console.log("ERROR", error))
+            }
+        }
+        
+        function show_data(data) {
+            if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el usuario con la id en los query params
+                alert(data["Mensaje"])
+                window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+            } else {
+                let elementos = document.getElementById("editDevice").elements
+                elementos.client_email.value = data["email_cliente"]
+                elementos.equipo.value = data["tipo_equipo"]
+                elementos.marca.value = data["marca"]
+                elementos.modelo.value = data["modelo"]
+                elementos.serie.value = data["num_serie"]
+                elementos.estado.value = data["estado"]
+                if (data["observaciones"] != "-")
+                    elementos.observaciones.value = data["observaciones"]
+            }
+        }
+
+        function edit_device() {
+            let elementos = document.getElementById("editDevice").elements
+            let emailIngresado = elementos.client_email.value
+            let equipoIngresado = elementos.equipo.value
+            let marcaIngresada = elementos.marca.value
+            let modeloIngresado = elementos.modelo.value
+            let serieIngresada = elementos.serie.value
+            let estadoIngresado = elementos.estado.value
+            let observacionIngresada = elementos.observaciones.value
+            if (observacionIngresada == "") {
+                observacionIngresada = "-"
+            }
+            
+            fetch(`http://127.0.0.1:5000/acciones_equipo/${id_equipo_a_editar}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email_cliente: emailIngresado,
+                    tipo_equipo: equipoIngresado,
+                    marca: marcaIngresada,
+                    modelo: modeloIngresado,
+                    num_serie: serieIngresada,
+                    estado: estadoIngresado,
+                    observaciones: observacionIngresada
+                })
+            })
+            .then((res) => res.json())
+            .then(handle_response)
+            .catch((error) => console.log("ERROR", error))
+        }
+
+        function handle_response(data) {
+            alert(data["Mensaje"])
+
+            if (data["Mensaje"] == "Equipo actualizado con éxito") {
+                window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${id_equipo_a_editar}&sessionID=${sessionID}`
+            }
+        }
+
+        function GO_BACK() {
+            window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${id_equipo_a_editar}&sessionID=${sessionID}`
+        }
+
+        function CLOSE_SESSION() {
+            if (confirm("¿Estás seguro que deseas cerrar la sesión?")) {
+                window.location.href = "http://localhost:8000/main"
+            }
+        }
+    </script>
+</body>
+</html>
