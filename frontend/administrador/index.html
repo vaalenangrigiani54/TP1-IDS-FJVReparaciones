@@ -7,34 +7,57 @@
 </head>
 <body>
     <h1>FJVREPARACIONES</h1>
+    <button class="button-close-session" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+    <br>
     <h2 id="bienvenida">BIENVENIDO/A:</h2> <!-- Esto se actualiza después en la función show_data() -->
+    <h3>Haz click en el nombre de un usuario para ver su información...</h3>
+
+    <br>
+    <button id="addUser" onclick=goToAddUser()>Añadir un nuevo usuario</button>
+    
+    <br><br>
+    <table id="table" border="1" cellpadding="8">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo electrónico</th>
+            <th>Rango</th>
+            <th>Fecha de ingreso</th>
+            <th>Acciones</th>
+        </tr>
+    </table>
 
     <script>
-        const session_id = new URLSearchParams(window.location.search).get("id")
+        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
-        fetch(`http://127.0.0.1:5000/administrador/${session_id}`)
+        if (sessionID == null) {
+            sessionID = -2147483648
+        }
+
+        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/administrador`)
         .then((res) => res.json())
-        .then(handle_response)
+        .then(verify_session)
         .catch((error) => console.log(`ERROR: ${error}`))
 
-        function handle_response(data) {
-            // Las listas vacías están dadas porque no se han realizado las querys al iniciar mal la sesión
-            if (data["usuarios"].length == 0 && data["equipos"].length == 0) {
+        function verify_session(login) {
+            if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
             } else {
-                show_data(data)
+                fetch(`http://127.0.0.1:5000/administrador/${sessionID}`)
+                .then((res) => res.json())
+                .then(show_data)
+                .catch((error) => console.log(`ERROR: ${error}`))
             }
         }
 
         function show_data(data) {
-            console.log(data)
             session_username = ""
             let i = 0
 
             // Búsqueda secuencial para el nombre del usuario de la sesión
-            while (i < data["usuarios"].length) {
-                if (data["usuarios"][i]["id"] == session_id) {
-                    session_username = data["usuarios"][i]["nombre_usuario"]
+            while (i < data.length) {
+                if (data[i]["id"] == sessionID) {
+                    session_username = data[i]["nombre_usuario"]
                     break
                 }
                 i++
@@ -42,6 +65,74 @@
 
             bienvenido = document.getElementById("bienvenida")
             bienvenido.innerText = `BIENVENIDO/A: ${session_username}`
+            
+            // Lleno la tabla con todos los usuarios del sistema
+            tabla = document.getElementById("table")
+
+            for (let i = 0; i < data.length; i++) {
+                usuario = document.createElement("tr")
+
+                columnID = document.createElement("td")
+                columnID.innerText = data[i]["id"]
+                usuario.append(columnID)
+
+                linkUSERNAME = document.createElement("a")
+                linkUSERNAME.innerText = data[i]["nombre_usuario"]
+                linkUSERNAME.setAttribute("href", `http://localhost:8000/administrador/informacionUsuario?id=${data[i]["id"]}&sessionID=${sessionID}`)
+                columnUSERNAME = document.createElement("td")
+                columnUSERNAME.append(linkUSERNAME)
+                usuario.append(columnUSERNAME)
+
+                columnEMAIL = document.createElement("td")
+                columnEMAIL.innerText = data[i]["email"]
+                usuario.append(columnEMAIL)
+
+                columnRANGE = document.createElement("td")
+                columnRANGE.innerText = data[i]["rango"]
+                usuario.append(columnRANGE)
+
+                date = new Date(data[i]["fecha_ingreso"])
+                columnDATE = document.createElement("td")
+                columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                usuario.append(columnDATE)
+
+                columnBUTTONS = document.createElement("td")
+                if (data[i]["id"] != sessionID) {
+                    buttonEDIT = document.createElement("button")
+                    buttonEDIT.innerText = "Editar usuario"
+                    buttonEDIT.onclick = function() {
+                        location.href=`editarUsuario?id=${data[i]["id"]}&sessionID=${sessionID}`
+                    }
+                    
+                    buttonDELETE = document.createElement("button")
+                    buttonDELETE.innerText = "Eliminar usuario"
+                    buttonDELETE.onclick = function() {
+                        if (confirm(`¿Estás seguro que deseas eliminar al usuario ${data[i]["nombre_usuario"]}?`)) {
+                            fetch(`http://127.0.0.1:5000/acciones_usuario/${data[i]["id"]}`, {method: "DELETE"})
+                            .then(function() {
+                                alert("Usuario eliminado con éxito")
+                                window.location.reload()
+                            }).catch((error) => console.log(`ERROR AL ELIMINAR EL USUARIO: ${error}`))
+                        }
+                    }
+
+                    columnBUTTONS.append(buttonEDIT)
+                    columnBUTTONS.append(buttonDELETE)
+                }
+                usuario.append(columnBUTTONS)
+
+                tabla.append(usuario)
+            }
+        }
+
+        function goToAddUser() {
+            location.href=`agregarUsuario?sessionID=${sessionID}`
+        }
+
+        function CLOSE_SESSION() {
+            if (confirm("¿Estás seguro que deseas cerrar la sesión?")) {
+                window.location.href = "http://localhost:8000/main"
+            }
         }
     </script>
 </body>

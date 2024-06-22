@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del usuario</title>
+</head>
+<body>
+    <h1>FJVReparaciones</h1>
+    <button class="button-go-back" onclick=GO_BACK()>Atrás</button>
+    <button class="button-close-session" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+    <br>
+    <h2 id="titleInfo">Información del usuario #:</h2>
+    <p id="nombre">Nombre completo:</p>
+    <p id="email">Correo electrónico:</p>
+    <p id="fecha">Fecha de ingreso al sistema:</p>
+
+    <script>
+        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
+        let id_usuario_info = new URLSearchParams(window.location.search).get("id")
+
+        if (sessionID == null) {
+            sessionID = -2147483648
+        }
+
+        if (id_usuario_info == null) {
+            id_usuario_info = -2147483648
+        }
+
+        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/administrador`)
+        .then((res) => res.json())
+        .then(verify_session)
+        .catch((error) => console.log(`ERROR: ${error}`))
+
+        function verify_session(login) {
+            if (login["Logged"] == false) {
+                window.location.href = "http://localhost:8000/main/loginUsuario"
+            } else {
+                fetch(`http://127.0.0.1:5000/acciones_usuario/${id_usuario_info}`, {method: "GET"})
+                .then((res) => res.json())
+                .then(show_user_data)
+                .catch((error) => console.log("ERROR", error))
+            }
+        }
+
+        function show_user_data(data) {
+            if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el usuario con la id en los query params
+                alert(data["Mensaje"])
+                window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
+            } else {
+                date = new Date(data["fecha_ingreso"])
+                document.getElementById("titleInfo").innerText = `Información del usuario #${data["id"]}:`
+                document.getElementById("nombre").innerText = `Nombre completo: ${data["nombre_usuario"]}`
+                document.getElementById("email").innerText = `Correo electrónico: ${data["email"]}`
+                document.getElementById("fecha").innerText = `Fecha de ingreso: ${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+
+                infoRango = document.createElement("h3")
+                
+                if (data["rango"] == "Administrador") {
+                    infoRango.innerText = "Este usuario es un administrador."
+                    document.body.append(infoRango)
+                } else {
+                    infoRango.innerText = "Este usuario es un técnico. Estos son los equipos que él agregó:"
+                    document.body.append(infoRango)
+
+                    fetch(`http://127.0.0.1:5000/tecnico/${id_usuario_info}`)
+                    .then((res) => res.json())
+                    .then(show_devices_table)
+                    .catch((error) => console.log(`ERROR: ${error}`))
+                }
+            }
+        }
+
+        function show_devices_table(data) { // Esto solo si la información es de un técnico
+            //Agrego los encabezados de la tabla
+            tabla = document.createElement("table")
+            tabla.setAttribute("border", 1)
+            tabla.setAttribute("cellpadding", 8)
+
+            fila = document.createElement("tr")
+
+            headerID = document.createElement("th")
+            headerID.innerText = "ID"
+            fila.append(headerID)
+
+            headerDEVICETYPE = document.createElement("th")
+            headerDEVICETYPE.innerText = "Equipo"
+            fila.append(headerDEVICETYPE)
+
+            headerBRAND = document.createElement("th")
+            headerBRAND.innerText = "Marca"
+            fila.append(headerBRAND)
+
+            headerMODEL = document.createElement("th")
+            headerMODEL.innerText = "Modelo"
+            fila.append(headerMODEL)
+
+            headerSERIALNUMBER = document.createElement("th")
+            headerSERIALNUMBER.innerText = "Número de serie"
+            fila.append(headerSERIALNUMBER)
+
+            headerSTATUS = document.createElement("th")
+            headerSTATUS.innerText = "Estado"
+            fila.append(headerSTATUS)
+
+            headerCLIENTNAME = document.createElement("th")
+            headerCLIENTNAME.innerText = "Nombre del cliente"
+            fila.append(headerCLIENTNAME)
+
+            headerDATE = document.createElement("th")
+            headerDATE.innerText = "Fecha de ingreso"
+            fila.append(headerDATE)
+            
+            tabla.append(fila)
+            document.body.append(tabla)
+
+            //Agrego la información de los equipos del técnico
+            equiposData = data["equipos"]
+
+            for (let i = 0; i < equiposData.length; i++) {
+                equipo = document.createElement("tr")
+                
+                columnID = document.createElement("td")
+                columnID.innerText = equiposData[i]["id"]
+                equipo.append(columnID)
+
+                columnDEVICETYPE = document.createElement("td")
+                columnDEVICETYPE.innerText = equiposData[i]["tipo_equipo"]
+                equipo.append(columnDEVICETYPE)
+
+                columnBRAND = document.createElement("td")
+                columnBRAND.innerText = equiposData[i]["marca"]
+                equipo.append(columnBRAND)
+
+                columnMODEL = document.createElement("td")
+                columnMODEL.innerText = equiposData[i]["modelo"]
+                equipo.append(columnMODEL)
+
+                columnSERIALNUMBER = document.createElement("td")
+                columnSERIALNUMBER.innerText = equiposData[i]["num_serie"]
+                equipo.append(columnSERIALNUMBER)
+
+                columnSTATUS = document.createElement("td")
+                columnSTATUS.innerText = equiposData[i]["estado"]
+                equipo.append(columnSTATUS)
+
+                columnCLIENTNAME = document.createElement("td")
+                columnCLIENTNAME.innerText = equiposData[i]["nombre_cliente"]
+                equipo.append(columnCLIENTNAME)
+
+                date = new Date(equiposData[i]["fecha_ingreso"])
+                columnDATE = document.createElement("td")
+                columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                equipo.append(columnDATE)
+
+                tabla.append(equipo)
+            }
+        }
+
+        function GO_BACK() {
+            window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
+        }
+
+        function CLOSE_SESSION() {
+            if (confirm("¿Estás seguro que deseas cerrar la sesión?")) {
+                window.location.href = "http://localhost:8000/main"
+            }
+        }
+    </script>
+</body>
+</html>

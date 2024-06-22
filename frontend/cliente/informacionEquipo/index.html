@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del equipo</title>
+</head>
+<body>
+    <h1>FJVReparaciones</h1>
+    <button class="button-go-back" onclick=GO_BACK()>Atrás</button>
+    <button class="button-close-session" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+    <br>
+    <h2>Información de tu equipo:</h2>
+    <p id="equipo">Tipo de equipo:</p>
+    <p id="marca">Marca:</p>
+    <p id="modelo">Modelo:</p>
+    <p id="serie">Número de serie:</p>
+    <p id="estado">Estado:</p>
+    <p id="fecha">Fecha de ingreso:</p>
+    <p id="observaciones">OBSERVACIONES:</p>
+
+    <script>
+        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
+        let id_equipo_info = new URLSearchParams(window.location.search).get("id")
+
+        if (sessionID == null) {
+            sessionID = -2147483648
+        }
+
+        if (id_equipo_info == null) {
+            id_equipo_info = -2147483648
+        }
+
+        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/cliente`)
+        .then((res) => res.json())
+        .then(verify_session)
+        .catch((error) => console.log(`ERROR: ${error}`))
+
+        function verify_session(login) {
+            if (login["Logged"] == false) {
+                window.location.href = "http://localhost:8000/main/loginCliente"
+            } else {
+                fetch(`http://127.0.0.1:5000/verify_deviceInfoID/${id_equipo_info}`)
+                .then((res) => res.json())
+                .then(verify_deviceInfoID)
+                .catch((error) => console.log("ERROR", error))
+            }
+        }
+
+        function verify_deviceInfoID(response) {
+            if (response["ChangedParameter"] == true) {
+                alert("No se puede cambiar manualmente la id del equipo que se muestra...")
+                window.location.href = `http://localhost:8000/cliente/informacionEquipo?id=${response["DeviceInfoID"]}&sessionID=${sessionID}`
+            } else {
+                fetch(`http://127.0.0.1:5000/acciones_equipo/${id_equipo_info}`, {method: "GET"})
+                .then((res) => res.json())
+                .then(show_device_data)
+                .catch((error) => console.log("ERROR", error))
+            }
+        }
+
+        function show_device_data(data) {
+            if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el usuario con la id en los query params
+                alert(data["Mensaje"])
+                window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+            } else {
+                date = new Date(data["fecha_ingreso"])
+                document.getElementById("equipo").innerText = `Tipo de equipo: ${data["tipo_equipo"]}`
+                document.getElementById("marca").innerText = `Marca: ${data["marca"]}`
+                document.getElementById("modelo").innerText = `Modelo: ${data["modelo"]}`
+                document.getElementById("serie").innerText = `Número de serie: ${data["num_serie"]}`
+                document.getElementById("estado").innerText = `Estado: ${data["estado"]}`
+                document.getElementById("fecha").innerText = `Fecha de ingreso: ${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                document.getElementById("observaciones").innerText = `OBSERVACIONES: ${data["observaciones"]}`
+            }
+        }
+
+        function GO_BACK() {
+            window.location.href = `http://localhost:8000/cliente?sessionID=${sessionID}`
+        }
+
+        function CLOSE_SESSION() {
+            if (confirm("¿Estás seguro que deseas cerrar la sesión?")) {
+                window.location.href = "http://localhost:8000/main"
+            }
+        }
+    </script>
+</body>
+</html>

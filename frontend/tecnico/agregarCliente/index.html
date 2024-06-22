@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar un nuevo cliente</title>
+</head>
+<body>
+    <h1>FJVReparaciones</h1>
+    <button class="button-go-back" onclick=GO_BACK()>Atrás</button>
+    <button class="button-close-session" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+    <br>
+    <h2>Inscribir a un nuevo cliente:</h2>
+
+    <form id="addClient">
+        <label for="nombre">*Nombre completo:</label>
+        <input type="text" id="nombre" required><br><br>
+
+        <label for="email">*Correo electrónico:</label>
+        <input type="email" id="email" placeholder="ejemplo@example.com" required><br>
+
+        <br>
+        <input type="button" value="Agregar cliente" onclick=add_client()>
+    </form>
+
+    <h3>Una vez inscripto el cliente, se enviará a su correo un código de ingreso de 8 dígitos</h3>
+
+    <script>
+        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
+        
+        if (sessionID == null) {
+            sessionID = -2147483648
+        }
+
+        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/tecnico`)
+        .then((res) => res.json())
+        .then(verify_session)
+        .catch((error) => console.log(`ERROR: ${error}`))
+
+        function verify_session(login) {
+            if (login["Logged"] == false) {
+                window.location.href = "http://localhost:8000/main/loginUsuario"
+            }
+        }
+
+        function add_client() {
+            let elementos = document.getElementById("addClient").elements
+            let nombreIngresado = elementos.nombre.value
+            let emailIngresado = elementos.email.value
+            
+            fetch("http://127.0.0.1:5000/acciones_cliente/0", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nombre_cliente: nombreIngresado,
+                    email: emailIngresado
+                })
+            })
+            .then((res) => res.json())
+            .then(handle_response)
+            .catch((error) => console.log("ERROR", error))
+        }
+
+        function handle_response(data) {
+            if (data["Mensaje"] == "SUCCESS") {
+                alert(data["MensajeCodigo"])
+                window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+            } else {
+                alert(data["Mensaje"])
+            }
+        }
+
+        function GO_BACK() {
+            window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+        }
+
+        function CLOSE_SESSION() {
+            if (confirm("¿Estás seguro que deseas cerrar la sesión?")) {
+                window.location.href = "http://localhost:8000/main"
+            }
+        }
+    </script>
+</body>
+</html>

@@ -7,23 +7,44 @@
 </head>
 <body>
     <h1>FJVREPARACIONES</h1>
+    <button class="button-close-session" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+    <br>
     <h2 id="bienvenida">BIENVENIDO/A:</h2> <!-- Esto se actualiza después en la función show_data() -->
+    <h3>Estos son los equipos que has mandado a revisar/arreglar desde que te inscribiste:</h3>
+    <h3>Haz click en cualquier equipo para ver su información y las observaciones:</h3>
 
+    <table id="table" border="1" cellpadding="8">
+        <tr>
+            <th>ID</th>
+            <th>Equipo</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Estado</th>
+            <th>Nombre del técnico</th>
+            <th>Fecha de ingreso</th>
+        </tr>
+    </table>
 
     <script>
-        const session_id = new URLSearchParams(window.location.search).get("id")
+        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
-        fetch(`http://127.0.0.1:5000/cliente/${session_id}`)
+        if (sessionID == null) {
+            sessionID = -2147483648
+        }
+
+        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/cliente`)
         .then((res) => res.json())
-        .then(handle_response)
+        .then(verify_session)
         .catch((error) => console.log(`ERROR: ${error}`))
 
-        function handle_response(data) {
-            // El nombre vacío está dado porque no se han realizado las querys al iniciar mal la sesión
-            if (data["nombre_cliente"] == "") {
+        function verify_session(login) {
+            if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginCliente"
             } else {
-                show_data(data)
+                fetch(`http://127.0.0.1:5000/cliente/${sessionID}`)
+                .then((res) => res.json())
+                .then(show_data)
+                .catch((error) => console.log(`ERROR: ${error}`))
             }
         }
 
@@ -31,6 +52,56 @@
             session_clientname = data["nombre_cliente"]
             bienvenido = document.getElementById("bienvenida")
             bienvenido.innerText = `BIENVENIDO/A: ${session_clientname}`
+
+            // Agrego la tabla de todos los equipos que el cliente mandó a arreglar/revisar
+            equiposData = data["equipos"]
+            tabla = document.getElementById("table")
+
+            for (let i = 0; i < equiposData.length; i++) {
+                equipo = document.createElement("tr")
+                equipo.onclick = function() {
+                    fetch(`http://127.0.0.1:5000/set_deviceInfoID/${equiposData[i]["id"]}`)
+                    .catch((error) => console.log(`ERROR: ${error}`))
+                    window.location.href = `http://localhost:8000/cliente/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
+                }
+                
+                columnID = document.createElement("td")
+                columnID.innerText = equiposData[i]["id"]
+                equipo.append(columnID)
+
+                columnDEVICETYPE = document.createElement("td")
+                columnDEVICETYPE.innerText = equiposData[i]["tipo_equipo"]
+                equipo.append(columnDEVICETYPE)
+                
+                columnBRAND = document.createElement("td")
+                columnBRAND.innerText = equiposData[i]["marca"]
+                equipo.append(columnBRAND)
+
+                columnMODEL = document.createElement("td")
+                columnMODEL.innerText = equiposData[i]["modelo"]
+                equipo.append(columnMODEL)
+
+                columnSTATUS = document.createElement("td")
+                columnSTATUS.innerText = equiposData[i]["estado"]
+                equipo.append(columnSTATUS)
+
+                columnTECHNAME = document.createElement("td")
+                columnTECHNAME.innerText = equiposData[i]["nombre_tecnico"]
+                equipo.append(columnTECHNAME)
+
+                date = new Date(equiposData[i]["fecha_ingreso"])
+                columnDATE = document.createElement("td")
+                columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                equipo.append(columnDATE)
+
+                tabla.append(equipo)
+            }
+        }
+
+        function CLOSE_SESSION() {
+            if (confirm("¿Estás seguro que deseas cerrar la sesión?")) {
+                window.location.href = "http://localhost:8000/main"
+            }
         }
     </script>
 </body>
