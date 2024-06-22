@@ -304,6 +304,158 @@ def acciones_usuario(id):
         return {"Mensaje": "Algo ha fallado..."}
 
 
+
+# Endpoint para consultar/agregar/modificar a un cliente
+@app.route("/acciones_cliente/<id>", methods=["GET", "POST", "PUT"])
+def acciones_cliente(id):
+    try:
+        if request.method == "GET": # Para ver la información del cliente
+            cliente = Clientes.query.get(id)
+            
+            return {
+                "id": cliente.id,
+                "nombre_cliente": cliente.nombre_cliente,
+                "email": cliente.email,
+                "codigo_ingreso": cliente.codigo_ingreso,
+                "fecha_inscripcion": cliente.fecha_inscripcion
+            }
+        
+        elif request.method == "POST": # Para agregar un nuevo cliente (En este caso no se usa la id del parámetro)
+            data = request.json
+            nuevo_nombre = data.get("nombre_cliente")
+            nuevo_email = data.get("email")
+            
+            if len(Clientes.query.where(Clientes.email == nuevo_email).all()) > 0:
+                return {"Mensaje": "El correo ingresado ya existe. Pruebe con otro distinto..."}
+            else:
+                clienteQuery = Clientes.query.all()
+                codigos = [cliente.codigo_ingreso for cliente in clienteQuery]
+                nuevo_codigoIngreso = codigos[0]
+                
+                while nuevo_codigoIngreso in codigos:
+                    nuevo_codigoIngreso = random.randrange(10000000, 99999999)
+                
+                cliente = Clientes(
+                    nombre_cliente = nuevo_nombre,
+                    email = nuevo_email,
+                    codigo_ingreso = nuevo_codigoIngreso
+                )
+                db.session.add(cliente)
+                db.session.commit()
+                
+                return {"Mensaje": "SUCCESS", "MensajeCodigo": f"Cliente agregado con éxito. Su código de ingreso es {nuevo_codigoIngreso}"}
+        
+        elif request.method == "PUT":
+            data = request.json
+            
+            cliente = Clientes.query.get(id)
+            cliente.nombre_cliente = data.get("nombre_cliente")
+            cliente.email = data.get("email")
+            db.session.commit()
+            
+            return {"Mensaje": "Cliente actualizado con éxito"}
+        
+    except Exception as error:
+        print(f"\n\nERROR: {error}\n\n")
+        return {"Mensaje": "Algo ha fallado..."}
+
+
+
+# Endpoint para consultar/agregar/modificar a un equipo
+@app.route("/acciones_equipo/<id>", methods=["GET", "POST", "PUT"])
+def acciones_equipo(id):
+    try:
+        if request.method == "GET": # Para ver la información del equipo
+            equipoQuery = Equipos.query.where(Equipos.id == id).join(Clientes).add_columns(
+                Clientes.nombre_cliente,
+                Clientes.email
+            ).join(Usuarios).add_column(
+                Usuarios.nombre_usuario
+            ).first()
+            
+            # EquipoQuery es una tupla de 4 elementos, debido a la relación con las otras dos tablas
+            equipo = equipoQuery[0]
+            nombre_cliente = equipoQuery[1]
+            email_cliente = equipoQuery[2]
+            nombre_usuario = equipoQuery[3]
+            
+            return {
+                "id": equipo.id,
+                "tipo_equipo": equipo.tipo_equipo,
+                "marca": equipo.marca,
+                "modelo": equipo.modelo,
+                "num_serie": equipo.num_serie,
+                "estado": equipo.estado,
+                "observaciones": equipo.observaciones,
+                "nombre_cliente": nombre_cliente,
+                "email_cliente": email_cliente,
+                "nombre_tecnico": nombre_usuario,
+                "fecha_ingreso": equipo.fecha_ingreso
+            }
+            
+        elif request.method == "POST": # Para agregar un nuevo equipo (En este caso no se usa la id del parámetro)
+            data = request.json
+            
+            nuevo_email_cliente = data.get("email_cliente")
+            nuevo_tipo_equipo = data.get("tipo_equipo")
+            nueva_marca = data.get("marca")
+            nuevo_modelo = data.get("modelo")
+            nuevo_num_serie = data.get("num_serie")
+            id_tecnico = data.get("id_tecnico")
+
+            if len(Clientes.query.where(Clientes.email == nuevo_email_cliente).all()) == 0:
+                return {"Mensaje": "El email del cliente ingresado no existe..."}
+            else:
+                id_cliente = Clientes.query.where(Clientes.email == nuevo_email_cliente).first().id
+                
+                equipo = Equipos(
+                    tipo_equipo = nuevo_tipo_equipo,
+                    marca = nueva_marca,
+                    modelo = nuevo_modelo,
+                    num_serie = nuevo_num_serie,
+                    estado = "Nuevo Ingreso",
+                    observaciones = "-",
+                    id_cliente = id_cliente,
+                    id_tecnico = id_tecnico,
+                )
+                db.session.add(equipo)
+                db.session.commit()
+                
+                return {"Mensaje": "Equipo agregado con éxito"}
+            
+        elif request.method == "PUT":
+            data = request.json
+            
+            email_cliente = data.get("email_cliente")
+            tipo_equipo = data.get("tipo_equipo")
+            marca = data.get("marca")
+            modelo = data.get("modelo")
+            num_serie = data.get("num_serie")
+            estado = data.get("estado")
+            observaciones = data.get("observaciones")
+            
+            if len(Clientes.query.where(Clientes.email == email_cliente).all()) == 0:
+                return {"Mensaje": "El email del cliente ingresado no existe..."}
+            elif estado == "Nuevo Ingreso" and observaciones != "-":
+                return {"Mensaje": "No puedes agregar observaciones si el equipo está en nuevo ingreso..."}
+            else:
+                id_cliente = Clientes.query.where(Clientes.email == email_cliente).first().id
+                equipo = Equipos.query.where(Equipos.id == id).first()
+                equipo.tipo_equipo = tipo_equipo
+                equipo.marca = marca
+                equipo.modelo = modelo
+                equipo.num_serie = num_serie
+                equipo.estado = estado
+                equipo.observaciones = observaciones
+                equipo.id_cliente = id_cliente
+                db.session.commit()
+                return {"Mensaje": "Equipo actualizado con éxito"}
+
+    except Exception as error:
+        print(f"\n\nERROR: {error}\n\n")
+        return {"Mensaje": "Algo ha fallado..."}
+
+
 ########################################################################################################################
 ########################################################################################################################
 
