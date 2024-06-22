@@ -25,6 +25,10 @@ h2 {
     align-items: center;
     max-height: 100%;
     max-width: 100%;
+    border-top: .2em solid rgba(200,200,200);
+    border-bottom: .2em solid rgba(200,200,200);
+    margin: 1em 0;
+    padding: 1em;
 }
 
 h3 {
@@ -108,4 +112,22 @@ h4 {
 
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
+}
+
+#btn-cerrar-sesion{
+    justify-self: flex-end;
+    align-self: flex-end;
+    width: 10em;
+    margin-top: .5em;
+    margin-right: .5em;
+}
+
+table{
+    font-family: 'Poppins', sans-serif;
+    
+}
+
+.t-div{
+    margin-left: 2em;
+    margin-right: 2em;
 }

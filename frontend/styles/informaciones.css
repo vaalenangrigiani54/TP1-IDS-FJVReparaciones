@@ -1,0 +1,48 @@
+.info-card{
+    margin-top: 3em;
+    border: .1em solid rgb(200,200,200);
+    /* padding-bottom: 5em; */
+    justify-self: center;
+    align-self: center;
+    min-width: 30em;
+    min-height: 30em;
+}
+
+.info-top-btns{
+    display: flex;
+    justify-content: space-between;
+
+    .btn-go-back{
+        margin-top: .5em;
+        margin-left: .5em;
+        width: 10em;
+    }
+}
+
+.btn-edit{
+    width: 15em;
+    justify-self: center;
+    align-self: center;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.texto-observaciones{
+    min-width: fit-content;
+    min-height: fit-content;
+    border: .1em solid rgb(200,200,200);
+}
+
+.cards{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.observaciones{
+    margin-left: 1em;
+
+    h3{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
