@@ -1,10 +1,10 @@
 body {
     overflow-y: auto;
-    /* background: linear-gradient(135deg, #EA98DA, #5B6CF9); */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
+
 .header {
     min-width: 100%;
     min-height: 100%;
@@ -15,7 +15,8 @@ body {
 h2 {
     font-weight: bold;
     font-size: 2.05em;
-    font-family: "Poppins", sans-serif;
+    font-family: Poppins, sans-serif;
+    margin-top: .2em;
 }
 
 .div-h2 {
@@ -40,92 +41,71 @@ h4 {
     justify-content: center;
     font-family: "Roboto", sans-serif;
     font-size: 1.5em;
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-
-.formularios {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    padding-bottom: 1em;
+    margin-bottom: 2em;
 }
 
 .div-form{
     display: flex;
     justify-content: center;
+    align-self: center;
     align-items: center;
     flex-direction: column;
     border: .1em solid rgb(200,200,200);
-    background-color: #ebf2fa;
+    background-color: #e9f3fe;
     border-radius: 2em;
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     padding: 2em;
-    margin-bottom: 1em;
-    margin-top: 3em;
-}
-.form-input {
-    background: transparent;
-    height: 50px;
-    color: rgb(134, 131, 131) !important;
-    border: 1px solid black;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 40px;
-    padding-left: 20px;
-    padding-right: 20px;
-    -webkit-transition: 0.3s;
-    -o-transition: 0.3s;
-    transition: 0.3s;
-    margin-top: .7em;
-    margin-bottom: .7em;
-}
-.div-buttons{
-    margin-top: 1em;
+    margin-top: 2em;
+    margin-bottom: 2em;
+
+    .formularios {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        padding-bottom: 1em;
+    }
+
+    .form-title {
+        font-family: Poppins;
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    .form-input {
+        background: white;
+        width: 20em;
+        height: 50px;
+        margin-bottom: -1em;
+        color: rgb(100, 100, 100);
+        border: 1px solid black;
+        border-radius: 20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        -webkit-transition: 0.4s;
+        -o-transition: 0.4s;
+        transition: 0.4s;
+    }
+
+    .form-button {
+        width: 10em;
+        margin-top: -1.2m;
+        margin-left: 1em;
+        margin-right: 1em;
+    }
 }
 
 .footer {
-    background-color: black;
+    background-color: #222222;
     color: white;
     text-align: center;
-    padding: 15px;
+    padding: .5em;
     margin-top: auto;
 
-    #info{
+    #info {
         font-size: 1em;
     }
 }
 
-/* footer {
-    background-color: darkgray;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    clear: both;
-    margin-top: auto;
-  }
-  
-  .contact-info {
-    margin-bottom: 10px;
-  }
-  
-  .contact-info p {
-    margin: 0;
-  }
-  
-  .contact-info span {
-    margin: 0 10px;
-  }
-  
-  .company-info {
-    font-size: 0.8em;
-    color: #666;
-  }
-  
-  .company-info p {
-    margin: 0;
-  } */
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
