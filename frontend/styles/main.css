@@ -13,12 +13,3 @@
 #btn-usuario {
     background-color: #A209b7;
 }
-
-.div-h2 {
-    border-top: .2em solid rgba(200,200,200);
-    border-bottom: .2em solid rgba(200,200,200);
-    margin: 1em 0;
-    padding: 1em;
-    display: flex;
-    justify-content: center;
-}
