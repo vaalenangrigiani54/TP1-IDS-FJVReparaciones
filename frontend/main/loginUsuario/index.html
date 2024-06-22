@@ -7,6 +7,8 @@
 </head>
 <body>
     <h1>FJVREPARACIONES</h1>
+    <button class="button-go-back" onclick=GO_BACK()>Atrás</button>
+    <br>
     <h2>Iniciar sesión como un usuario:</h2>
 
     <form id="form_user">
@@ -28,7 +30,7 @@
             let emailIngresado = elementos.email.value
             let contraseniaIngresada = elementos.contrasenia.value
 
-            fetch(`http://127.0.0.1:5000/loginUsuario/${emailIngresado},${contraseniaIngresada}`)
+            fetch(`http://127.0.0.1:5000/loginUsuario/${emailIngresado}/${contraseniaIngresada}`)
             .then((res) => res.json())
             .then(handle_response)
             .catch((error) => console.log(`ERROR: ${error}`))
@@ -40,10 +42,14 @@
             } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo
                 alert("Algo ha fallado. Vuelva a intentarlo más tarde")
             } else if (data[0]["rango"] == "Administrador") { //Se distingue entre la página del administrador y la página del técnico
-                window.location.href = `http://localhost:8000/administrador?id=${data[0]["id"]}`
+                window.location.href = `http://localhost:8000/administrador?sessionID=${data[0]["id"]}`
             } else {
-                window.location.href = `http://localhost:8000/tecnico?id=${data[0]["id"]}`
+                window.location.href = `http://localhost:8000/tecnico?sessionID=${data[0]["id"]}`
             }
+        }
+
+        function GO_BACK() {
+            window.location.href = "http://localhost:8000/main"
         }
     </script>
 </body>
