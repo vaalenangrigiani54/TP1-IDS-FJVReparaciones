@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar un usuario</title>
+</head>
+<body>
+    <h1>FJVReparaciones</h1>
+    <button class="button-go-back" onclick=GO_BACK()>Atrás</button>
+    <button class="button-close-session" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+    <br>
+    <h2>Editar al usuario:</h2>
+
+    <form id="editUser">
+        <label for="nombre">*Nombre:</label>
+        <input type="text" id="nombre" required><br><br>
+
+        <label for="email">*Correo electrónico:</label>
+        <input type="email" id="email" placeholder="ejemplo@gmail.com" required><br><br>
+
+        <label for="contrasenia">*Contraseña:</label>
+        <input type="password" id="contrasenia" required><br><br>
+
+        <label for="rango">Seleccione el rango del usuario:</label>
+        <select id="rango">
+            <option value="Administrador">Administrador</option>
+            <option value="Técnico">Técnico</option>
+        </select>
+
+        <br><br>
+        <input type="button" value="Actualizar usuario" onclick=edit_user()>
+    </form>
+
+    <script>
+        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
+        let id_usuario_a_editar = new URLSearchParams(window.location.search).get("id")
+
+        if (sessionID == null) {
+            sessionID = -2147483648
+        }
+
+        if (id_usuario_a_editar == null) {
+            id_usuario_a_editar = -2147483648
+        }
+
+        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/administrador`)
+        .then((res) => res.json())
+        .then(verify_session)
+        .catch((error) => console.log(`ERROR: ${error}`))
+
+        function verify_session(login) {
+            if (login["Logged"] == false) {
+                window.location.href = "http://localhost:8000/main/loginUsuario"
+            } else {
+                fetch(`http://127.0.0.1:5000/acciones_usuario/${id_usuario_a_editar}`, {method: "GET"})
+                .then((res) => res.json())
+                .then(show_data)
+                .catch((error) => console.log("ERROR", error))
+            }
+        }
+        
+        function show_data(data) {
+            if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el usuario con la id en los query params
+                alert(data["Mensaje"])
+                window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
+            } else {
+                let elementos = document.getElementById("editUser").elements
+                elementos.nombre.value = data["nombre_usuario"]
+                elementos.email.value = data["email"]
+                elementos.contrasenia.value = data["contrasenia"]
+                elementos.rango.value = data["rango"]
+            }
+        }
+
+        function edit_user() {
+            let elementos = document.getElementById("editUser").elements
+            let nombreIngresado = elementos.nombre.value
+            let emailIngresado = elementos.email.value
+            let contraseniaIngresada = elementos.contrasenia.value
+            let rangoIngresado = elementos.rango.value
+            
+            fetch(`http://127.0.0.1:5000/acciones_usuario/${id_usuario_a_editar}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nombre_usuario: nombreIngresado,
+                    email: emailIngresado,
+                    contrasenia: contraseniaIngresada,
+                    rango: rangoIngresado,
+                })
+            })
+            .then((res) => res.json())
+            .then(handle_response)
+            .catch((error) => console.log("ERROR", error))
+        }
+
+        function handle_response(data) {
+            alert(data["Mensaje"])
+
+            if (data["Mensaje"] == "Usuario actualizado con éxito") {
+                window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
+            }
+        }
+
+        function GO_BACK() {
+            window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
+        }
+
+        function CLOSE_SESSION() {
+            if (confirm("¿Estás seguro que deseas cerrar la sesión?")) {
+                window.location.href = "http://localhost:8000/main"
+            }
+        }
+    </script>
+</body>
+</html>
