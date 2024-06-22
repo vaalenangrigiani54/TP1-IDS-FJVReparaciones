@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del cliente</title>
+</head>
+<body>
+    <h1>FJVReparaciones</h1>
+    <button class="button-go-back" onclick=GO_BACK()>Atrás</button>
+    <button class="button-close-session" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+    <br>
+    <h2 id="titleInfo">Información del cliente #:</h2>
+    <p id="nombre">Nombre:</p>
+    <p id="email">Correo electrónico:</p>
+    <p id="codigo">Código de ingreso:</p>
+    <p id="fecha">Fecha de inscripción:</p>
+    
+    <button onclick=goToEditClient()>Editar información del cliente</button>
+
+    <br><br>
+    <h3>Estos son los equipos que él mandó a revisar/arreglar:</h3>
+    <table id="table" border="1" cellpadding="8">
+        <tr>
+            <th>ID</th>
+            <th>Equipo</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Número de serie</th>
+            <th>Estado</th>
+            <th>Nombre del técnico</th>
+            <th>Fecha de ingreso</th>
+        </tr>
+    </table>
+
+    <script>
+        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
+        let id_cliente_info = new URLSearchParams(window.location.search).get("id")
+
+        if (sessionID == null) {
+            sessionID = -2147483648
+        }
+
+        if (id_cliente_info == null) {
+            id_cliente_info = -2147483648
+        }
+
+        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/tecnico`)
+        .then((res) => res.json())
+        .then(verify_session)
+        .catch((error) => console.log(`ERROR: ${error}`))
+
+        function verify_session(login) {
+            if (login["Logged"] == false) {
+                window.location.href = "http://localhost:8000/main/loginUsuario"
+            } else {
+                fetch(`http://127.0.0.1:5000/acciones_cliente/${id_cliente_info}`, {method: "GET"})
+                .then((res) => res.json())
+                .then(show_client_data)
+                .catch((error) => console.log("ERROR", error))
+            }
+        }
+
+        function show_client_data(data) {
+            if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el cliente con la id en los query params
+                alert(data["Mensaje"])
+                window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+            } else {
+                date = new Date(data["fecha_inscripcion"])
+                document.getElementById("titleInfo").innerText = `Información del cliente #${data["id"]}:`
+                document.getElementById("nombre").innerText = `Nombre: ${data["nombre_cliente"]}`
+                document.getElementById("email").innerText = `Correo electrónico: ${data["email"]}`
+                document.getElementById("codigo").innerText = `Código de ingreso: ${data["codigo_ingreso"]}`
+                document.getElementById("fecha").innerText = `Fecha de inscripción: ${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+
+                fetch(`http://127.0.0.1:5000/cliente/${id_cliente_info}`, {method: "GET"})
+                .then((res) => res.json())
+                .then(show_clientDevices_table)
+                .catch((error) => console.log("ERROR", error))
+            }
+        }
+
+        function show_clientDevices_table(data) {
+            equiposData = data["equipos"]
+            tabla = document.getElementById("table")
+
+            for (let i = 0; i < equiposData.length; i++) {
+                equipo = document.createElement("tr")
+                
+                columnID = document.createElement("td")
+                columnID.innerText = equiposData[i]["id"]
+                equipo.append(columnID)
+
+                columnDEVICETYPE = document.createElement("td")
+                columnDEVICETYPE.innerText = equiposData[i]["tipo_equipo"]
+                equipo.append(columnDEVICETYPE)
+                
+                columnBRAND = document.createElement("td")
+                columnBRAND.innerText = equiposData[i]["marca"]
+                equipo.append(columnBRAND)
+
+                columnMODEL = document.createElement("td")
+                columnMODEL.innerText = equiposData[i]["modelo"]
+                equipo.append(columnMODEL)
+
+                columnSERIALNUMBER = document.createElement("td")
+                columnSERIALNUMBER.innerText = equiposData[i]["num_serie"]
+                equipo.append(columnSERIALNUMBER)
+
+                columnSTATUS = document.createElement("td")
+                columnSTATUS.innerText = equiposData[i]["estado"]
+                equipo.append(columnSTATUS)
+
+                columnTECHNAME = document.createElement("td")
+                columnTECHNAME.innerText = equiposData[i]["nombre_tecnico"]
+                equipo.append(columnTECHNAME)
+
+                date = new Date(equiposData[i]["fecha_ingreso"])
+                columnDATE = document.createElement("td")
+                columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                equipo.append(columnDATE)
+
+                tabla.append(equipo)
+            }
+        }
+
+        function goToEditClient() {
+            window.location.href = `http://localhost:8000/tecnico/editarCliente?id=${id_cliente_info}&sessionID=${sessionID}`
+        }
+
+        function GO_BACK() {
+            window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+        }
+
+        function CLOSE_SESSION() {
+            if (confirm("¿Estás seguro que deseas cerrar la sesión?")) {
+                window.location.href = "http://localhost:8000/main"
+            }
+        }
+    </script>
+</body>
+</html>
