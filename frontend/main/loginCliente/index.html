@@ -7,6 +7,8 @@
 </head>
 <body>
     <h1>FJVREPARACIONES</h1>
+    <button class="button-go-back" onclick=GO_BACK()>Atrás</button>
+    <br>
     <h2>Iniciar sesión como un cliente:</h2>
 
     <form id="form_client">
@@ -30,7 +32,7 @@
             let emailIngresado = elementos.email.value
             let codigoIngresado = elementos.codigo.value
 
-            fetch(`http://127.0.0.1:5000/loginCliente/${emailIngresado},${codigoIngresado}`)
+            fetch(`http://127.0.0.1:5000/loginCliente/${emailIngresado}/${codigoIngresado}`)
             .then((res) => res.json())
             .then(handle_response)
             .catch((error) => console.log(`ERROR: ${error}`))
@@ -42,8 +44,12 @@
             } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo
                 alert("Algo ha fallado. Vuelva a intentarlo más tarde")
             } else {
-                window.location.href = `http://localhost:8000/cliente?id=${data[0]["id"]}`
+                window.location.href = `http://localhost:8000/cliente?sessionID=${data[0]["id"]}`
             }
+        }
+        
+        function GO_BACK() {
+            window.location.href = "http://localhost:8000/main"
         }
     </script>
 </body>
