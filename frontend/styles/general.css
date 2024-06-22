@@ -1,0 +1,43 @@
+
+.footer{
+    background-color: black;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    min-width: 100%;
+    padding: 20px;
+
+    #info{
+        font-size: 25px;
+    }
+}
+
+
+.main-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 100px;
+    max-width: 1000px;
+}
+h3{
+    display: flex;
+    justify-content: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 40px;
+    margin-bottom: 1em;
+}
+
+.btn-inicio{
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: .5em;
+}
+
+h2{
+    font-weight: bold;
+    font-size: 45px;
+    font-family:  "Poppins", sans-serif;
+}
+
