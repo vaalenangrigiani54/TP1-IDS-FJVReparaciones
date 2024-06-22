@@ -8,7 +8,7 @@ Por otra parte, el cliente, si tiene una cuenta registrada en la página web, pu
 TABLAS:<br>
 Usuarios: ID | Nombre | Email | Contraseña | Rango (Administrador/Técnico) | Fecha de ingreso<br>
 Clientes: ID | Nombre | Email | Código de ingreso (8 dígitos) | Fecha de inscripción<br>
-Equipos: ID | Marca | Modelo | Numero de serie | ID del cliente | ID del técnico | Estado (Nuevo ingreso/En reparación/Reparado/No reparado) | Fecha de ingreso
+Equipos: ID | Tipo del equipo | Marca | Modelo | Numero de serie | ID del cliente | ID del técnico | Estado (Nuevo ingreso/En reparación/Reparado/No reparado) | Fecha de ingreso
 
 Para crear la base de datos usando postgresql, usamos los comandos:<br>
 sudo apt install postgresql<br>
@@ -17,8 +17,3 @@ sudo -u postgres createdb --owner=usuario nombre_base_de_datos<br>
 
 Y luego, para acceder a la base de datos con el usuario, usamos el comando:<br>
 sudo -u usuario psql nombre_base_de_datos
-
-creamos tablas y las definimos en el archivo database.py<br>
-relacionamos esto con el backend con el archivo app.py
-
-vamos ahora a definir los endpoints que va a tener el backend
