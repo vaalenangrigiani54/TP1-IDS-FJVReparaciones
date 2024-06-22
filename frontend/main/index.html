@@ -12,19 +12,19 @@
     <link rel="stylesheet" href="../styles/main.css">
 </head>
 <body>
-    <img src="../header.jpg">
-    <div id="main-div">
-        <div id="div-h2">
-            <h2 >Bienvenido a la empresa de reparaciones de dispositivos más grande del país</h2>
+    <img class="header" src="../header.jpg">
+
+    <div class="main-div">
+        <div class="div-h2">
+            <h2>Bienvenido a la empresa de reparaciones de dispositivos más grande de la ciudad</h2>
         </div>
-        
-    
+
         <h3>¿Eres un cliente o un usuario de la empresa?</h3>
+
         <div class="d-grid gap-2 col-6 mx-auto">
             <button id="btn-cliente" onclick="location.href='loginCliente'" class="btn btn-secondary btn-inicio">Cliente</button>
             <button id="btn-usuario" onclick="location.href='loginUsuario'" class="btn btn-secondary btn-inicio">Usuario</button>
         </div>
-        
     </div>
     
     <footer class="footer">
@@ -32,16 +32,21 @@
           <div class="row">
             <div class="col-md-12 text-center">
               <p id="info">
-                <i class="fas fa-phone"></i> Teléfono: 912 345 678
+                <i class="fas fa-phone"></i> Contactos:
                 <br>
-                FJV Reparaciones
+                Facundo Matías Cardogna: +54 9 11 1234-5678
                 <br>
+                Jesús Miguel Fernández Bozo: +54 9 11 1010-0101
+                <br>
+                Valentín Angrigiani: +54 9 2227 98-7654
+                <br><br>
                 &copy; 2024 FJV Reparaciones. Todos los derechos reservados.
               </p>
             </div>
           </div>
         </div>
-      </footer>
+    </footer>
+
     <script>
         //Esto manda a reiniciar las variables globales de session_id a 0
         fetch("http://127.0.0.1:5000/reset_session").catch((error) => console.log(`ERROR: ${error}`))
