@@ -12,21 +12,18 @@
 </head>
 <body>
     <img class="header" src="../../header.jpg">
-
-    <button class="btn btn-secondary" onclick=GO_BACK()>Atrás</button>
-    <br>
-
-    <h2>Iniciar sesión como un cliente:</h2>
-
-    <form class="formularios" id="form_client">
-        <label for="email">*Correo electrónico:</label><br>
-        <input id="email" type="email" placeholder="ejemplo@gmail.com" required><br><br>
-
-        <label for="codigo">*Código de acceso (8 dígitos):</label><br>
-        <input id="codigo" type="number", required><br><br>
-
-        <input type="button" value="Iniciar sesión" onclick=login()>
-    </form>
+    
+    <div class="div-form">
+        <p class="form-title">Iniciar sesión como un cliente:<p>
+        <form class="formularios" id="form_client">
+            <input class="form-input" id="email" type="email" placeholder="Ingrese su correo electrónico" required><br><br>
+            <input class="form-input" id="codigo" type="number" placeholder="Ingrese su código de 8 dígitos" required><br><br>
+        </form>
+        <div class="div-buttons">
+            <button class="btn btn-secondary form-button" onclick=GO_BACK()>Atrás</button>
+            <button class="btn btn-success form-button" onclick=login()>Iniciar sesión</button>
+        </div>
+    </div>
 
     <h4>Si no tienes un código de acceso, debes ir a cualquiera de las sucursales y pedirle a un técnico que te registre y te lo dé.</h4>
 
@@ -59,10 +56,14 @@
             let emailIngresado = elementos.email.value
             let codigoIngresado = elementos.codigo.value
 
-            fetch(`http://127.0.0.1:5000/loginCliente/${emailIngresado}/${codigoIngresado}`)
-            .then((res) => res.json())
-            .then(handle_response)
-            .catch((error) => console.log(`ERROR: ${error}`))
+            if (emailIngresado == "" || codigoIngresado == "") {
+                alert("Debes llenar todos los campos para continuar")
+            } else {
+                fetch(`http://127.0.0.1:5000/loginCliente/${emailIngresado}/${codigoIngresado}`)
+                .then((res) => res.json())
+                .then(handle_response)
+                .catch((error) => console.log(`ERROR: ${error}`))
+            }
         }
 
         function handle_response(data) {

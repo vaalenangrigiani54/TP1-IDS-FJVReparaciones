@@ -13,55 +13,27 @@
 <body>
     <img class="header" src="../../header.jpg">
 
-    
-    <br>
     <div class="div-form">
-        <h2>Iniciar sesión como un usuario:</h2>
-
+        <p class="form-title">Iniciar sesión como un usuario:<p>
         <form class="formularios" id="form_user">
-            <!-- <label for="email">*Correo electrónico:</label><br> -->
-            <input class="form-input" id="email" type="email" placeholder="Ingresa tu email" required><br><br>
-<!-- 
-            <label for="contrasenia">*Contraseña:</label><br> -->
-            <input class="form-input"id="contrasenia" type="password" placeholder="Ingresa tu contraseña" required><br><br>
-
-            <div class="div-buttons">
-                <button class="btn btn-secondary" onclick=GO_BACK()>Atrás</button>
-                <input class="btn btn-success" type="button" value="Iniciar sesión" onclick=login()>
-            </div>
+            <input class="form-input" id="email" type="email" placeholder="Ingrese su correo electrónico" required><br><br>
+            <input class="form-input"id="contrasenia" type="password" placeholder="Ingrese su contraseña" required><br><br>
         </form>
+        <div class="div-buttons">
+            <button class="btn btn-secondary form-button" onclick=GO_BACK()>Atrás</button>
+            <button class="btn btn-success form-button" onclick=login()>Iniciar sesión</button>
+        </div>
     </div>
+
     <footer class="footer">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12 text-center">
-              <p id="info">
-                <i class="fas fa-phone"></i> Contactos:
-                <br>
-                Facundo Matías Cardogna: +54 9 11 1234-5678
-                <br>
-                Jesús Miguel Fernández Bozo: +54 9 11 1010-0101
-                <br>
-                Valentín Angrigiani: +54 9 2227 98-7654
-                <br><br>
-                &copy; 2024 FJV Reparaciones. Todos los derechos reservados.
-              </p>
-            </div>
-          </div>
-        </div>
+      <p id="info">
+        Contactos:<br>
+        Facundo Matías Cardogna: +54 9 11 1234-5678<br>
+        Jesús Miguel Fernández Bozo: +54 9 11 1010-0101<br>
+        Valentín Angrigiani: +54 9 2227 98-7654<br><br>
+        &copy; 2024 FJV Reparaciones. Todos los derechos reservados.
+      </p>
     </footer>
-    <!-- <footer>
-        <div class="contact-info">
-          <p>
-            <span>Jesus Fernandez</span> <span>+54 9 11</span>
-            <span>Facundo Cardogna</span> <span>+54 9 11</span>
-            <span>Valentin Angrigiani</span> <span>+54 9 11</span>
-          </p>
-        </div>
-        <div class="company-info">
-          <p>&copy; FJVReparaciones. Todos los derechos reservados.</p>
-        </div>
-      </footer> -->
     
     <script>
         //Esto manda a reiniciar las variables globales SESSION_ID a 0
@@ -72,10 +44,14 @@
             let emailIngresado = elementos.email.value
             let contraseniaIngresada = elementos.contrasenia.value
 
-            fetch(`http://127.0.0.1:5000/loginUsuario/${emailIngresado}/${contraseniaIngresada}`)
-            .then((res) => res.json())
-            .then(handle_response)
-            .catch((error) => console.log(`ERROR: ${error}`))
+            if (emailIngresado == "" || contraseniaIngresada == "") {
+                alert("Debes llenar todos los campos para continuar")
+            } else {
+              fetch(`http://127.0.0.1:5000/loginUsuario/${emailIngresado}/${contraseniaIngresada}`)
+              .then((res) => res.json())
+              .then(handle_response)
+              .catch((error) => console.log(`ERROR: ${error}`))
+            }
         }
 
         function handle_response(data) {
