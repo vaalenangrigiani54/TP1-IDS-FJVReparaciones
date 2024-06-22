@@ -13,20 +13,24 @@
 <body>
     <img class="header" src="../../header.jpg">
 
-    <button class="btn btn-secondary" onclick=GO_BACK()>Atrás</button>
+    
     <br>
-    <h2>Iniciar sesión como un usuario:</h2>
+    <div class="div-form">
+        <h2>Iniciar sesión como un usuario:</h2>
 
-    <form class="formularios" id="form_user">
-        <label for="email">*Correo electrónico:</label><br>
-        <input id="email" type="email" placeholder="ejemplo@gmail.com" required><br><br>
+        <form class="formularios" id="form_user">
+            <!-- <label for="email">*Correo electrónico:</label><br> -->
+            <input class="form-input" id="email" type="email" placeholder="Ingresa tu email" required><br><br>
+<!-- 
+            <label for="contrasenia">*Contraseña:</label><br> -->
+            <input class="form-input"id="contrasenia" type="password" placeholder="Ingresa tu contraseña" required><br><br>
 
-        <label for="contrasenia">*Contraseña:</label><br>
-        <input id="contrasenia" type="password", required><br><br>
-
-        <input type="button" value="Iniciar sesión" onclick=login()>
-    </form>
-
+            <div class="div-buttons">
+                <button class="btn btn-secondary" onclick=GO_BACK()>Atrás</button>
+                <input class="btn btn-success" type="button" value="Iniciar sesión" onclick=login()>
+            </div>
+        </form>
+    </div>
     <footer class="footer">
         <div class="container">
           <div class="row">
@@ -46,6 +50,18 @@
           </div>
         </div>
     </footer>
+    <!-- <footer>
+        <div class="contact-info">
+          <p>
+            <span>Jesus Fernandez</span> <span>+54 9 11</span>
+            <span>Facundo Cardogna</span> <span>+54 9 11</span>
+            <span>Valentin Angrigiani</span> <span>+54 9 11</span>
+          </p>
+        </div>
+        <div class="company-info">
+          <p>&copy; FJVReparaciones. Todos los derechos reservados.</p>
+        </div>
+      </footer> -->
     
     <script>
         //Esto manda a reiniciar las variables globales SESSION_ID a 0
