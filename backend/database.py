@@ -29,7 +29,7 @@ class Equipos(db.Model):
     marca = db.Column(db.String(255), nullable=False)
     modelo = db.Column(db.String(255), nullable=False)
     num_serie = db.Column(db.String(255), nullable=False)
-    estado = db.Column(db.String(30), nullable=False) # Nuevo Ingreso / En Revisión/Reparación / Reparado / No Reparado
+    estado = db.Column(db.String(30), nullable=False) # Nuevo Ingreso; En Revisión/Reparación; Reparado; No Reparado
     observaciones = db.Column(db.String(500)) # Esto es para que el técnico le explique al cliente lo que pudo reparar y/o lo que no
     id_cliente = db.Column(db.Integer, db.ForeignKey("clientes.id"))
     id_tecnico = db.Column(db.Integer, db.ForeignKey("usuarios.id"))
