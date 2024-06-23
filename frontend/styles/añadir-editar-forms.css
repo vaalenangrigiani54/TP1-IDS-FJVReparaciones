@@ -1,0 +1,59 @@
+.div-form {
+    background: rgb(255, 255, 220);
+    border: .1em solid rgb(180, 180, 100);
+    margin-top: 1em;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 45em;
+    height: 40em;
+}
+
+.label-inputs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.label {
+    font-size: 1.2em;
+}
+
+.input {
+    font-size: 1.1em;
+    border: .1em solid gray;
+    border-radius: 7px;
+    padding: .2em;
+    padding-left: .5em;
+    width: 20em;
+}
+
+.form-select {
+    font-size: 1.1em;
+    border: .1em solid gray;
+    width: 18em;
+}
+
+.textarea {
+    resize: none;
+    font-size: 1.1em;
+    border: .1em solid rgb(180, 180, 100);
+    border-radius: 10px;
+    padding: 1em;
+    height: 12em;
+    margin-top: .5em;
+    margin-bottom: 1.7em;
+}
+
+.label-textarea {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-button {
+    font-size: 1.15em;
+    font-weight: bold;
+}
