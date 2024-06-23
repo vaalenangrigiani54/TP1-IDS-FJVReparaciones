@@ -115,21 +115,6 @@ input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-#btn-go-back {
-    align-self: flex-start;
-    width: 10em;
-    margin-top: .5em;
-    margin-left: .5em;
-}
-
-#btn-cerrar-sesion {
-    justify-self: flex-end;
-    align-self: flex-end;
-    width: 10em;
-    margin-top: .5em;
-    margin-right: .5em;
-}
-
 .t-div {
     margin-top: .5em;
     margin-left: 2em;
@@ -177,4 +162,18 @@ table {
 .table-buttons {
     display: flex;
     justify-content: space-around;
+}
+
+.info-top-btns {
+    display: flex;
+    justify-content: space-between;
+    margin: .5em;
+}
+
+#btn-go-back {
+    width: 10em;
+}
+
+#btn-cerrar-sesion {
+    width: 10em;
 }

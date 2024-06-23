@@ -1,47 +1,42 @@
-.info-top-btns {
-    display: flex;
-    justify-content: space-between;
-}
-
 .info-card {
     border: .1em solid rgb(200,200,200);
     align-self: center;
     margin-top: 2em;
     min-width: 30em;
     min-height: 30em;
+}
 
-    .div-h2 {
-        margin: 0;
-    }
+.div-h2 {
+    margin: 0;
+}
 
-    .div-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+.div-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
-    .container {
-        display: flex;
-        width: 65em;
-    }
+.container {
+    display: flex;
+    width: 65em;
+}
 
-    .div-data {
-        display: flex;
-        flex-direction: row;
-    }
+.div-data {
+    display: flex;
+    flex-direction: row;
+}
 
-    .div-data-text {
-        font-size: 1.2em;
-        margin-right: .4em;
-    }
+.div-data-text {
+    font-size: 1.2em;
+    margin-right: .4em;
+}
 
-    .observaciones {
-        flex: 1;
-        padding: 1em;
-        border: .1em solid rgb(200,200,200);
-        border-radius: 10px;
-        margin-left: 3em;
-    }
+.observaciones {
+    flex: 1;
+    padding: 1em;
+    border: .1em solid rgb(200,200,200);
+    border-radius: 10px;
+    margin-left: 3em;
 }
 
 .btn-edit {
