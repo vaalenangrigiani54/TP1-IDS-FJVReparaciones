@@ -21,9 +21,9 @@
         <h3>Haz click en el nombre de un usuario para ver su información...</h3>
         <button id="addUser" class="btn btn-primary btn-add" onclick=goToAddUser()>Añadir un nuevo usuario</button>
     </div>
-    <br><br>
+    
     <div class="t-div">
-        <table class="table">
+        <table class="table table-bordered" id="table" cellpadding="7">
             <tr class="table-dark">
                 <th >ID</th>
                 <th>Nombre</th>
@@ -36,16 +36,14 @@
     </div>
 
     <footer class="footer">
-        <footer class="footer">
-          <p id="info">
-            Contactos:<br>
+        <p id="info">
+            <b>Contactos:</b><br>
             Facundo Matías Cardogna: +54 9 11 1234-5678<br>
             Jesús Miguel Fernández Bozo: +54 9 11 1010-0101<br>
             Valentín Angrigiani: +54 9 2227 98-7654<br><br>
             &copy; 2024 FJV Reparaciones. Todos los derechos reservados.
-          </p>
-        </footer>
-      </footer>
+        </p>
+    </footer>
 
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
@@ -71,64 +69,64 @@
         }
 
         function show_data(data) {
-            session_username = ""
-            let i = 0
-
-            // Búsqueda secuencial para el nombre del usuario de la sesión
-            while (i < data.length) {
-                if (data[i]["id"] == sessionID) {
-                    session_username = data[i]["nombre_usuario"]
-                    break
-                }
-                i++
-            }
-
             bienvenido = document.getElementById("bienvenida")
-            bienvenido.innerText = `BIENVENIDO/A: ${session_username}`
+            bienvenido.innerText = `BIENVENIDO/A: ${data["session_username"]}`
             
             // Lleno la tabla con todos los usuarios del sistema
             tabla = document.getElementById("table")
+            usuariosData = data["usuarios"]
 
-            for (let i = 0; i < data.length; i++) {
+            for (let i = 0; i < usuariosData.length; i++) {
                 usuario = document.createElement("tr")
 
                 columnID = document.createElement("td")
-                columnID.innerText = data[i]["id"]
+                columnID.setAttribute("class", "ids-dates")
+                columnID.innerText = usuariosData[i]["id"]
                 usuario.append(columnID)
 
-                linkUSERNAME = document.createElement("a")
-                linkUSERNAME.innerText = data[i]["nombre_usuario"]
-                linkUSERNAME.setAttribute("href", `http://localhost:8000/administrador/informacionUsuario?id=${data[i]["id"]}&sessionID=${sessionID}`)
                 columnUSERNAME = document.createElement("td")
-                columnUSERNAME.append(linkUSERNAME)
+                columnUSERNAME.innerText = usuariosData[i]["nombre_usuario"]
+                columnUSERNAME.setAttribute("class", "hrefs")
+                columnUSERNAME.onclick = function() {
+                    window.location.href = `http://localhost:8000/administrador/informacionUsuario?id=${usuariosData[i]["id"]}&sessionID=${sessionID}`
+                }
                 usuario.append(columnUSERNAME)
 
                 columnEMAIL = document.createElement("td")
-                columnEMAIL.innerText = data[i]["email"]
+                columnEMAIL.innerText = usuariosData[i]["email"]
                 usuario.append(columnEMAIL)
 
                 columnRANGE = document.createElement("td")
-                columnRANGE.innerText = data[i]["rango"]
+                columnRANGE.innerText = usuariosData[i]["rango"]
                 usuario.append(columnRANGE)
 
-                date = new Date(data[i]["fecha_ingreso"])
+                date = new Date(usuariosData[i]["fecha_ingreso"])
                 columnDATE = document.createElement("td")
                 columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                columnDATE.setAttribute("class", "ids-dates")
                 usuario.append(columnDATE)
 
                 columnBUTTONS = document.createElement("td")
-                if (data[i]["id"] != sessionID) {
+                if (i == 0) { // En el backend ya había reservado el primer lugar para el usuario de la sesión
+                    usuario.setAttribute("style", "font-weight: bold")
+                    columnBUTTONS.innerText = "=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+                } else {
+                    BUTTONS = document.createElement("div")
+                    BUTTONS.setAttribute("class", "table-buttons")
+
                     buttonEDIT = document.createElement("button")
+                    buttonEDIT.setAttribute("class", "btn btn-warning")
                     buttonEDIT.innerText = "Editar usuario"
                     buttonEDIT.onclick = function() {
-                        location.href=`editarUsuario?id=${data[i]["id"]}&sessionID=${sessionID}`
+                        location.href=`editarUsuario?id=${usuariosData[i]["id"]}&sessionID=${sessionID}`
                     }
                     
                     buttonDELETE = document.createElement("button")
+                    buttonDELETE.setAttribute("class", "btn btn-danger")
                     buttonDELETE.innerText = "Eliminar usuario"
                     buttonDELETE.onclick = function() {
-                        if (confirm(`¿Estás seguro que deseas eliminar al usuario ${data[i]["nombre_usuario"]}?`)) {
-                            fetch(`http://127.0.0.1:5000/acciones_usuario/${data[i]["id"]}`, {method: "DELETE"})
+                        if (confirm(`¿Estás seguro que deseas eliminar al usuario ${usuariosData[i]["nombre_usuario"]}?`)) {
+                            fetch(`http://127.0.0.1:5000/acciones_usuario/${usuariosData[i]["id"]}`, {method: "DELETE"})
                             .then(function() {
                                 alert("Usuario eliminado con éxito")
                                 window.location.reload()
@@ -136,8 +134,9 @@
                         }
                     }
 
-                    columnBUTTONS.append(buttonEDIT)
-                    columnBUTTONS.append(buttonDELETE)
+                    BUTTONS.append(buttonEDIT)
+                    BUTTONS.append(buttonDELETE)
+                    columnBUTTONS.append(BUTTONS)
                 }
                 usuario.append(columnBUTTONS)
 

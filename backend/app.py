@@ -9,8 +9,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://vaalen782:2147483
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app)
 
-########################################################################################################################
-########################################################################################################################
+
+#======================================================================================================================================================#
+
 
 # Estas variables globales van a servir como control para que no se salteen la parte de login
 ADMIN_SESSION_ID = 0
@@ -19,6 +20,7 @@ CLIENT_SESSION_ID = 0
 
 # Esta variable global sirve como control para no cambiar manualmente los query params de la id de un equipo
 DEVICE_INFO_ID = 0
+
 
 
 # Endpoint auxiliar para resetear las variables globales cuando se cierra sesión
@@ -74,8 +76,7 @@ def set_deviceInfoID(id):
     DEVICE_INFO_ID = int(id)
 
 
-########################################################################################################################
-########################################################################################################################
+#======================================================================================================================================================#
 
 
 # Endpoint para verificar el inicio de sesión de un usuario
@@ -136,16 +137,15 @@ def data_client(email, codigo):
         return [{"Mensaje": "Algo ha fallado..."}]
 
 
-########################################################################################################################
-########################################################################################################################
+
 
 
 # Hace referencia a la página del administrador.
 # Se obtienen todos los usuarios.
-@app.route("/administrador/<id>")
+@app.route("/administrador/<int:id>")
 def administrador(id):
     try:
-        data = []
+        data = {"session_username": "", "usuarios": ["Acá va primero mi usuario"]} # Reservo la primera posición en la lista para el usuario de la sesión
         usuarios = Usuarios.query.where(Usuarios.id != -1).order_by(Usuarios.id).all()
         
         for usuario in usuarios:
@@ -156,7 +156,11 @@ def administrador(id):
                 "rango": usuario.rango,
                 "fecha_ingreso": usuario.fecha_ingreso
             }
-            data.append(usuarioData)
+            if usuario.id == id:
+                data["session_username"] = usuario.nombre_usuario
+                data["usuarios"][0] = usuarioData # Aquí es donde lo inserto en la primera posición
+            else:
+                data["usuarios"].append(usuarioData)
             
         return data
     except Exception as error:
@@ -170,14 +174,14 @@ def administrador(id):
 @app.route("/tecnico/<id>")
 def tecnico(id):
     try:
-        data = {"nombre_usuario": "", "equipos": []}
+        data = {"session_username": "", "equipos": []}
     
         usuario = Usuarios.query.where(Usuarios.id == id).first()
         equipos = Equipos.query.where(Equipos.id_tecnico == id).join(Clientes).add_columns(
             Clientes.nombre_cliente
         ).order_by(desc(Equipos.fecha_ingreso)).all()
 
-        data["nombre_usuario"] = usuario.nombre_usuario
+        data["session_username"] = usuario.nombre_usuario
         
         for (equipo, nombre_cliente) in equipos:
             equipoData = {
@@ -206,14 +210,14 @@ def tecnico(id):
 @app.route("/cliente/<id>")
 def cliente(id):
     try:
-        data = {"nombre_cliente": "", "equipos": []}
+        data = {"session_clientname": "", "equipos": []}
 
         cliente = Clientes.query.where(Clientes.id == id).first()
         equipos = Equipos.query.where(Equipos.id_cliente == id).join(Usuarios).add_columns(
             Usuarios.nombre_usuario
         ).order_by(desc(Equipos.fecha_ingreso)).all()
         
-        data["nombre_cliente"] = cliente.nombre_cliente
+        data["session_clientname"] = cliente.nombre_cliente
         
         for (equipo, nombre_tecnico) in equipos:
             equipoData = {
@@ -235,8 +239,7 @@ def cliente(id):
         return {"Mensaje": "Algo ha fallado..."}
 
 
-########################################################################################################################
-########################################################################################################################
+
 
 
 # Endpoint para consultar/agregar/modificar/eliminar a un usuario de la empresa
@@ -456,10 +459,10 @@ def acciones_equipo(id):
         return {"Mensaje": "Algo ha fallado..."}
 
 
-########################################################################################################################
-########################################################################################################################
+#======================================================================================================================================================#
 
 
+# Arranque del backend y la base de datos
 if __name__ == "__main__":
     db.init_app(app)
     with app.app_context():

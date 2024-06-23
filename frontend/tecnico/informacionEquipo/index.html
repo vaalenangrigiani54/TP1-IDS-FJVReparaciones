@@ -14,41 +14,61 @@
 </head>
 <body>
     <img class="header" src="../../header.jpg" alt="Header, logo de la empresa">
+    
     <div class="info-top-btns">
-        <button class="btn btn-secondary btn-go-back" onclick=GO_BACK()>Atrás</button>
-        <button id="btn-cerrar-sesion"class="btn btn-danger" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+        <button class="btn btn-secondary" id="btn-go-back" onclick=GO_BACK()>Atrás</button>
+        <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
-    <div class="cards">
-        <div class="info-card card">
-            <div class="card-body">
-                <div class="div-h2">
-                    <h2 id="titleInfo" class="card-title">Información del equipo #:</h2>
+
+    <div class="info-card card">
+        <div class="card-header">
+            <div class="div-h2 card-title">
+                <h2 id="titleInfo">Información del equipo #:</h2>
+            </div>
+        </div>
+        <div class="card-body container">
+            <div class="card-text div-info">
+                <div class="div-data">
+                    <div class="div-data-text"><b>Nombre del cliente:</b></div>
+                    <div style="font-size:1.2em" id="cliente"></div>
                 </div>
-                <div class="card-text">
-                    <p id="cliente">Nombre del dueño/cliente:</p>
-                    <p id="equipo">Tipo de equipo:</p>
-                    <p id="marca">Marca:</p>
-                    <p id="modelo">Modelo:</p>
-                    <p id="serie">Número de serie:</p>
-                    <p id="estado">Estado:</p>
-                    <p id="fecha">Fecha de ingreso:</p>
+                <div class="div-data">
+                    <div class="div-data-text"><b>Tipo de equipo:</b></div>
+                    <div style="font-size:1.2em" id="equipo"></div>
+                </div>
+                <div class="div-data">
+                    <div class="div-data-text"><b>Marca:</b></div>
+                    <div style="font-size:1.2em" id="marca"></div>
+                </div>
+                <div class="div-data">
+                    <div class="div-data-text"><b>Modelo:</b></div>
+                    <div style="font-size:1.2em" id="modelo"></div>
+                </div>
+                <div class="div-data">
+                    <div class="div-data-text"><b>Número de serie:</b></div>
+                    <div style="font-size:1.2em" id="serie"></div>
+                </div>
+                <div class="div-data">
+                    <div class="div-data-text"><b>Estado:</b></div>
+                    <div style="font-size:1.2em" id="estado"></div>
+                </div>
+                <div class="div-data">
+                    <div class="div-data-text" style="font-size:1.3em"><b>Fecha de ingreso:</b></div>
+                    <div style="font-size:1.3em" id="fecha"></div>
+                </div>
+            </div>
+            <div class="card-text observaciones">
+                <div class="div-data" style="flex-direction:column">
+                    <p style="text-decoration:underline" class="div-data-text"><b>OBSERVACIONES:</b></p>
+                    <p style="font-size:1.1em; margin-top:-0.5em" id="observaciones"></p>
                 </div>
             </div>
         </div>
-        <div class=" info-card card">
-            <div class="card-body observaciones">
-                <div class="div-h2">
-                    <h2 class="card-title " id="observaciones">OBSERVACIONES:</h2>
-                </div>
-                
-                <div class="texto-observaciones"></div>
-            </div>
-        </div>
-        
     </div>
     
-    <br>
-    <button class="btn btn btn-primary btn-edit" onclick=goToEditDevice()>Editar información del equipo</button>
+    <div class="btn-edit">
+        <button class="btn btn-primary" style="font-size:1.2em; width:30em" onclick=goToEditDevice()>Editar información del equipo</button>
+    </div>
 
     <footer class="footer">
         <footer class="footer">
@@ -109,14 +129,14 @@
             } else {
                 date = new Date(data["fecha_ingreso"])
                 document.getElementById("titleInfo").innerText = `Información del equipo #${data["id"]}:`
-                document.getElementById("cliente").innerText = `Nombre del dueño/cliente: ${data["nombre_cliente"]}`
-                document.getElementById("equipo").innerText = `Tipo de equipo: ${data["tipo_equipo"]}`
-                document.getElementById("marca").innerText = `Marca: ${data["marca"]}`
-                document.getElementById("modelo").innerText = `Modelo: ${data["modelo"]}`
-                document.getElementById("serie").innerText = `Número de serie: ${data["num_serie"]}`
-                document.getElementById("estado").innerText = `Estado: ${data["estado"]}`
-                document.getElementById("fecha").innerText = `Fecha de ingreso: ${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
-                document.getElementById("observaciones").innerText = `OBSERVACIONES: ${data["observaciones"]}`
+                document.getElementById("cliente").innerText = data["nombre_cliente"]
+                document.getElementById("equipo").innerText = data["tipo_equipo"]
+                document.getElementById("marca").innerText = data["marca"]
+                document.getElementById("modelo").innerText = data["modelo"]
+                document.getElementById("serie").innerText = data["num_serie"]
+                document.getElementById("estado").innerText = data["estado"]
+                document.getElementById("fecha").innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                document.getElementById("observaciones").innerText = data["observaciones"]
             }
         }
 

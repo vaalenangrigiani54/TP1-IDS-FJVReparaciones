@@ -16,32 +16,31 @@
     <button id="btn-cerrar-sesion"class="btn btn-danger" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     <h2 id="bienvenida">BIENVENIDO/A:</h2> <!-- Esto se actualiza después en la función show_data() -->
     <h3>Estos son los equipos que has mandado a revisar/arreglar desde que te inscribiste:</h3>
-    <h3>Haz click en cualquier equipo para ver su información y las observaciones:</h3>
-
-    <table id="table" class="table table-hover">
-        <tr class="table-dark">
-            <th>#</th>
-            <th>Equipo</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Estado</th>
-            <th>Nombre del técnico</th>
-            <th>Fecha de ingreso</th>
-        </tr>
-    </table>
+    <h3>(Haz click en cualquier equipo para ver su información y las observaciones)</h3>
+    <br>
+    <div class="t-div">
+        <table id="table" class="table table-bordered" cellpadding="7">
+            <tr class="table-dark">
+                <th>#</th>
+                <th>Equipo</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Estado</th>
+                <th>Nombre del técnico</th>
+                <th>Fecha de ingreso</th>
+            </tr>
+        </table>
+    </div>
 
     <footer class="footer">
-        <footer class="footer">
-          <p id="info">
-            Contactos:<br>
+        <p id="info">
+            <b>Contactos:</b><br>
             Facundo Matías Cardogna: +54 9 11 1234-5678<br>
             Jesús Miguel Fernández Bozo: +54 9 11 1010-0101<br>
             Valentín Angrigiani: +54 9 2227 98-7654<br><br>
             &copy; 2024 FJV Reparaciones. Todos los derechos reservados.
-          </p>
-        </footer>
-      </footer>
-  
+        </p>
+    </footer>
 
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
@@ -67,30 +66,32 @@
         }
 
         function show_data(data) {
-            session_clientname = data["nombre_cliente"]
             bienvenido = document.getElementById("bienvenida")
-            bienvenido.innerText = `BIENVENIDO/A: ${session_clientname}`
+            bienvenido.innerText = `BIENVENIDO/A: ${data["session_clientname"]}`
 
             // Agrego la tabla de todos los equipos que el cliente mandó a arreglar/revisar
-            equiposData = data["equipos"]
             tabla = document.getElementById("table")
+            equiposData = data["equipos"]
 
             for (let i = 0; i < equiposData.length; i++) {
                 equipo = document.createElement("tr")
+                equipo.setAttribute("style", "cursor: pointer")
                 equipo.onclick = function() {
                     fetch(`http://127.0.0.1:5000/set_deviceInfoID/${equiposData[i]["id"]}`)
                     .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/cliente/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
                 }
-                if (equiposData[i]["estado"] == "En Revisión/Reparación") {
-                    equipo.setAttribute('class', 'table-warning')
+
+                if (equiposData[i]["estado"] == "En revisión/reparación") {
+                    equipo.setAttribute("class", "revision")
                 } else if (equiposData[i]["estado"] == "Reparado") {
-                    equipo.setAttribute('class', 'table-succes')
+                    equipo.setAttribute("class", "reparado")
                 } else if (equiposData[i]["estado"] == "No Reparado") {
-                    equipo.setAttribute('class', 'table-danger')
+                    equipo.setAttribute("class", "no-reparado")
                 }
                 
                 columnID = document.createElement("td")
+                columnID.setAttribute("class", "ids-dates")
                 columnID.innerText = equiposData[i]["id"]
                 equipo.append(columnID)
 
@@ -118,6 +119,7 @@
                 date = new Date(equiposData[i]["fecha_ingreso"])
                 columnDATE = document.createElement("td")
                 columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                columnDATE.setAttribute("class", "ids-dates")
                 equipo.append(columnDATE)
 
                 tabla.append(equipo)
