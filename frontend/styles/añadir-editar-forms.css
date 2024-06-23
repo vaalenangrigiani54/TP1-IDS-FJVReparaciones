@@ -40,7 +40,7 @@
 .textarea {
     resize: none;
     font-size: 1.1em;
-    border: .1em solid rgb(180, 180, 100);
+    border: .1em solid lightgray;
     border-radius: 10px;
     padding: 1em;
     height: 12em;
@@ -56,4 +56,57 @@
 .form-button {
     font-size: 1.15em;
     font-weight: bold;
+}
+
+#editClient {
+    justify-content: space-around;
+    width: 40em;
+    height: 20em;
+    font-size: 1.15em;
+}
+
+#addClient {
+    justify-content: space-around;
+    width: 40em;
+    height: 17em;
+    font-size: 1.15em;  
+}
+.div-form-cliente { 
+    background-color: #f8c2fa;
+    border-color: lightgrey;
+}
+
+#addDevice {
+    width: 43em;
+    height: 25em;
+    margin-bottom: 2em;
+    font-size: 1.15em; 
+}
+
+.div-form-usuarios {
+    background-color: #caffbf;
+    border-color: #007700;
+}
+
+#editUser{
+    width: 40em;
+    height: 25em;
+    margin-bottom: 2em;
+    font-size: 1.15em; 
+}
+
+#addUser{
+    width: 40em;
+    height: 20em;
+    margin-bottom: 2em;
+    font-size: 1.15em; 
+}
+
+.h3-equipos {
+    margin-top: 0;
+}
+
+.card-user-body{
+    min-width: 10em;
+    min-height: 10em;
 }
