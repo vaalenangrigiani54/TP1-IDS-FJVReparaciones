@@ -14,9 +14,10 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding-right: 7em;
 }
 
-.container {
+.info-equipo{
     display: flex;
     width: 65em;
 }
@@ -24,6 +25,7 @@
 .div-data {
     display: flex;
     flex-direction: row;
+    
 }
 
 .div-data-text {
@@ -44,4 +46,23 @@
     justify-content: center;
     margin-top: 2em;
     margin-bottom: 2em;
+}
+
+.card-client {
+    min-width: 26em;
+    min-height: 26em;
+}
+
+.card-user {
+    max-width: 40em;
+    min-height: 23em;
+    max-height: 23em;   
+    margin-bottom: 2em;
+
+}
+
+.card-user .card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
