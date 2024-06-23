@@ -1,32 +1,33 @@
-h3{
+h3 {
     font-size: 1.5em;
     margin-bottom: 0;
 }
 
-h2{
+h2 {
     margin-left: .5em;
 }
 
-t
-
 .btn-add{
-    width: 13em;
+    width: 14em;
+    font-size: 1.2em;
+    font-weight: bold;
     justify-self: flex-end;
     align-self: flex-end;
     margin-top: .5em;
     margin-left: .5em;
     margin-bottom: .3em;
-    margin-right: .5em;
+    margin-right: .7em;
 }
 
-.tab-info{
+.tab-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-left: 1.5em;
-    margin-right: .5em;
+    margin-right: 1.5em;
     margin-bottom: .6em;
-    h3{
+
+    h3 {
         font-family: "Roboto", sans-serif;
         font-size: 1.5em;
         margin-bottom: 0;

@@ -13,24 +13,19 @@
 </head>
 <body>
     <img class="header" src="../header.jpg" alt="Header, logo de la empresa">
-    <button id="btn-cerrar-sesion"class="btn btn-danger" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
-    <br>
+    <button id="btn-cerrar-sesion" class="btn btn-danger" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     <h2 id="bienvenida">BIENVENIDO/A:</h2> <!-- Esto se actualiza después en la función show_data() -->
-    
-    
-    
 
     <div class="tab-info">
-            <h3>Haz click en el nombre de un equipo para ver su información...</h3>
-            <div class="tab-btns">       
-                <button class="btn btn-primary btn-add" id="addClient" onclick=goToAddClient()>Registrar un nuevo cliente</button>
-                <button class="btn btn-info btn-add" id="addClient" onclick=goToAddDevice()>Registrar un nuevo equipo</button>
+        <h3>Haz click en el tipo del equipo o en el cliente para ver la respectiva información...</h3>
+        <div class="tab-btns">       
+            <button class="btn btn-primary btn-add" id="addClient" onclick=goToAddClient()>Registrar un nuevo cliente</button>
+            <button class="btn btn-info btn-add" id="addClient" onclick=goToAddDevice()>Registrar un nuevo equipo</button>
         </div>
- 
     </div>
 
     <div class="t-div">
-        <table class="table">
+        <table class="table table-bordered" id="table" cellpadding="7">
             <tr class="table-dark">
                 <th>ID</th>
                 <th>Equipo</th>
@@ -44,16 +39,14 @@
     </div>
 
     <footer class="footer">
-        <footer class="footer">
-          <p id="info">
-            Contactos:<br>
+        <p id="info">
+            <b>Contactos:</b><br>
             Facundo Matías Cardogna: +54 9 11 1234-5678<br>
             Jesús Miguel Fernández Bozo: +54 9 11 1010-0101<br>
             Valentín Angrigiani: +54 9 2227 98-7654<br><br>
             &copy; 2024 FJV Reparaciones. Todos los derechos reservados.
-          </p>
-        </footer>
-      </footer>
+        </p>
+    </footer>
 
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
@@ -79,9 +72,8 @@
         }
 
         function show_data(data) {
-            session_username = data["nombre_usuario"]
             bienvenido = document.getElementById("bienvenida")
-            bienvenido.innerText = `BIENVENIDO/A: ${session_username}`
+            bienvenido.innerText = `BIENVENIDO/A: ${data["session_username"]}`
 
             // Agrego los equipos que el técnico administra
             tabla = document.getElementById("table")
@@ -89,27 +81,28 @@
 
             for (let i = 0; i < equiposData.length; i++) {
                 equipo = document.createElement("tr")
-                if (equiposData[i]["estado"] == "En Revisión/Reparación") {
-                    equipo.setAttribute('class', 'table-warning')
-                } else if (equiposData[i]["estado"] == "Reparado") {
-                    equipo.setAttribute('class', 'table-succes')
-                } else if (equiposData[i]["estado"] == "No Reparado") {
-                    equipo.setAttribute('class', 'table-danger')
-                }
                 
+                if (equiposData[i]["estado"] == "En revisión/reparación") {
+                    equipo.setAttribute("class", "revision")
+                } else if (equiposData[i]["estado"] == "Reparado") {
+                    equipo.setAttribute("class", "reparado")
+                } else if (equiposData[i]["estado"] == "No Reparado") {
+                    equipo.setAttribute("class", "no-reparado")
+                }
+
                 columnID = document.createElement("td")
+                columnID.setAttribute("class", "ids-dates")
                 columnID.innerText = equiposData[i]["id"]
                 equipo.append(columnID)
-                
-                linkDEVICE = document.createElement("a")
-                linkDEVICE.innerText = equiposData[i]["tipo_equipo"]
-                linkDEVICE.onclick = function() {
+
+                columnDEVICETYPE = document.createElement("td")
+                columnDEVICETYPE.innerText = equiposData[i]["tipo_equipo"]
+                columnDEVICETYPE.setAttribute("class", "hrefs")
+                columnDEVICETYPE.onclick = function() {
                     fetch(`http://127.0.0.1:5000/set_deviceInfoID/${equiposData[i]["id"]}`)
                     .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
                 }
-                columnDEVICETYPE = document.createElement("td")
-                columnDEVICETYPE.append(linkDEVICE)
                 equipo.append(columnDEVICETYPE)
                 
                 columnBRAND = document.createElement("td")
@@ -124,16 +117,18 @@
                 columnSTATUS.innerText = equiposData[i]["estado"]
                 equipo.append(columnSTATUS)
 
-                linkCLIENT = document.createElement("a")
-                linkCLIENT.innerText = equiposData[i]["nombre_cliente"]
-                linkCLIENT.setAttribute("href", `http://localhost:8000/tecnico/informacionCliente?id=${equiposData[i]["id_cliente"]}&sessionID=${sessionID}`)
                 columnCLIENTNAME = document.createElement("td")
-                columnCLIENTNAME.append(linkCLIENT)
+                columnCLIENTNAME.innerText = equiposData[i]["nombre_cliente"]
+                columnCLIENTNAME.setAttribute("class", "hrefs")
+                columnCLIENTNAME.onclick = function() {
+                    window.location.href = `http://localhost:8000/tecnico/informacionCliente?id=${equiposData[i]["id_cliente"]}&sessionID=${sessionID}`
+                }
                 equipo.append(columnCLIENTNAME)
 
                 date = new Date(equiposData[i]["fecha_ingreso"])
                 columnDATE = document.createElement("td")
                 columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                columnDATE.setAttribute("class", "ids-dates")
                 equipo.append(columnDATE)
 
                 tabla.append(equipo)
