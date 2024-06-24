@@ -74,6 +74,7 @@ def verify_deviceInfoID(id):
 def set_deviceInfoID(id):
     global DEVICE_INFO_ID
     DEVICE_INFO_ID = int(id)
+    return ["ID seteada con éxito"]
 
 
 #======================================================================================================================================================#
