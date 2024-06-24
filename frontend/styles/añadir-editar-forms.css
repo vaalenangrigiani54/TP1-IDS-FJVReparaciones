@@ -40,7 +40,7 @@
 .textarea {
     resize: none;
     font-size: 1.1em;
-    border: .1em solid lightgray;
+    border: .1em solid rgb(100, 100, 100);
     border-radius: 10px;
     padding: 1em;
     height: 12em;
@@ -68,12 +68,13 @@
 #addClient {
     justify-content: space-around;
     width: 40em;
-    height: 17em;
+    height: 15em;
     font-size: 1.15em;  
 }
+
 .div-form-cliente { 
-    background-color: #f8c2fa;
-    border-color: lightgrey;
+    background-color: #FFCCFF;
+    border-color: #FF00FF;
 }
 
 #addDevice {

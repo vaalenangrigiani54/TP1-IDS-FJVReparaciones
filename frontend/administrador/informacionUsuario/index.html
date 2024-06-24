@@ -28,7 +28,7 @@
         <div class="card-body card-content">
                 <div class="div-data">
                     <div class="div-data-text" style="font-size: 1.3em"><b>Nombre completo:</b></div>
-                    <div style="font-size: 1.3em" id="cliente"></div>
+                    <div style="font-size: 1.3em" id="nombre"></div>
                 </div>
                 <div class="div-data">
                     <div class="div-data-text" style="font-size: 1.3em"><b>Correo electrónico:</b></div>
@@ -39,6 +39,16 @@
                     <div style="font-size:1.3em" id="fecha"></div>
             </div>
         </div>
+    </div>
+
+    <p id="rango-big">Este usuario es un -</p>
+
+    <div class="t-div" style="margin-top: 0; margin-bottom: 1em">
+        <table class="table table-bordered" id="table" cellpadding="7">
+            <tr class="table-dark" id="headers">
+
+            </tr>
+        </table>
     </div>
 
     <footer class="footer">
@@ -86,18 +96,16 @@
             } else {
                 date = new Date(data["fecha_ingreso"])
                 document.getElementById("titleInfo").innerText = `Información del usuario #${data["id"]}:`
-                document.getElementById("nombre").innerText = `Nombre completo: ${data["nombre_usuario"]}`
-                document.getElementById("email").innerText = `Correo electrónico: ${data["email"]}`
-                document.getElementById("fecha").innerText = `Fecha de ingreso: ${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                document.getElementById("nombre").innerText = data["nombre_usuario"]
+                document.getElementById("email").innerText = data["email"]
+                document.getElementById("fecha").innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
 
-                infoRango = document.createElement("h3")
+                infoRango = document.getElementById("rango-big")
                 
                 if (data["rango"] == "Administrador") {
                     infoRango.innerText = "Este usuario es un administrador."
-                    document.body.append(infoRango)
                 } else {
-                    infoRango.innerText = "Este usuario es un técnico. Estos son los equipos que él agregó:"
-                    document.body.append(infoRango)
+                    infoRango.innerText = "Este usuario es un técnico. Estos son los equipos que él administra:"
 
                     fetch(`http://127.0.0.1:5000/tecnico/${id_usuario_info}`)
                     .then((res) => res.json())
@@ -109,11 +117,11 @@
 
         function show_devices_table(data) { // Esto solo si la información es de un técnico
             //Agrego los encabezados de la tabla
-            tabla = document.createElement("table")
+            tabla = document.getElementById("table")
             tabla.setAttribute("border", 1)
-            tabla.setAttribute("cellpadding", 8)
+            tabla.setAttribute("cellpadding", 7)
 
-            fila = document.createElement("tr")
+            fila = document.getElementById("headers")
 
             headerID = document.createElement("th")
             headerID.innerText = "ID"
@@ -146,17 +154,23 @@
             headerDATE = document.createElement("th")
             headerDATE.innerText = "Fecha de ingreso"
             fila.append(headerDATE)
-            
-            tabla.append(fila)
-            document.body.append(tabla)
 
             //Agrego la información de los equipos del técnico
             equiposData = data["equipos"]
 
             for (let i = 0; i < equiposData.length; i++) {
                 equipo = document.createElement("tr")
+
+                if (equiposData[i]["estado"] == "En revisión/reparación") {
+                    equipo.setAttribute("class", "revision")
+                } else if (equiposData[i]["estado"] == "Reparado") {
+                    equipo.setAttribute("class", "reparado")
+                } else if (equiposData[i]["estado"] == "No Reparado") {
+                    equipo.setAttribute("class", "no-reparado")
+                }
                 
                 columnID = document.createElement("td")
+                columnID.setAttribute("class", "ids-dates")
                 columnID.innerText = equiposData[i]["id"]
                 equipo.append(columnID)
 
@@ -186,6 +200,7 @@
 
                 date = new Date(equiposData[i]["fecha_ingreso"])
                 columnDATE = document.createElement("td")
+                columnDATE.setAttribute("class", "ids-dates")
                 columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
                 equipo.append(columnDATE)
 

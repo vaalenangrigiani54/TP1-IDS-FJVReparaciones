@@ -13,12 +13,16 @@
 </head>
 <body>
     <img class="header" src="../header.jpg" alt="Header, logo de la empresa">
-    <button id="btn-cerrar-sesion"class="btn btn-danger" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+
+    <div class="info-top-btns" style="justify-content: end">
+        <button id="btn-cerrar-sesion"class="btn btn-danger" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
+    </div>
+    
     <h2 id="bienvenida">BIENVENIDO/A:</h2> <!-- Esto se actualiza después en la función show_data() -->
     <h3>Estos son los equipos que has mandado a revisar/arreglar desde que te inscribiste:</h3>
     <h3>(Haz click en cualquier equipo para ver su información y las observaciones)</h3>
-    <br>
-    <div class="t-div">
+    
+    <div class="t-div" style="margin-top: 2em">
         <table id="table" class="table table-bordered" cellpadding="7">
             <tr class="table-dark">
                 <th>#</th>
