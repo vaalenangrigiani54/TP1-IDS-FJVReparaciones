@@ -18,16 +18,7 @@
         <button class="btn btn-secondary" id="btn-go-back" onclick=GO_BACK()>Atrás</button>
         <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
-<!-- 
-    <h2>Información de tu equipo:</h2>
-    <p id="equipo">Tipo de equipo:</p>
-    <p id="marca">Marca:</p>
-    <p id="modelo">Modelo:</p>
-    <p id="serie">Número de serie:</p>
-    <p id="estado">Estado:</p>
-    <p id="fecha">Fecha de ingreso:</p>
-    <p id="observaciones">OBSERVACIONES:</p> -->
-
+    
     <div class="info-card card" style="margin-bottom: 2em;">
         <div class="card-header">
             <div class="div-h2 card-title">
@@ -121,19 +112,14 @@
         }
 
         function show_device_data(data) {
-            if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el usuario con la id en los query params
-                alert(data["Mensaje"])
-                window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
-            } else {
-                date = new Date(data["fecha_ingreso"])
-                document.getElementById("equipo").innerText = `Tipo de equipo: ${data["tipo_equipo"]}`
-                document.getElementById("marca").innerText = `Marca: ${data["marca"]}`
-                document.getElementById("modelo").innerText = `Modelo: ${data["modelo"]}`
-                document.getElementById("serie").innerText = `Número de serie: ${data["num_serie"]}`
-                document.getElementById("estado").innerText = `Estado: ${data["estado"]}`
-                document.getElementById("fecha").innerText = `Fecha de ingreso: ${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
-                document.getElementById("observaciones").innerText = `OBSERVACIONES: ${data["observaciones"]}`
-            }
+            date = new Date(data["fecha_ingreso"])
+            document.getElementById("equipo").innerText = data["tipo_equipo"]
+            document.getElementById("marca").innerText = data["marca"]
+            document.getElementById("modelo").innerText = data["modelo"]
+            document.getElementById("serie").innerText = data["num_serie"]
+            document.getElementById("estado").innerText = data["estado"]
+            document.getElementById("fecha").innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+            document.getElementById("observaciones").innerText = `${data["observaciones"]}`
         }
 
         function GO_BACK() {

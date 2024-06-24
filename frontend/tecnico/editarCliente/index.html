@@ -83,8 +83,7 @@
                 let elementos = document.getElementById("editClient").elements
                 elementos.nombre.value = data["nombre_cliente"]
                 elementos.email.value = data["email"]
-                document.getElementById("codigo").innerText =
-                    `Código de ingreso: ${data["codigo_ingreso"]} (No se puede modificar)`
+                document.getElementById("codigo").innerHTML = `<b>Código de ingreso:</b>  ${data["codigo_ingreso"]}  <b>(No se puede modificar)</b>`
             }
         }
 

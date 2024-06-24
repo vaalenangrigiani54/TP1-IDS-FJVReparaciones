@@ -24,24 +24,22 @@
                 <h2 id="titleInfo">Información del cliente #:</h2>
             </div>
         </div>
-        <div class="card-body container">
-            <div class="card-text div-info">
-                <div class="div-data">
-                    <div id="nombre" class="div-data-text" style="font-size: 1.3em"><b>Nombre: </b></div>
-                    <div style="font-size: 1.3em" id="cliente"></div>
-                </div>
-                <div class="div-data">
-                    <div id="email" class="div-data-text" style="font-size: 1.3em"><b>Correo electrónico:</b></div>
-                    <div style="font-size:1.3em" id="marca"></div>
-                </div>
-                <div class="div-data">
-                    <div id="codigo" class="div-data-text" style="font-size: 1.3em"><b>Código de ingreso:</b></div>
-                    <div style="font-size:1.3em" id="modelo"></div>
-                </div>
-                <div class="div-data">
-                    <div id="fecha" class="div-data-text" style="font-size: 1.3em"><b>Fecha de inscripción:</b></div>
-                    <div style="font-size:1.3em" id="serie"></div>
-                </div>
+        <div class="card-body container div-info">
+            <div class="div-data">
+                <div class="div-data-text" style="font-size: 1.3em"><b>Nombre:</b></div>
+                <div style="font-size: 1.3em" id="nombre"></div>
+            </div>
+            <div class="div-data">
+                <div class="div-data-text" style="font-size: 1.3em"><b>Correo electrónico:</b></div>
+                <div style="font-size:1.3em" id="email"></div>
+            </div>
+            <div class="div-data">
+                <div class="div-data-text" style="font-size: 1.3em"><b>Código de ingreso:</b></div>
+                <div style="font-size:1.3em" id="codigo"></div>
+            </div>
+            <div class="div-data">
+                <div class="div-data-text" style="font-size: 1.3em"><b>Fecha de inscripción:</b></div>
+                <div style="font-size:1.3em" id="fecha"></div>
             </div>
         </div>
     </div>
@@ -50,8 +48,9 @@
         <button class="btn btn-primary" style="font-size:1.2em; width:30em" onclick=goToEditClient()>Editar información del cliente</button>
     </div>
 
-    <h3>Estos son los equipos que él mandó a revisar/arreglar:</h3>
-    <div class="t-div">
+    <h3 style="margin-top:0; margin-bottom: .3em">Estos son los equipos que él mandó a revisar/arreglar:</h3>
+    
+    <div class="t-div" style="margin-bottom: 1em">
         <table id="table" class="table table-bordered" cellpadding="7">
             <tr class="table-dark">
                 <th>ID</th>
@@ -112,10 +111,10 @@
             } else {
                 date = new Date(data["fecha_inscripcion"])
                 document.getElementById("titleInfo").innerText = `Información del cliente #${data["id"]}:`
-                document.getElementById("nombre").innerText = `Nombre: ${data["nombre_cliente"]}`
-                document.getElementById("email").innerText = `Correo electrónico: ${data["email"]}`
-                document.getElementById("codigo").innerText = `Código de ingreso: ${data["codigo_ingreso"]}`
-                document.getElementById("fecha").innerText = `Fecha de inscripción: ${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                document.getElementById("nombre").innerText = data["nombre_cliente"]
+                document.getElementById("email").innerText = data["email"]
+                document.getElementById("codigo").innerText = data["codigo_ingreso"]
+                document.getElementById("fecha").innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
 
                 fetch(`http://127.0.0.1:5000/cliente/${id_cliente_info}`, {method: "GET"})
                 .then((res) => res.json())
@@ -131,7 +130,16 @@
             for (let i = 0; i < equiposData.length; i++) {
                 equipo = document.createElement("tr")
                 
+                if (equiposData[i]["estado"] == "En revisión/reparación") {
+                    equipo.setAttribute("class", "revision")
+                } else if (equiposData[i]["estado"] == "Reparado") {
+                    equipo.setAttribute("class", "reparado")
+                } else if (equiposData[i]["estado"] == "No Reparado") {
+                    equipo.setAttribute("class", "no-reparado")
+                }
+
                 columnID = document.createElement("td")
+                columnID.setAttribute("class", "ids-dates")
                 columnID.innerText = equiposData[i]["id"]
                 equipo.append(columnID)
 
@@ -161,6 +169,7 @@
 
                 date = new Date(equiposData[i]["fecha_ingreso"])
                 columnDATE = document.createElement("td")
+                columnDATE.setAttribute("class", "ids-dates")
                 columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
                 equipo.append(columnDATE)
 

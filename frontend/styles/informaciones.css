@@ -13,11 +13,11 @@
 .div-info {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     padding-right: 7em;
 }
 
-.info-equipo{
+.info-equipo {
     display: flex;
     width: 65em;
 }
@@ -49,20 +49,28 @@
 }
 
 .card-client {
-    min-width: 26em;
-    min-height: 26em;
+    min-width: 27em;
+    min-height: 25em;
 }
 
 .card-user {
     max-width: 40em;
     min-height: 23em;
-    max-height: 23em;   
+    max-height: 23em;
+    margin-top: 1em;
     margin-bottom: 2em;
-
 }
 
 .card-user .card-content {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+}
+
+#rango-big {
+    display: flex;
+    align-self: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 2em;
+    font-weight: bold;
 }

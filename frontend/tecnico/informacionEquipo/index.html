@@ -139,6 +139,8 @@
         }
 
         function goToEditDevice() {
+            fetch(`http://127.0.0.1:5000/set_deviceInfoID/${id_equipo_info}`)
+                .catch((error) => console.log(`ERROR: ${error}`))
             window.location.href = `http://localhost:8000/tecnico/editarEquipo?id=${id_equipo_info}&sessionID=${sessionID}`
         }
 
