@@ -59,7 +59,7 @@
                 </select>
             </div>
             <div class="label-textarea">
-                <label class="label" for="observaciones"><b>Añadir una descripción/observación:</b></label>
+                <label class="label" for="observaciones"><b>(Opcional) Añadir una descripción/observación:</b></label>
                 <textarea class="textarea" id="observaciones" placeholder="-"></textarea>
             </div>
         </form>
@@ -76,6 +76,7 @@
         </p>
     </footer>
 
+    <script src="../../auxiliar_functions.js" type="text/javascript">//Importo esto para poder validar el email</script>
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         let id_equipo_a_editar = new URLSearchParams(window.location.search).get("id")
@@ -142,10 +143,12 @@
             let serieIngresada = elementos.serie.value
             let estadoIngresado = elementos.estado.value
             let observacionIngresada = elementos.observaciones.value
-            if (emailIngresado == '' || marcaIngresada == '' || modeloIngresado == ''|| serieIngresada==''){
+
+            if (emailIngresado == "" || marcaIngresada == "" || modeloIngresado == "" || serieIngresada == "") {
                 alert("Por favor, completa todos los campos.")
-            }
-            else{
+            } else if (!validate_email(emailIngresado)) {
+                alert("El correo electrónico ingresado no es válido.")
+            } else {
                 fetch(`http://127.0.0.1:5000/acciones_equipo/${id_equipo_a_editar}`, {
                     method: "PUT",
                     headers: {
