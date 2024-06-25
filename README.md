@@ -17,3 +17,9 @@ sudo -u postgres createdb --owner=usuario nombre_base_de_datos<br>
 
 Y luego, para acceder a la base de datos con el usuario, usamos el comando:<br>
 sudo -u usuario psql nombre_base_de_datos
+
+
+
+
+y esto continua asi 
+
