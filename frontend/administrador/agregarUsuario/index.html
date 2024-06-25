@@ -56,6 +56,7 @@
         </p>
     </footer>
 
+    <script src="../../auxiliar_functions.js" type="text/javascript">//Importo esto para poder validar el email</script>
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
@@ -81,9 +82,11 @@
             let contraseniaIngresada = elementos.contrasenia.value
             let rangoIngresado = elementos.rango.value
             
-            if (nombreIngresado == '' || emailIngresado == '' || contraseniaIngresada == '' || rangoIngresado == ''){
+            if (nombreIngresado == "" || emailIngresado == "" || contraseniaIngresada == "") {
                 alert("Por favor, completa todos los campos.")
-            }else{
+            } else if (!validate_email(emailIngresado)) {
+                alert("El correo electrónico ingresado no es válido.")
+            } else {
                 fetch("http://127.0.0.1:5000/acciones_usuario/0", {
                     method: "POST",
                     headers: {
