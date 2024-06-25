@@ -71,6 +71,7 @@
         </p>
     </footer>
 
+    <script src="../../format_date.js" type="text/javascript">//Importo esto para poder formatear las fechas</script>
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         let id_equipo_info = new URLSearchParams(window.location.search).get("id")
@@ -112,13 +113,12 @@
         }
 
         function show_device_data(data) {
-            date = new Date(data["fecha_ingreso"])
             document.getElementById("equipo").innerText = data["tipo_equipo"]
             document.getElementById("marca").innerText = data["marca"]
             document.getElementById("modelo").innerText = data["modelo"]
             document.getElementById("serie").innerText = data["num_serie"]
             document.getElementById("estado").innerText = data["estado"]
-            document.getElementById("fecha").innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+            document.getElementById("fecha").innerText = format_date(data["fecha_ingreso"])
             document.getElementById("observaciones").innerText = `${data["observaciones"]}`
         }
 
