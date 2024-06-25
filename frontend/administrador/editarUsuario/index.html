@@ -104,24 +104,24 @@
             let contraseniaIngresada = elementos.contrasenia.value
             let rangoIngresado = elementos.rango.value
             
-            if (nombreIngresado == '' || emailIngresado == ''|| contraseniaIngresada == '' || rangoIngresado == ''){
+            if (nombreIngresado == '' || emailIngresado == '' || contraseniaIngresada == '' || rangoIngresado == ''){
                 alert("Por favor, completa todos los campos.")
             } else {
                 fetch(`http://127.0.0.1:5000/acciones_usuario/${id_usuario_a_editar}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    nombre_usuario: nombreIngresado,
-                    email: emailIngresado,
-                    contrasenia: contraseniaIngresada,
-                    rango: rangoIngresado,
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        nombre_usuario: nombreIngresado,
+                        email: emailIngresado,
+                        contrasenia: contraseniaIngresada,
+                        rango: rangoIngresado,
+                    })
                 })
-            })
-            .then((res) => res.json())
-            .then(handle_response)
-            .catch((error) => console.log("ERROR", error))
+                .then((res) => res.json())
+                .then(handle_response)
+                .catch((error) => console.log("ERROR", error))
             }
         }
 
