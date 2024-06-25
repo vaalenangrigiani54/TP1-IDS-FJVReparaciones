@@ -46,6 +46,7 @@
         </p>
     </footer>
 
+    <script src="../format_date.js" type="text/javascript">//Importo esto para poder formatear las fechas</script>
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
@@ -120,9 +121,8 @@
                 columnTECHNAME.innerText = equiposData[i]["nombre_tecnico"]
                 equipo.append(columnTECHNAME)
 
-                date = new Date(equiposData[i]["fecha_ingreso"])
                 columnDATE = document.createElement("td")
-                columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                columnDATE.innerText = format_date(equiposData[i]["fecha_ingreso"])
                 columnDATE.setAttribute("class", "ids-dates")
                 equipo.append(columnDATE)
 
