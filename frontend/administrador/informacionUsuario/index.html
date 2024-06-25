@@ -61,6 +61,7 @@
         </p>
     </footer>
 
+    <script src="../../format_date.js" type="text/javascript">//Importo esto para poder formatear las fechas</script>
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         let id_usuario_info = new URLSearchParams(window.location.search).get("id")
@@ -94,11 +95,10 @@
                 alert(data["Mensaje"])
                 window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
             } else {
-                date = new Date(data["fecha_ingreso"])
                 document.getElementById("titleInfo").innerText = `Información del usuario #${data["id"]}:`
                 document.getElementById("nombre").innerText = data["nombre_usuario"]
                 document.getElementById("email").innerText = data["email"]
-                document.getElementById("fecha").innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                document.getElementById("fecha").innerText = format_date(data["fecha_ingreso"])
 
                 infoRango = document.getElementById("rango-big")
                 
@@ -198,10 +198,9 @@
                 columnCLIENTNAME.innerText = equiposData[i]["nombre_cliente"]
                 equipo.append(columnCLIENTNAME)
 
-                date = new Date(equiposData[i]["fecha_ingreso"])
                 columnDATE = document.createElement("td")
                 columnDATE.setAttribute("class", "ids-dates")
-                columnDATE.innerText = `${date.toLocaleDateString('pt-PT')} - ${date.getHours()}:${date.getMinutes()}`
+                columnDATE.innerText = format_date(equiposData[i]["fecha_ingreso"])
                 equipo.append(columnDATE)
 
                 tabla.append(equipo)
