@@ -118,24 +118,27 @@
             let marcaIngresada = elementos.marca.value
             let modeloIngresado = elementos.modelo.value
             let serieIngresada = elementos.serie.value
-            
-            fetch(`http://127.0.0.1:5000/acciones_equipo/0`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email_cliente: emailIngresado,
-                    tipo_equipo: equipoIngresado,
-                    marca: marcaIngresada,
-                    modelo: modeloIngresado,
-                    num_serie: serieIngresada,
-                    id_tecnico: sessionID
+            if (equipoIngresado == '' || emailIngresado == '' || marcaIngresada == '' || modeloIngresado == ''|| serieIngresada=='' ){
+                alert("Por favor, completa todos los campos.")
+            }else{
+                fetch(`http://127.0.0.1:5000/acciones_equipo/0`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email_cliente: emailIngresado,
+                        tipo_equipo: equipoIngresado,
+                        marca: marcaIngresada,
+                        modelo: modeloIngresado,
+                        num_serie: serieIngresada,
+                        id_tecnico: sessionID
+                    })
                 })
-            })
-            .then((res) => res.json())
-            .then(handle_response)
-            .catch((error) => console.log("ERROR", error))
+                .then((res) => res.json())
+                .then(handle_response)
+                .catch((error) => console.log("ERROR", error))
+            }
         }
 
         function handle_response(data) {
