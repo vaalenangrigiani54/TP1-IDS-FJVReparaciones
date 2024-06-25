@@ -19,34 +19,6 @@
         <button class="btn btn-secondary" id="btn-go-back" onclick=GO_BACK()>Atrás</button>
         <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
-<!--     
-    <h2>Agregar un nuevo equipo:</h2>
-
-        <form id="addDevice">
-        <label for="client_email">*Correo electrónico del cliente:</label>
-        <input type="email" id="client_email" placeholder="ejemplo@example.com" required><br><br>
-
-        <label for="equipo">Seleccione el tipo del equipo:</label>
-        <select id="equipo">
-            <option value="Computadora de escritorio">Computadora de escritorio</option>
-            <option value="Computadora portátil">Computadora portátil</option>
-            <option value="Celular">Celular</option>
-            <option value="Tablet">Tablet</option>
-            <option value="Impresora">Impresora</option>
-        </select><br><br>
-
-        <label for="marca">*Marca:</label>
-        <input type="text" id="marca" required><br><br>
-
-        <label for="modelo">*Modelo:</label>
-        <input type="text" id="modelo" required><br><br>
-
-        <label for="serie">*Número de serie:</label>
-        <input type="text" id="serie" required><br><br>
-
-        <br>
-        <input type="button" value="Agregar equipo" onclick=add_device()> -->
-    </form>
 
     <div class="div-form ">
         <p class="form-title">Agregar un nuevo equipo:<p></p>
@@ -93,6 +65,7 @@
         </p>
     </footer>
 
+    <script src="../../auxiliar_functions.js" type="text/javascript">//Importo esto para poder validar el email</script>
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
 
@@ -118,9 +91,12 @@
             let marcaIngresada = elementos.marca.value
             let modeloIngresado = elementos.modelo.value
             let serieIngresada = elementos.serie.value
-            if (equipoIngresado == '' || emailIngresado == '' || marcaIngresada == '' || modeloIngresado == ''|| serieIngresada=='' ){
+            
+            if (emailIngresado == "" || marcaIngresada == "" || modeloIngresado == "" || serieIngresada == "" ) {
                 alert("Por favor, completa todos los campos.")
-            }else{
+            } else if (!validate_email(emailIngresado)) {
+                alert("El correo electrónico ingresado no es válido.")
+            } else {
                 fetch(`http://127.0.0.1:5000/acciones_equipo/0`, {
                     method: "POST",
                     headers: {
