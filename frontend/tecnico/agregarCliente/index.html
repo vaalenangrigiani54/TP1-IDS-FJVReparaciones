@@ -68,20 +68,23 @@
             let elementos = document.getElementById("addClient").elements
             let nombreIngresado = elementos.nombre.value
             let emailIngresado = elementos.email.value
-            
-            fetch("http://127.0.0.1:5000/acciones_cliente/0", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    nombre_cliente: nombreIngresado,
-                    email: emailIngresado
+            if (nombreIngresado == '' || emailIngresado == ''){
+                alert("Por favor, completa todos los campos.")
+            }else{   
+                fetch("http://127.0.0.1:5000/acciones_cliente/0", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        nombre_cliente: nombreIngresado,
+                        email: emailIngresado
+                    })
                 })
-            })
-            .then((res) => res.json())
-            .then(handle_response)
-            .catch((error) => console.log("ERROR", error))
+                .then((res) => res.json())
+                .then(handle_response)
+                .catch((error) => console.log("ERROR", error))
+            }
         }
 
         function handle_response(data) {
