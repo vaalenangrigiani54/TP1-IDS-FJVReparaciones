@@ -46,6 +46,7 @@
         </p>
     </footer>
 
+    <script src="../../auxiliar_functions.js" type="text/javascript">//Importo esto para poder validar el email</script>
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
@@ -68,9 +69,12 @@
             let elementos = document.getElementById("addClient").elements
             let nombreIngresado = elementos.nombre.value
             let emailIngresado = elementos.email.value
-            if (nombreIngresado == '' || emailIngresado == ''){
+
+            if (nombreIngresado == "" || emailIngresado == "") {
                 alert("Por favor, completa todos los campos.")
-            }else{   
+            } else if (!validate_email(emailIngresado)) {
+                alert("El correo electrónico ingresado no es válido.")
+            } else {
                 fetch("http://127.0.0.1:5000/acciones_cliente/0", {
                     method: "POST",
                     headers: {
