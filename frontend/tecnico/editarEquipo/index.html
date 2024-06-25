@@ -142,28 +142,29 @@
             let serieIngresada = elementos.serie.value
             let estadoIngresado = elementos.estado.value
             let observacionIngresada = elementos.observaciones.value
-            if (observacionIngresada == "") {
-                observacionIngresada = "-"
+            if (emailIngresado == '' || marcaIngresada == '' || modeloIngresado == ''|| serieIngresada==''){
+                alert("Por favor, completa todos los campos.")
             }
-            
-            fetch(`http://127.0.0.1:5000/acciones_equipo/${id_equipo_a_editar}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email_cliente: emailIngresado,
-                    tipo_equipo: equipoIngresado,
-                    marca: marcaIngresada,
-                    modelo: modeloIngresado,
-                    num_serie: serieIngresada,
-                    estado: estadoIngresado,
-                    observaciones: observacionIngresada
+            else{
+                fetch(`http://127.0.0.1:5000/acciones_equipo/${id_equipo_a_editar}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email_cliente: emailIngresado,
+                        tipo_equipo: equipoIngresado,
+                        marca: marcaIngresada,
+                        modelo: modeloIngresado,
+                        num_serie: serieIngresada,
+                        estado: estadoIngresado,
+                        observaciones: observacionIngresada
+                    })
                 })
-            })
-            .then((res) => res.json())
-            .then(handle_response)
-            .catch((error) => console.log("ERROR", error))
+                .then((res) => res.json())
+                .then(handle_response)
+                .catch((error) => console.log("ERROR", error))
+            }    
         }
 
         function handle_response(data) {
