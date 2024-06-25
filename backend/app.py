@@ -150,13 +150,17 @@ def administrador(id):
         usuarios = Usuarios.query.where(Usuarios.id != -1).order_by(Usuarios.id).all()
         
         for usuario in usuarios:
+            fechaAux = usuario.fecha_ingreso
+            fecha = {"dia": fechaAux.day, "mes": fechaAux.month, "anio": fechaAux.year, "horas": fechaAux.hour, "minutos": fechaAux.minute}
+            
             usuarioData = {
                 "id": usuario.id,
                 "nombre_usuario": usuario.nombre_usuario,
                 "email": usuario.email,
                 "rango": usuario.rango,
-                "fecha_ingreso": usuario.fecha_ingreso
+                "fecha_ingreso": fecha
             }
+            
             if usuario.id == id:
                 data["session_username"] = usuario.nombre_usuario
                 data["usuarios"][0] = usuarioData # Aquí es donde lo inserto en la primera posición
@@ -185,6 +189,9 @@ def tecnico(id):
         data["session_username"] = usuario.nombre_usuario
         
         for (equipo, nombre_cliente) in equipos:
+            fechaAux = equipo.fecha_ingreso
+            fecha = {"dia": fechaAux.day, "mes": fechaAux.month, "anio": fechaAux.year, "horas": fechaAux.hour, "minutos": fechaAux.minute}
+            
             equipoData = {
                 "id": equipo.id,
                 "tipo_equipo": equipo.tipo_equipo,
@@ -195,7 +202,7 @@ def tecnico(id):
                 "observaciones": equipo.observaciones,
                 "id_cliente": equipo.id_cliente,
                 "nombre_cliente": nombre_cliente,
-                "fecha_ingreso": equipo.fecha_ingreso
+                "fecha_ingreso": fecha
             }
             data["equipos"].append(equipoData)
           
@@ -221,6 +228,9 @@ def cliente(id):
         data["session_clientname"] = cliente.nombre_cliente
         
         for (equipo, nombre_tecnico) in equipos:
+            fechaAux = equipo.fecha_ingreso
+            fecha = {"dia": fechaAux.day, "mes": fechaAux.month, "anio": fechaAux.year, "horas": fechaAux.hour, "minutos": fechaAux.minute}
+            
             equipoData = {
                 "id": equipo.id,
                 "tipo_equipo": equipo.tipo_equipo,
@@ -230,7 +240,7 @@ def cliente(id):
                 "estado": equipo.estado,
                 "observaciones": equipo.observaciones,
                 "nombre_tecnico": nombre_tecnico,
-                "fecha_ingreso": equipo.fecha_ingreso
+                "fecha_ingreso": fecha
             }
             data["equipos"].append(equipoData)
 
@@ -249,13 +259,17 @@ def acciones_usuario(id):
     try:
         if request.method == "GET": # Para ver la información del usuario
             usuario = Usuarios.query.get(id)
+            
+            fechaAux = usuario.fecha_ingreso
+            fecha = {"dia": fechaAux.day, "mes": fechaAux.month, "anio": fechaAux.year, "horas": fechaAux.hour, "minutos": fechaAux.minute}
+            
             return {
                 "id": usuario.id,
                 "nombre_usuario": usuario.nombre_usuario,
                 "email": usuario.email,
                 "contrasenia": usuario.contrasenia,
                 "rango": usuario.rango,
-                "fecha_ingreso": usuario.fecha_ingreso
+                "fecha_ingreso": fecha
             }
             
         elif request.method == "POST": # Para agregar un nuevo usuario (En este caso no se usa la id del parámetro)
@@ -316,28 +330,35 @@ def acciones_cliente(id):
         if request.method == "GET": # Para ver la información del cliente
             cliente = Clientes.query.get(id)
             
+            fechaAux = cliente.fecha_inscripcion
+            fecha = {"dia": fechaAux.day, "mes": fechaAux.month, "anio": fechaAux.year, "horas": fechaAux.hour, "minutos": fechaAux.minute}
+            
             return {
                 "id": cliente.id,
                 "nombre_cliente": cliente.nombre_cliente,
                 "email": cliente.email,
                 "codigo_ingreso": cliente.codigo_ingreso,
-                "fecha_inscripcion": cliente.fecha_inscripcion
+                "fecha_inscripcion": fecha
             }
         
         elif request.method == "POST": # Para agregar un nuevo cliente (En este caso no se usa la id del parámetro)
             data = request.json
             nuevo_nombre = data.get("nombre_cliente")
             nuevo_email = data.get("email")
+            nuevo_codigoIngreso = random.randrange(10000000, 99999999)
             
             if len(Clientes.query.where(Clientes.email == nuevo_email).all()) > 0:
                 return {"Mensaje": "El correo ingresado ya existe. Pruebe con otro distinto..."}
             else:
+                # Si de pura casualidad se genera un número aleatorio que ya existe en la base de datos, se cambia. (Esto igual se vuelve muy lento cuando hay decenas de millones de inscriptos)
+                # Para ello primero necesito obtener todos los códigos
                 clienteQuery = Clientes.query.all()
                 codigos = [cliente.codigo_ingreso for cliente in clienteQuery]
-                nuevo_codigoIngreso = codigos[0]
-                
-                while nuevo_codigoIngreso in codigos:
-                    nuevo_codigoIngreso = random.randrange(10000000, 99999999)
+                if len(codigos) >= 50000000: # Doy un poco de margen para que no sea tan lento. No pueden haber más de 50 millones de clientes
+                    return {"Mensaje": "FATAL", "MensajeCodigo": f"Base de datos colapsada"}
+                elif len(codigos) > 0:
+                    while nuevo_codigoIngreso in codigos:
+                        nuevo_codigoIngreso = random.randrange(10000000, 99999999)
                 
                 cliente = Clientes(
                     nombre_cliente = nuevo_nombre,
@@ -383,6 +404,9 @@ def acciones_equipo(id):
             email_cliente = equipoQuery[2]
             nombre_usuario = equipoQuery[3]
             
+            fechaAux = equipo.fecha_ingreso
+            fecha = {"dia": fechaAux.day, "mes": fechaAux.month, "anio": fechaAux.year, "horas": fechaAux.hour, "minutos": fechaAux.minute}
+            
             return {
                 "id": equipo.id,
                 "tipo_equipo": equipo.tipo_equipo,
@@ -394,7 +418,7 @@ def acciones_equipo(id):
                 "nombre_cliente": nombre_cliente,
                 "email_cliente": email_cliente,
                 "nombre_tecnico": nombre_usuario,
-                "fecha_ingreso": equipo.fecha_ingreso
+                "fecha_ingreso": fecha
             }
             
         elif request.method == "POST": # Para agregar un nuevo equipo (En este caso no se usa la id del parámetro)
