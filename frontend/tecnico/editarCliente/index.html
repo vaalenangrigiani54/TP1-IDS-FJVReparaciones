@@ -47,6 +47,7 @@
         </p>
     </footer>
 
+    <script src="../../auxiliar_functions.js" type="text/javascript">//Importo esto para poder validar el email</script>
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         let id_cliente_a_editar = new URLSearchParams(window.location.search).get("id")
@@ -91,9 +92,12 @@
             let elementos = document.getElementById("editClient").elements
             let nombreIngresado = elementos.nombre.value
             let emailIngresado = elementos.email.value
-            if (equipoIngresado == '' || emailIngresado == '' || marcaIngresada == '' || modeloIngresado == ''|| serieIngresada=='' ){
+
+            if (nombreIngresado == "" || emailIngresado == "") {
                 alert("Por favor, completa todos los campos.")
-            }else{
+            } else if (!validate_email(emailIngresado)) {
+                alert("El correo electrónico ingresado no es válido.")
+            } else {
                 fetch(`http://127.0.0.1:5000/acciones_cliente/${id_cliente_a_editar}`, {
                     method: "PUT",
                     headers: {
