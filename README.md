@@ -20,6 +20,3 @@ sudo -u usuario psql nombre_base_de_datos
 
 
 
-
-y esto continua asi 
-
