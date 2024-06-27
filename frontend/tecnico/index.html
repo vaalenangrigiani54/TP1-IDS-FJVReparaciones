@@ -104,7 +104,7 @@
                 columnDEVICETYPE.innerText = equiposData[i]["tipo_equipo"]
                 columnDEVICETYPE.setAttribute("class", "hrefs")
                 columnDEVICETYPE.onclick = function() {
-                    fetch(`http://127.0.0.1:5000/set_deviceInfoID/${equiposData[i]["id"]}`)
+                    fetch(`http://127.0.0.1:5000/set_InfoID/${equiposData[i]["id"]}/equipo`)
                     .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
                 }
@@ -126,6 +126,8 @@
                 columnCLIENTNAME.innerText = equiposData[i]["nombre_cliente"]
                 columnCLIENTNAME.setAttribute("class", "hrefs")
                 columnCLIENTNAME.onclick = function() {
+                    fetch(`http://127.0.0.1:5000/set_InfoID/${equiposData[i]["id_cliente"]}/cliente`)
+                    .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/tecnico/informacionCliente?id=${equiposData[i]["id_cliente"]}&sessionID=${sessionID}`
                 }
                 equipo.append(columnCLIENTNAME)
