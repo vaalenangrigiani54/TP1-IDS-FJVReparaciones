@@ -91,6 +91,8 @@
                 columnUSERNAME.innerText = usuariosData[i]["nombre_usuario"]
                 columnUSERNAME.setAttribute("class", "hrefs")
                 columnUSERNAME.onclick = function() {
+                    fetch(`http://127.0.0.1:5000/set_InfoID/${usuariosData[i]["id"]}/usuario`)
+                    .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/administrador/informacionUsuario?id=${usuariosData[i]["id"]}&sessionID=${sessionID}`
                 }
                 usuario.append(columnUSERNAME)

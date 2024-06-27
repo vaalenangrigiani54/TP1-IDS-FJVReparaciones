@@ -82,7 +82,7 @@
                 equipo = document.createElement("tr")
                 equipo.setAttribute("style", "cursor: pointer")
                 equipo.onclick = function() {
-                    fetch(`http://127.0.0.1:5000/set_deviceInfoID/${equiposData[i]["id"]}`)
+                    fetch(`http://127.0.0.1:5000/set_InfoID/${equiposData[i]["id"]}/equipo`)
                     .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/cliente/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
                 }

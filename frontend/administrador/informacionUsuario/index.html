@@ -83,6 +83,23 @@
             if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
             } else {
+                fetch(`http://127.0.0.1:5000/verify_InfoID/${id_usuario_info}/usuario`)
+                .then((res) => res.json())
+                .then(verify_InfoID)
+                .catch((error) => console.log("ERROR", error))
+            }
+        }
+
+        function verify_InfoID(response) {
+            if (response["ChangedParameter"] == true) {
+                if (response["UserInfoID"] === 0) { //Esto pasa porque se intentó entrar manualmente desde la página principal del administrador
+                    alert("No puedes entrar manualmente (cambiando la URL) a esta página...")
+                    window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
+                } else {
+                    alert("No se puede cambiar manualmente la id del usuario que se muestra...")
+                    window.location.href = `http://localhost:8000/administrador/informacionUsuario?id=${response["UserInfoID"]}&sessionID=${sessionID}`
+                }
+            } else {
                 fetch(`http://127.0.0.1:5000/acciones_usuario/${id_usuario_info}`, {method: "GET"})
                 .then((res) => res.json())
                 .then(show_user_data)
