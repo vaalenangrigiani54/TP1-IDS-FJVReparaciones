@@ -18,7 +18,9 @@ ADMIN_SESSION_ID = 0
 TECH_SESSION_ID = 0
 CLIENT_SESSION_ID = 0
 
-# Esta variable global sirve como control para no cambiar manualmente los query params de la id de un equipo
+# Estas variable global sirve como control para no cambiar manualmente los query params de la id de información del usuario/cliente/equipo
+USER_INFO_ID = 0
+CLIENT_INFO_ID = 0
 DEVICE_INFO_ID = 0
 
 
@@ -26,55 +28,77 @@ DEVICE_INFO_ID = 0
 # Endpoint auxiliar para resetear las variables globales cuando se cierra sesión
 @app.route("/reset_session")
 def reset_session():
-    global ADMIN_SESSION_ID, TECH_SESSION_ID, CLIENT_SESSION_ID, DEVICE_INFO_ID
+    global ADMIN_SESSION_ID, TECH_SESSION_ID, CLIENT_SESSION_ID, USER_INFO_ID, CLIENT_INFO_ID, DEVICE_INFO_ID
     ADMIN_SESSION_ID = 0
     TECH_SESSION_ID = 0
     CLIENT_SESSION_ID = 0
+    USER_INFO_ID = 0
+    CLIENT_INFO_ID = 0
     DEVICE_INFO_ID = 0
-    return []
+    return {"Mensaje": "SESSION RESET"}
 
 
 # Endpoint auxiliar para verificar si el usuario inició sesión o no
 # Se debe hacer fetch() al mismo en todas las páginas
-@app.route("/verify_session/<int:id>/<rango>")
+@app.route("/verify_session/<id>/<rango>")
 def verify_session(id, rango):
     global ADMIN_SESSION_ID, TECH_SESSION_ID, CLIENT_SESSION_ID
     response = {"Logged": False}
     
-    if id > 0:
-        if rango == "administrador":
-            if id == ADMIN_SESSION_ID:
-                response["Logged"] = True
-        elif rango == "tecnico":
-            if id == TECH_SESSION_ID:
-                response["Logged"] = True
-        elif rango == "cliente":
-            if id == CLIENT_SESSION_ID:
-                response["Logged"] = True
+    try: # Hago esto porque si se pone texto manualmente en el query-param, debe pasar y hacer como que no inició sesión (que es lo lógico)
+        if int(id) > 0:
+            if rango == "administrador":
+                if int(id) == ADMIN_SESSION_ID:
+                    response["Logged"] = True
+            elif rango == "tecnico":
+                if int(id) == TECH_SESSION_ID:
+                    response["Logged"] = True
+            elif rango == "cliente":
+                if int(id) == CLIENT_SESSION_ID:
+                    response["Logged"] = True
+    except:
+        pass
     
     return response
 
 
-# Endpoint auxiliar para verificar que no se cambien los query params de la id de un equipo
-# Se debe hacer fetch() al mismo en todas las páginas que lo muestren
-@app.route("/verify_deviceInfoID/<int:id>")
-def verify_deviceInfoID(id):
-    global DEVICE_INFO_ID
-    response = {"ChangedParameter": True, "DeviceInfoID": DEVICE_INFO_ID}
+# Endpoint auxiliar para verificar que no se cambien los query params de la id de información de un usuario/cliente/equipo
+# Se debe hacer fetch() al mismo en todas las páginas que muestren información
+@app.route("/verify_InfoID/<id>/<opcion>")
+def verify_InfoID(id, opcion):
+    global USER_INFO_ID, CLIENT_INFO_ID, DEVICE_INFO_ID
+    response = {"ChangedParameter": True, "UserInfoID": USER_INFO_ID, "ClientInfoID": CLIENT_INFO_ID, "DeviceInfoID": DEVICE_INFO_ID}
     
-    if id == DEVICE_INFO_ID and id > 0:
-        response["ChangedParameter"] = False
+    try: # Acá es lo mismo que en el endpoint anterior. Se debe evitar que se escriba texto
+        if opcion == "usuario":
+            if int(id) == USER_INFO_ID and int(id) > 0:
+                response["ChangedParameter"] = False
+        elif opcion == "cliente":
+            if int(id) == CLIENT_INFO_ID and int(id) > 0:
+                response["ChangedParameter"] = False
+        elif opcion == "equipo":
+            if int(id) == DEVICE_INFO_ID and int(id) > 0:
+                response["ChangedParameter"] = False
+    except:
+        pass
     
     return response
 
 
 # Por otra parte se necesita un endpoint auxiliar más para setear esa variable global que hace la verificación en el endpoint anterior
-# Este endpoint se invoca desde las páginas que tienen la opción de mostrar un equipo
-@app.route("/set_deviceInfoID/<id>")
-def set_deviceInfoID(id):
-    global DEVICE_INFO_ID
-    DEVICE_INFO_ID = int(id)
-    return ["ID seteada con éxito"]
+# Este endpoint se invoca desde las páginas que pueden dirigir a las de información del usuario/cliente/equipo
+@app.route("/set_InfoID/<int:id>/<opcion>")
+def set_InfoID(id, opcion):
+    global USER_INFO_ID, CLIENT_INFO_ID, DEVICE_INFO_ID
+    
+    if opcion == "usuario":
+        USER_INFO_ID = id
+    elif opcion == "cliente":
+        CLIENT_INFO_ID = id
+    elif opcion == "equipo":
+        DEVICE_INFO_ID = id
+    
+    return {"Mensaje": "INFO ID SET"}
 
 
 #======================================================================================================================================================#
@@ -145,6 +169,9 @@ def data_client(email, codigo):
 # Se obtienen todos los usuarios.
 @app.route("/administrador/<int:id>")
 def administrador(id):
+    global USER_INFO_ID
+    USER_INFO_ID = 0
+    
     try:
         data = {"session_username": "", "usuarios": ["Acá va primero mi usuario"]} # Reservo la primera posición en la lista para el usuario de la sesión
         usuarios = Usuarios.query.where(Usuarios.id != -1).order_by(Usuarios.id).all()
@@ -178,6 +205,10 @@ def administrador(id):
 # Se obtienen todos los equipos que administra cierto técnico.
 @app.route("/tecnico/<id>")
 def tecnico(id):
+    global CLIENT_INFO_ID, DEVICE_INFO_ID
+    CLIENT_INFO_ID = 0
+    DEVICE_INFO_ID = 0
+    
     try:
         data = {"session_username": "", "equipos": []}
     
@@ -217,6 +248,9 @@ def tecnico(id):
 # Se obtienen todos los equipos que cierto cliente llevó a arreglar.
 @app.route("/cliente/<id>")
 def cliente(id):
+    global DEVICE_INFO_ID
+    DEVICE_INFO_ID = 0
+    
     try:
         data = {"session_clientname": "", "equipos": []}
 
