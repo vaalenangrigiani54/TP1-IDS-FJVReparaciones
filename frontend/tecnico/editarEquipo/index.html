@@ -98,7 +98,7 @@
             if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
             } else {
-                fetch(`http://127.0.0.1:5000/verify_deviceInfoID/${id_equipo_a_editar}`)
+                fetch(`http://127.0.0.1:5000/verify_InfoID/${id_equipo_a_editar}/equipo`)
                 .then((res) => res.json())
                 .then(verify_deviceInfoID)
                 .catch((error) => console.log("ERROR", error))
