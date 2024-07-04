@@ -19,13 +19,11 @@
         <button id="btn-cerrar-sesion" class="btn btn-danger" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
 
-    <h2>Información de todos los clientes</h2> <!-- Esto se actualiza después en la función show_data() -->
+    <h2>Información de todos los clientes</h2>
 
     <div class="tab-info">
-        <h3>Haz click en el tipo del cliente o en el cliente para ver la respectiva información...</h3>
         <div class="tab-btns">       
             <button class="btn btn-primary btn-add" name="nombre" id="orderButton" onclick=order_table(name)>Ordenado por defecto</button>
-            <!-- <button class="btn btn-info btn-add" id="orderByEmail" onclick=order_table(id)>Ordenar por cliente</button> -->
         </div>
     </div>
 
@@ -139,6 +137,7 @@
         }
 
         function order_table(name) {
+            //Elimino las filas de la tabla ordenadas de la forma anterior
             table = document.getElementById("table")
             rows = table.getElementsByTagName("tr")
 
