@@ -25,6 +25,7 @@ DEVICE_INFO_ID = 0
 
 
 
+
 # Endpoint auxiliar para resetear las variables globales cuando se cierra sesión
 @app.route("/reset_session")
 def reset_session():
@@ -36,6 +37,7 @@ def reset_session():
     CLIENT_INFO_ID = 0
     DEVICE_INFO_ID = 0
     return {"Mensaje": "SESSION RESET"}
+
 
 
 # Endpoint auxiliar para verificar si el usuario inició sesión o no
@@ -62,6 +64,7 @@ def verify_session(id, rango):
     return response
 
 
+
 # Endpoint auxiliar para verificar que no se cambien los query params de la id de información de un usuario/cliente/equipo
 # Se debe hacer fetch() al mismo en todas las páginas que muestren información
 @app.route("/verify_InfoID/<id>/<opcion>")
@@ -83,6 +86,7 @@ def verify_InfoID(id, opcion):
         pass
     
     return response
+
 
 
 # Por otra parte se necesita un endpoint auxiliar más para setear esa variable global que hace la verificación en el endpoint anterior
@@ -285,6 +289,38 @@ def cliente(id):
 
 
 
+# Endpoint que hace referencia a la página que muestra la lista de todos los clientes
+@app.route("/listaClientes/<ordenamiento>", methods=["GET"])
+def listaClientes(ordenamiento):
+    data = []
+    
+    try:
+        if ordenamiento == None: # El ordenamiento por defecto es por id
+            clientesQuery = Clientes.query.all()
+        elif ordenamiento == "nombre": 
+            clientesQuery = Clientes.query.order_by(Clientes.nombre_cliente)
+        elif ordenamiento == "email":
+            clientesQuery = Clientes.query.order_by(Clientes.email)
+        
+        for cliente in clientesQuery:
+            clienteData = {
+                "id": cliente.id,
+                "nombre_cliente": cliente.nombre_cliente,
+                "email": cliente.email,
+                "fecha_inscripcion": cliente.fecha_inscripcion
+            }
+            data.append(clienteData)
+        
+        return data
+    except Exception as error:
+        print(f"\n\nERROR: {error}\n\n")
+        return {"Mensaje": "Algo ha fallado..."}
+
+
+
+
+
+# Los siguientes endpoints, a diferencia de los otros, obtienen informaciones de UN SOLO USUARIO, no de todos
 
 
 # Endpoint para consultar/agregar/modificar/eliminar a un usuario de la empresa
