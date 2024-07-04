@@ -35,7 +35,9 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Email</th>
+                <th>Código de ingreso</th>
                 <th>Fecha de inscripción</th>
+                <th>Acciones</th>
             </tr>
         </table>
     </div>
@@ -50,7 +52,7 @@
         </p>
     </footer>
 
-    <script src="../../auxiliar_functions.js" type="text/javascript">//Importo esto para poder formatear las fechas</script>t>
+    <script src="../../auxiliar_functions.js" type="text/javascript">//Importo esto para poder formatear las fechas</script>
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
@@ -88,22 +90,49 @@
 
                 columnCLIENTNAME = document.createElement("td")
                 columnCLIENTNAME.innerText = clientesData[i]["nombre_cliente"]
-                columnCLIENTNAME.setAttribute("class", "hrefs")
-                columnCLIENTNAME.onclick = function() {
-                    fetch(`http://127.0.0.1:5000/set_InfoID/${clientesData[i]["id"]}/cliente`)
-                    .catch((error) => console.log(`ERROR: ${error}`))
-                    window.location.href = `http://localhost:8000/tecnico/informacionCliente?id=${clientesData[i]["id"]}&sessionID=${sessionID}`
-                }
                 cliente.append(columnCLIENTNAME)
 
                 columnEMAIL = document.createElement("td")
                 columnEMAIL.innerText = clientesData[i]["email"]
                 cliente.append(columnEMAIL)
 
+                columnCODE = document.createElement("td")
+                columnCODE.innerText = clientesData[i]["codigo_ingreso"]
+                cliente.append(columnCODE)
+
                 columnDATE = document.createElement("td")
                 columnDATE.innerText = format_date(clientesData[i]["fecha_inscripcion"])
                 columnDATE.setAttribute("class", "ids-dates")
                 cliente.append(columnDATE)
+
+                columnBUTTONS = document.createElement("td")
+                BUTTONS = document.createElement("div")
+                BUTTONS.setAttribute("class", "table-buttons")
+
+                buttonEDIT = document.createElement("button")
+                buttonEDIT.setAttribute("class", "btn btn-warning")
+                buttonEDIT.innerText = "Editar cliente"
+                buttonEDIT.onclick = function() {
+                    window.location.href=`http://localhost:8000/tecnico/editarCliente?id=${clientesData[i]["id"]}&sessionID=${sessionID}`
+                }
+                
+                buttonDELETE = document.createElement("button")
+                buttonDELETE.setAttribute("class", "btn btn-danger")
+                buttonDELETE.innerText = "Eliminar cliente"
+                buttonDELETE.onclick = function() {
+                    if (confirm(`¿Estás seguro que deseas eliminar al cliente ${clientesData[i]["nombre_cliente"]}?`)) {
+                        fetch(`http://127.0.0.1:5000/acciones_cliente/${clientesData[i]["id"]}`, {method: "DELETE"})
+                        .then(function() {
+                            alert("cliente eliminado con éxito")
+                            window.location.reload()
+                        }).catch((error) => console.log(`ERROR AL ELIMINAR EL CLIENTE: ${error}`))
+                    }
+                }
+
+                BUTTONS.append(buttonEDIT)
+                BUTTONS.append(buttonDELETE)
+                columnBUTTONS.append(BUTTONS)
+                cliente.append(columnBUTTONS)
 
                 tabla.append(cliente)
             }
