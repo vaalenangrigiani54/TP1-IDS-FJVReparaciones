@@ -5,7 +5,7 @@ from database import *
 import random
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://vaalen782:2147483647@localhost:5432/tp1_ids"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://main:main@localhost:5432/main"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app)
 
@@ -295,7 +295,7 @@ def listaClientes(ordenamiento):
     data = []
     
     try:
-        if ordenamiento == None: # El ordenamiento por defecto es por id
+        if ordenamiento == "default": # El ordenamiento por defecto es por id
             clientesQuery = Clientes.query.all()
         elif ordenamiento == "nombre": 
             clientesQuery = Clientes.query.order_by(Clientes.nombre_cliente)
@@ -303,11 +303,15 @@ def listaClientes(ordenamiento):
             clientesQuery = Clientes.query.order_by(Clientes.email)
         
         for cliente in clientesQuery:
+            fechaAux = cliente.fecha_inscripcion
+            fecha = {"dia": fechaAux.day, "mes": fechaAux.month, "anio": fechaAux.year, "horas": fechaAux.hour, "minutos": fechaAux.minute}
+
             clienteData = {
                 "id": cliente.id,
                 "nombre_cliente": cliente.nombre_cliente,
                 "email": cliente.email,
-                "fecha_inscripcion": cliente.fecha_inscripcion
+                "codigo_ingreso": cliente.codigo_ingreso,
+                "fecha_inscripcion": fecha
             }
             data.append(clienteData)
         
@@ -394,7 +398,7 @@ def acciones_usuario(id):
 
 
 # Endpoint para consultar/agregar/modificar a un cliente
-@app.route("/acciones_cliente/<id>", methods=["GET", "POST", "PUT"])
+@app.route("/acciones_cliente/<id>", methods=["GET", "POST", "PUT", "DELETE"])
 def acciones_cliente(id):
     try:
         if request.method == "GET": # Para ver la información del cliente
@@ -449,6 +453,22 @@ def acciones_cliente(id):
             db.session.commit()
             
             return {"Mensaje": "Cliente actualizado con éxito"}
+        
+        elif request.method == "DELETE":
+            cliente = db.session.query(Clientes).filter(Clientes.id == id).first()
+            
+            if cliente == None:
+                return {"Eliminado": False}
+            else:
+                equipos = db.session.query(Equipos).filter(Equipos.id_cliente == id).all()
+                
+                for equipo in equipos: # En la tabla de clientes tengo la id -1 que hace referencia al cliente eliminado
+                    db.session.delete(equipo)
+                db.session.commit()
+                
+                db.session.delete(cliente)
+                db.session.commit()
+                return {"Eliminado": True}
         
     except Exception as error:
         print(f"\n\nERROR: {error}\n\n")
