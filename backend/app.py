@@ -290,12 +290,17 @@ def cliente(id):
 
 
 # Endpoint que hace referencia a la página que muestra la lista de todos los clientes
-@app.route("/listaClientes", methods=["GET"])
-def listaClientes():
+@app.route("/listaClientes/<ordenamiento>", methods=["GET"])
+def listaClientes(ordenamiento):
     data = []
     
     try:
-        clientesQuery = Clientes.query.all()
+        if ordenamiento == None: # El ordenamiento por defecto es por id
+            clientesQuery = Clientes.query.all()
+        elif ordenamiento == "nombre": 
+            clientesQuery = Clientes.query.order_by(Clientes.nombre_cliente)
+        elif ordenamiento == "email":
+            clientesQuery = Clientes.query.order_by(Clientes.email)
         
         for cliente in clientesQuery:
             clienteData = {
