@@ -22,7 +22,8 @@
 
     <div class="tab-info">
         <h3>Haz click en el tipo del equipo o en el cliente para ver la respectiva información...</h3>
-        <div class="tab-btns">       
+        <div class="tab-btns">  
+            <button class="btn btn-warning btn-add" onclick=goToListClients()>Ver la lista de los clientes</button>     
             <button class="btn btn-primary btn-add" id="addClient" onclick=goToAddClient()>Registrar un nuevo cliente</button>
             <button class="btn btn-info btn-add" id="addClient" onclick=goToAddDevice()>Registrar un nuevo equipo</button>
         </div>
@@ -124,12 +125,6 @@
 
                 columnCLIENTNAME = document.createElement("td")
                 columnCLIENTNAME.innerText = equiposData[i]["nombre_cliente"]
-                columnCLIENTNAME.setAttribute("class", "hrefs")
-                columnCLIENTNAME.onclick = function() {
-                    fetch(`http://127.0.0.1:5000/set_InfoID/${equiposData[i]["id_cliente"]}/cliente`)
-                    .catch((error) => console.log(`ERROR: ${error}`))
-                    window.location.href = `http://localhost:8000/tecnico/informacionCliente?id=${equiposData[i]["id_cliente"]}&sessionID=${sessionID}`
-                }
                 equipo.append(columnCLIENTNAME)
 
                 columnDATE = document.createElement("td")
@@ -147,6 +142,10 @@
 
         function goToAddDevice() {
             window.location.href = `http://localhost:8000/tecnico/agregarEquipo?sessionID=${sessionID}`
+        }
+
+        function goToListClients() {
+            window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
         }
 
         function CLOSE_SESSION() {
