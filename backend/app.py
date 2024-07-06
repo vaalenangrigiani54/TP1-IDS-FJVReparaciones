@@ -463,7 +463,11 @@ def acciones_cliente(id):
                 return {"Eliminado": False}
             else: # Si se elimina un cliente, también se deben eliminar todos los equipos con la id de ese cliente
                 equipos = db.session.query(Equipos).filter(Equipos.id_cliente == id).all()
-                db.session.delete(equipos)
+                
+                for equipo in equipos:
+                    db.session.delete(equipo)
+                db.session.commit()
+                
                 db.session.delete(cliente)
                 db.session.commit()
                 return {"Eliminado": True}
