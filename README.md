@@ -48,7 +48,7 @@ Ademas de todo eso le dimos importancia a la seguridad del software y por lo tan
   `pip install -r backend/requirements.txt` <br>
 
 5. Abre dos terminales, en la terminal donde tienes activado el virtualenv inicia el app.py en el directorio backend y un servidor http en el directorio frontend <br>
-  `python3 backend/app.py` (en la terminal donde tienes activado el virtualenv y ubicado en el directorio backend)<br>
+  `python3 backend/app.py` (en la terminal donde tienes activado el virtualenv)<br>
   `python3 -m http.server` (en la otra terminal donde abriste en el directorio frontend)<br>
 
 Ya puedes usar nuestro software web abriendo tu navegador y entrando en [http://localhost:8000/main](http://localhost:8000/main)
@@ -58,7 +58,7 @@ Ya puedes usar nuestro software web abriendo tu navegador y entrando en [http://
 
 1. Ir al directorio donde tienes el repositorio del proyecto <br>
 
-2. Iniciar el entrono virtual donde tienes las dependencias del proyecto <br>
+2. Iniciar el entorno virtual donde tienes las dependencias del proyecto <br>
   `source venv/bin/activate` <br>
 
 3. Abre dos terminales, en la terminal donde tienes activado el virtualenv inicia el app.py en el directorio backend y un servidor http en el directorio frontend <br>
