@@ -5,7 +5,7 @@ from database import *
 import random
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://vaalen782:2147483647@localhost:5432/tp1_ids"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://user:password@localhost:5432/fjvrep"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app)
 
