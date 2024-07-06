@@ -19,7 +19,7 @@
         <button id="btn-cerrar-sesion" class="btn btn-danger" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
 
-    <h2>Información de todos los clientes</h2>
+    <h2>Información de todos los clientes inscriptos</h2>
 
     <div class="tab-info">
         <div class="tab-btns">       
@@ -153,7 +153,7 @@
                     if (confirm(`¿Estás seguro que deseas eliminar al cliente ${clientesData[i]["nombre_cliente"]}?`)) {
                         fetch(`http://127.0.0.1:5000/acciones_cliente/${clientesData[i]["id"]}`, {method: "DELETE"})
                         .then(function() {
-                            alert("cliente eliminado con éxito")
+                            alert("Cliente eliminado con éxito")
                             window.location.reload()
                         }).catch((error) => console.log(`ERROR AL ELIMINAR EL CLIENTE: ${error}`))
                     }
