@@ -21,8 +21,14 @@
     <h2 id="bienvenida">BIENVENIDO/A:</h2> <!-- Esto se actualiza después en la función show_data() -->
     <h3>Estos son los equipos que has mandado a revisar/arreglar desde que te inscribiste:</h3>
     <h3>(Haz click en cualquier equipo para ver su información y las observaciones)</h3>
+
+    <div class="tab-info" style="margin-top: 1em">
+        <div class="tab-btns">       
+            <button name="Nuevo Ingreso" onclick=filter_table(name) style="width: 20em" class="btn btn-secondary btn-add" id="filterButton"></button>
+        </div>
+    </div>
     
-    <div class="t-div" style="margin-top: 2em">
+    <div class="t-div">
         <table id="table" class="table table-bordered" cellpadding="7">
             <tr class="table-dark">
                 <th>#</th>
@@ -63,10 +69,44 @@
             if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginCliente"
             } else {
-                fetch(`http://127.0.0.1:5000/cliente/${sessionID}`)
-                .then((res) => res.json())
-                .then(show_data)
-                .catch((error) => console.log(`ERROR: ${error}`))
+                //Cuando se accede a la página o se recarga, el filtro por defecto es "all", es decir, todos los estados de los equipos
+                filter_table("all")
+            }
+        }
+
+        function filter_table(statusFilter) {
+            //Elimino las filas de la tabla filtradas de la forma anterior
+            table = document.getElementById("table")
+            rows = table.getElementsByTagName("tr")
+
+            for (let i = rows.length - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+
+            fetch(`http://127.0.0.1:5000/cliente/${sessionID}/${statusFilter}`)
+            .then((res) => res.json())
+            .then(show_data)
+            .catch((error) => console.log(`ERROR: ${error}`))
+
+            
+            filterBtn = document.getElementById("filterButton")
+            
+            //Luego de hacer la query con el filtro indicado, se debe poner en la variable "statusFilter" la siguiente clave de filtro cuando se va a hacer click en el botón
+            if (statusFilter == "Nuevo Ingreso") {
+                filterBtn.innerText = "Mostrar: Nuevo ingreso"
+                filterBtn.setAttribute("name", "En revisión/reparación")
+            } else if (statusFilter == "En revisión/reparación") {
+                filterBtn.innerText = "Mostrar: En revisión/reparación"
+                filterBtn.setAttribute("name", "Reparado")
+            } else if (statusFilter == "Reparado") {
+                filterBtn.innerText = "Mostrar: Reparados"
+                filterBtn.setAttribute("name", "No Reparado")
+            } else if (statusFilter == "No Reparado") {
+                filterBtn.innerText = "Mostrar: No reparados"
+                filterBtn.setAttribute("name", "all")
+            } else { //Cuando statusFilter == "all"
+                filterBtn.innerText = "Mostrar: Todos"
+                filterBtn.setAttribute("name", "Nuevo Ingreso")
             }
         }
 
