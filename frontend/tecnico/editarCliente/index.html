@@ -34,7 +34,7 @@
                 <p id="codigo"><b>Código de ingreso: (No se puede modificar)</b></p>
             </div>
         </form>
-        <button class="btn btn-success form-button" onclick=edit_client()>Actualizar equipo</button>
+        <button class="btn btn-success form-button" onclick=edit_client()>Actualizar cliente</button>
     </div>
 
     <footer class="footer">
@@ -52,12 +52,12 @@
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         let id_cliente_a_editar = new URLSearchParams(window.location.search).get("id")
 
-        if (sessionID == null) {
-            sessionID = -2147483648
+        if (sessionID == "") {
+            sessionID = "null"
         }
 
-        if (id_cliente_a_editar == null) {
-            id_cliente_a_editar = -2147483648
+        if (id_cliente_a_editar == "") {
+            id_cliente_a_editar = "null"
         }
 
         fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/tecnico`)
@@ -118,7 +118,7 @@
             alert(data["Mensaje"])
 
             if (data["Mensaje"] == "Cliente actualizado con éxito") {
-                window.location.href = `http://localhost:8000/tecnico/informacionCliente?id=${id_cliente_a_editar}&sessionID=${sessionID}`
+                window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
             }
         }
 

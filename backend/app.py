@@ -58,7 +58,7 @@ def verify_session(id, rango):
             elif rango == "cliente":
                 if int(id) == CLIENT_SESSION_ID:
                     response["Logged"] = True
-    except:
+    except: # La funcion int() no pudo convertir a entero una cadena de caracteres pasada en id
         pass
     
     return response
@@ -294,13 +294,15 @@ def cliente(id):
 def listaClientes(ordenamiento):
     data = []
     
-    try:
-        if ordenamiento == "default": # El ordenamiento por defecto es por id
-            clientesQuery = Clientes.query.all()
-        elif ordenamiento == "nombre": 
+    try: # Estos strings son estáticos pero sirven como referencia
+        if ordenamiento == "nombre A-Z":
             clientesQuery = Clientes.query.order_by(Clientes.nombre_cliente)
-        elif ordenamiento == "email":
-            clientesQuery = Clientes.query.order_by(Clientes.email)
+        elif ordenamiento == "nombre Z-A":
+            clientesQuery = Clientes.query.order_by(desc(Clientes.nombre_cliente))
+        elif ordenamiento == "fecha antiguos":
+            clientesQuery = Clientes.query.order_by(Clientes.fecha_inscripcion)
+        elif ordenamiento == "fecha recientes":
+            clientesQuery = Clientes.query.order_by(desc(Clientes.fecha_inscripcion))
         
         for cliente in clientesQuery:
             fechaAux = cliente.fecha_inscripcion
@@ -459,13 +461,9 @@ def acciones_cliente(id):
             
             if cliente == None:
                 return {"Eliminado": False}
-            else:
+            else: # Si se elimina un cliente, también se deben eliminar todos los equipos con la id de ese cliente
                 equipos = db.session.query(Equipos).filter(Equipos.id_cliente == id).all()
-                
-                for equipo in equipos: # En la tabla de clientes tengo la id -1 que hace referencia al cliente eliminado
-                    db.session.delete(equipo)
-                db.session.commit()
-                
+                db.session.delete(equipos)
                 db.session.delete(cliente)
                 db.session.commit()
                 return {"Eliminado": True}

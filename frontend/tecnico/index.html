@@ -21,9 +21,9 @@
     <h2 id="bienvenida">BIENVENIDO/A:</h2> <!-- Esto se actualiza después en la función show_data() -->
 
     <div class="tab-info">
-        <h3>Haz click en el tipo del equipo o en el cliente para ver la respectiva información...</h3>
+        <h3>Haz click en un equipo para ver su información...</h3>
         <div class="tab-btns">  
-            <button class="btn btn-warning btn-add" onclick=goToListClients()>Ver la lista de los clientes</button>     
+            <button class="btn btn-warning btn-add" onclick=goToClientsList()>Ver la lista de clientes</button>     
             <button class="btn btn-primary btn-add" id="addClient" onclick=goToAddClient()>Registrar un nuevo cliente</button>
             <button class="btn btn-info btn-add" id="addClient" onclick=goToAddDevice()>Registrar un nuevo equipo</button>
         </div>
@@ -57,8 +57,8 @@
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
-        if (sessionID == null) {
-            sessionID = -2147483648
+        if (sessionID == "") {
+            sessionID = "null"
         }
         
         fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/tecnico`)
@@ -87,6 +87,12 @@
 
             for (let i = 0; i < equiposData.length; i++) {
                 equipo = document.createElement("tr")
+                equipo.setAttribute("style", "cursor: pointer")
+                equipo.onclick = function() {
+                    fetch(`http://127.0.0.1:5000/set_InfoID/${equiposData[i]["id"]}/equipo`)
+                    .catch((error) => console.log(`ERROR: ${error}`))
+                    window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
+                }
                 
                 if (equiposData[i]["estado"] == "En revisión/reparación") {
                     equipo.setAttribute("class", "revision")
@@ -103,12 +109,6 @@
 
                 columnDEVICETYPE = document.createElement("td")
                 columnDEVICETYPE.innerText = equiposData[i]["tipo_equipo"]
-                columnDEVICETYPE.setAttribute("class", "hrefs")
-                columnDEVICETYPE.onclick = function() {
-                    fetch(`http://127.0.0.1:5000/set_InfoID/${equiposData[i]["id"]}/equipo`)
-                    .catch((error) => console.log(`ERROR: ${error}`))
-                    window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
-                }
                 equipo.append(columnDEVICETYPE)
                 
                 columnBRAND = document.createElement("td")
@@ -144,7 +144,7 @@
             window.location.href = `http://localhost:8000/tecnico/agregarEquipo?sessionID=${sessionID}`
         }
 
-        function goToListClients() {
+        function goToClientsList() {
             window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
         }
 
