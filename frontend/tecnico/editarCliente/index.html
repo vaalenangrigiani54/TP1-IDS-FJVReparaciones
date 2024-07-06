@@ -34,7 +34,7 @@
                 <p id="codigo"><b>Código de ingreso: (No se puede modificar)</b></p>
             </div>
         </form>
-        <button class="btn btn-success form-button" onclick=edit_client()>Actualizar equipo</button>
+        <button class="btn btn-success form-button" onclick=edit_client()>Actualizar cliente</button>
     </div>
 
     <footer class="footer">
@@ -118,7 +118,7 @@
             alert(data["Mensaje"])
 
             if (data["Mensaje"] == "Cliente actualizado con éxito") {
-                window.location.href = `http://localhost:8000/tecnico/informacionCliente?id=${id_cliente_a_editar}&sessionID=${sessionID}`
+                window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
             }
         }
 

@@ -23,7 +23,7 @@
 
     <div class="tab-info">
         <div class="tab-btns">       
-            <button class="btn btn-primary btn-add" name="fecha antiguos" id="orderButton" onclick=order_table(name)>Ordenado por los más recientes</button>
+            <button style="width: 20em" class="btn btn-primary btn-add" name="fecha antiguos" id="orderButton" onclick=order_table(name)>Ordenado por los más recientes</button>
         </div>
     </div>
 
@@ -67,10 +67,42 @@
             if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
             } else {
-                fetch(`http://127.0.0.1:5000/listaClientes/default`)
+                //"fecha recientes" es el primer ordenamiento cuando se accede a la página
+                order_table("fecha recientes")
+            }
+        }
+
+        function order_table(orderKEY) {
+            //Elimino las filas de la tabla ordenadas de la forma anterior
+            table = document.getElementById("table")
+            rows = table.getElementsByTagName("tr")
+
+            for (let i = rows.length - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+
+
+            fetch(`http://127.0.0.1:5000/listaClientes/${orderKEY}`)
                 .then((res) => res.json())
                 .then(show_data)
                 .catch((error) => console.log(`ERROR: ${error}`))
+
+
+            orderBtn = document.getElementById('orderButton')
+            
+            //Luego de hacer el query con el ordenamiento indicado, se debe poner en el atributo "name" la siguiente clave de ordenamiento cuando se va a hacer click en el botón
+            if (orderKEY == "nombre A-Z") {
+                orderBtn.innerText = "Ordenado por nombre A-Z"
+                orderBtn.setAttribute("name","nombre Z-A")
+            } else if (orderKEY == "nombre Z-A") {
+                orderBtn.innerText = "Ordenado por nombre Z-A"
+                orderBtn.setAttribute("name", "fecha recientes")
+            } else if (orderKEY == "fecha antiguos") {
+                orderBtn.innerText = "Ordenado por los más antiguos"
+                orderBtn.setAttribute("name", "nombre A-Z")
+            } else if (orderKEY == "fecha recientes") {
+                orderBtn.innerText = "Ordenado por los más recientes"
+                orderBtn.setAttribute("name", "fecha antiguos")
             }
         }
 
@@ -134,39 +166,6 @@
 
                 tabla.append(cliente)
             }
-        }
-
-        function order_table(name) {
-            //Elimino las filas de la tabla ordenadas de la forma anterior
-            table = document.getElementById("table")
-            rows = table.getElementsByTagName("tr")
-
-            for (let i = rows.length - 1; i > 0; i--) {
-                table.deleteRow(i);
-            }
-
-
-            fetch(`http://127.0.0.1:5000/listaClientes/${name}`)
-                .then((res) => res.json())
-                .then(show_data)
-                .catch((error) => console.log(`ERROR: ${error}`))
-
-                orderBtn = document.getElementById('orderButton')
-            if (name == "nombre A-Z"){
-                orderBtn.innerText = "Ordenado por nombre A-Z"
-                orderBtn.setAttribute("name","nombre Z-A")
-            } else if (name == "nombre Z-A") {
-                orderBtn.innerText = "Ordenado por nombre Z-A"
-                orderBtn.setAttribute("name", "fecha recientes")
-            } else if (name == "fecha antiguos") {
-                orderBtn.innerText = "Ordenado por los más antiguos"
-                orderBtn.setAttribute("name", "nombre A-Z")
-            } else if (name == "fecha recientes"){
-                orderBtn.innerText = "Ordenado por los más recientes"
-                orderBtn.setAttribute("name", "fecha antiguos")
-            }
-
-            
         }
 
         function CLOSE_SESSION() {
