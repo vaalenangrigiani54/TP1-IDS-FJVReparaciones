@@ -69,8 +69,8 @@
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
 
-        if (sessionID == null) {
-            sessionID = -2147483648
+        if (sessionID == "") {
+            sessionID = "null"
         }
 
         fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/tecnico`)

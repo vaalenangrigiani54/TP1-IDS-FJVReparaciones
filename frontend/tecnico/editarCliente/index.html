@@ -52,12 +52,12 @@
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         let id_cliente_a_editar = new URLSearchParams(window.location.search).get("id")
 
-        if (sessionID == null) {
-            sessionID = -2147483648
+        if (sessionID == "") {
+            sessionID = "null"
         }
 
-        if (id_cliente_a_editar == null) {
-            id_cliente_a_editar = -2147483648
+        if (id_cliente_a_editar == "") {
+            id_cliente_a_editar = "null"
         }
 
         fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/tecnico`)
