@@ -23,7 +23,7 @@
 
     <div class="tab-info">
         <div class="tab-btns">       
-            <button class="btn btn-primary btn-add" name="nombre" id="orderButton" onclick=order_table(name)>Ordenado por defecto</button>
+            <button class="btn btn-primary btn-add" name="fecha antiguos" id="orderButton" onclick=order_table(name)>Ordenado por los más recientes</button>
         </div>
     </div>
 
@@ -152,16 +152,20 @@
                 .catch((error) => console.log(`ERROR: ${error}`))
 
                 orderBtn = document.getElementById('orderButton')
-            if (name == "nombre"){
-                orderBtn.innerText = "Ordenado por nombre"
-                orderBtn.setAttribute("name", "email")
-            } else if (name == "email") {
-                orderBtn.innerText = "Ordenado por email"
-                orderBtn.setAttribute("name", "default")
-            } else {
-                orderBtn.innerText = "Ordenado por defecto"
-                orderBtn.setAttribute("name", "nombre")
+            if (name == "nombre A-Z"){
+                orderBtn.innerText = "Ordenado por nombre A-Z"
+                orderBtn.setAttribute("name","nombre Z-A")
+            } else if (name == "nombre Z-A") {
+                orderBtn.innerText = "Ordenado por nombre Z-A"
+                orderBtn.setAttribute("name", "fecha recientes")
+            } else if (name == "fecha antiguos") {
+                orderBtn.innerText = "Ordenado por los más antiguos"
+                orderBtn.setAttribute("name", "nombre A-Z")
+            } else if (name == "fecha recientes"){
+                orderBtn.innerText = "Ordenado por los más recientes"
+                orderBtn.setAttribute("name", "fecha antiguos")
             }
+
             
         }
 
