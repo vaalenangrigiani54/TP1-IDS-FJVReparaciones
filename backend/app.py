@@ -207,8 +207,8 @@ def administrador(id):
 
 # Endpoint que hace referencia a la página del usuario técnico.
 # Se obtienen todos los equipos que administra cierto técnico.
-@app.route("/tecnico/<id>")
-def tecnico(id):
+@app.route("/tecnico/<id>/<statusFilter>")
+def tecnico(id, statusFilter):
     global CLIENT_INFO_ID, DEVICE_INFO_ID
     CLIENT_INFO_ID = 0
     DEVICE_INFO_ID = 0
@@ -217,9 +217,14 @@ def tecnico(id):
         data = {"session_username": "", "equipos": []}
     
         usuario = Usuarios.query.where(Usuarios.id == id).first()
-        equipos = Equipos.query.where(Equipos.id_tecnico == id).join(Clientes).add_columns(
-            Clientes.nombre_cliente
-        ).order_by(desc(Equipos.fecha_ingreso)).all()
+        if statusFilter == "all":
+            equipos = Equipos.query.where(Equipos.id_tecnico == id).join(Clientes).add_columns(
+                Clientes.nombre_cliente
+            ).order_by(desc(Equipos.fecha_ingreso)).all()
+        else:
+            equipos = Equipos.query.where(Equipos.id_tecnico == id, Equipos.estado == statusFilter).join(Clientes).add_columns(
+                Clientes.nombre_cliente
+            ).order_by(desc(Equipos.fecha_ingreso)).all()
 
         data["session_username"] = usuario.nombre_usuario
         
@@ -250,8 +255,8 @@ def tecnico(id):
 
 # Endpoint que hace referencia a la página del cliente.
 # Se obtienen todos los equipos que cierto cliente llevó a arreglar.
-@app.route("/cliente/<id>")
-def cliente(id):
+@app.route("/cliente/<id>/<statusFilter>")
+def cliente(id, statusFilter):
     global DEVICE_INFO_ID
     DEVICE_INFO_ID = 0
     
@@ -259,9 +264,14 @@ def cliente(id):
         data = {"session_clientname": "", "equipos": []}
 
         cliente = Clientes.query.where(Clientes.id == id).first()
-        equipos = Equipos.query.where(Equipos.id_cliente == id).join(Usuarios).add_columns(
-            Usuarios.nombre_usuario
-        ).order_by(desc(Equipos.fecha_ingreso)).all()
+        if statusFilter == "all":
+            equipos = Equipos.query.where(Equipos.id_cliente == id).join(Usuarios).add_columns(
+                Usuarios.nombre_usuario
+            ).order_by(desc(Equipos.fecha_ingreso)).all()
+        else:
+            equipos = Equipos.query.where(Equipos.id_cliente == id, Equipos.estado == statusFilter).join(Usuarios).add_columns(
+                Usuarios.nombre_usuario
+            ).order_by(desc(Equipos.fecha_ingreso)).all()
         
         data["session_clientname"] = cliente.nombre_cliente
         

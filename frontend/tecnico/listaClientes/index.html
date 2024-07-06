@@ -23,7 +23,7 @@
 
     <div class="tab-info">
         <div class="tab-btns">       
-            <button style="width: 20em" class="btn btn-primary btn-add" name="fecha antiguos" id="orderButton" onclick=order_table(name)>Ordenado por los más recientes</button>
+            <button name="fecha antiguos" onclick=order_table(name) style="width: 20em" class="btn btn-primary btn-add" id="orderButton" ></button>
         </div>
     </div>
 
@@ -67,7 +67,7 @@
             if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
             } else {
-                //"fecha recientes" es el primer ordenamiento cuando se accede a la página
+                //Cuando se accede a la página o se recarga, el ordenamiento por defecto es por los más recientes primero
                 order_table("fecha recientes")
             }
         }
@@ -83,26 +83,26 @@
 
 
             fetch(`http://127.0.0.1:5000/listaClientes/${orderKEY}`)
-                .then((res) => res.json())
-                .then(show_data)
-                .catch((error) => console.log(`ERROR: ${error}`))
+            .then((res) => res.json())
+            .then(show_data)
+            .catch((error) => console.log(`ERROR: ${error}`))
 
 
-            orderBtn = document.getElementById('orderButton')
+            orderBtn = document.getElementById("orderButton")
             
-            //Luego de hacer el query con el ordenamiento indicado, se debe poner en el atributo "name" la siguiente clave de ordenamiento cuando se va a hacer click en el botón
+            //Luego de hacer la query con el ordenamiento indicado, se debe poner en la veriable "orderKEY" la siguiente clave de ordenamiento cuando se va a hacer click en el botón
             if (orderKEY == "nombre A-Z") {
                 orderBtn.innerText = "Ordenado por nombre A-Z"
-                orderBtn.setAttribute("name","nombre Z-A")
+                orderBtn.setAttribute("name", "nombre Z-A")
             } else if (orderKEY == "nombre Z-A") {
                 orderBtn.innerText = "Ordenado por nombre Z-A"
                 orderBtn.setAttribute("name", "fecha recientes")
-            } else if (orderKEY == "fecha antiguos") {
-                orderBtn.innerText = "Ordenado por los más antiguos"
-                orderBtn.setAttribute("name", "nombre A-Z")
             } else if (orderKEY == "fecha recientes") {
                 orderBtn.innerText = "Ordenado por los más recientes"
                 orderBtn.setAttribute("name", "fecha antiguos")
+            } else if (orderKEY == "fecha antiguos") {
+                orderBtn.innerText = "Ordenado por los más antiguos"
+                orderBtn.setAttribute("name", "nombre A-Z")
             }
         }
 
