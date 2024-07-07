@@ -119,9 +119,10 @@
 
                 infoRango = document.getElementById("rango-big")
                 
+                //Verifica si el usuario que queremos ver a detalle es un administrador o un tecnico
                 if (data["rango"] == "Administrador") {
                     infoRango.innerText = "Este usuario es un administrador."
-                } else {
+                } else { // Si es un tecnico se obtienen los datos como si estuviera en la pagina del tecnico
                     infoRango.innerText = "Este usuario es un técnico. Estos son los equipos que él administra:"
 
                     fetch(`http://127.0.0.1:5000/tecnico/${id_usuario_info}`)
