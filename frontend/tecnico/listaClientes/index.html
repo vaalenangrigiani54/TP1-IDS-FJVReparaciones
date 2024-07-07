@@ -143,6 +143,11 @@
                 buttonEDIT.setAttribute("class", "btn btn-warning")
                 buttonEDIT.innerText = "Editar cliente"
                 buttonEDIT.onclick = function() {
+                    /*Este fetch sólo sirve para darle valor a la variable global ClientInfoID del backend. Es para que la verificación en la otra página no tire ninguna alerta.
+                    No son necesarios los then() porque el endpoint no devuelve nada útil.
+                    Luego se redirige a la página de editarCliente con las IDs correspondientes...*/
+                    fetch(`http://127.0.0.1:5000/set_InfoID/${clientesData[i]["id"]}/cliente`)
+                    .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href=`http://localhost:8000/tecnico/editarCliente?id=${clientesData[i]["id"]}&sessionID=${sessionID}`
                 }
                 

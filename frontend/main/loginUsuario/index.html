@@ -36,28 +36,30 @@
     </footer>
     
     <script>
-        //Esto manda a reiniciar las variables globales SESSION_ID a 0
+        //Esto manda a reiniciar las variables globales SESSION_ID a 0 (No devuelve nada útil, por eso no pongo then()'s)
         fetch("http://127.0.0.1:5000/reset_session").catch((error) => console.log(`ERROR: ${error}`))
         
         function login() {
+            //Obtengo los datos del formulario
             let elementos = document.getElementById("form_user").elements
             let emailIngresado = elementos.email.value
             let contraseniaIngresada = elementos.contrasenia.value
 
-            if (emailIngresado == "" || contraseniaIngresada == "") { // Verifica que ningun campo este vacio
+            if (emailIngresado == "" || contraseniaIngresada == "") { //Verifica que ningun campo esté vacío
                 alert("Debes llenar todos los campos para continuar")
             } else {
-              fetch(`http://127.0.0.1:5000/loginUsuario/${emailIngresado}/${contraseniaIngresada}`) // Envia los datos de el email y la contraseña al backend y este verifica si son correctos
-              .then((res) => res.json())
-              .then(handle_response)
-              .catch((error) => console.log(`ERROR: ${error}`))
+                //Se envían los datos del email y la contraseña al backend y este verifica si son correctos
+                fetch(`http://127.0.0.1:5000/loginUsuario/${emailIngresado}/${contraseniaIngresada}`)
+                .then((res) => res.json())
+                .then(handle_response)
+                .catch((error) => console.log(`ERROR: ${error}`))
             }
         }
 
         function handle_response(data) {
-            if (data.length == 0) { //En caso de que el backend no encuentre ninguna coincidencia con los datos previamente ingresados se devuelve la lista vacia
+            if (data.length == 0) { //En caso de que el backend no encuentre ninguna coincidencia con los datos previamente ingresados se devuelve la lista vacía
                 alert("El correo y/o la contrasenia son incorrectos...")
-            } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo
+            } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo en la query
                 alert("Algo ha fallado. Vuelva a intentarlo más tarde")
             } else if (data[0]["rango"] == "Administrador") { //Se distingue entre la página del administrador y la página del técnico
                 window.location.href = `http://localhost:8000/administrador?sessionID=${data[0]["id"]}`

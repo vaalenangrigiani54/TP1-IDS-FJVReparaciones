@@ -78,14 +78,37 @@
             if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
             } else {
-                fetch(`http://127.0.0.1:5000/acciones_usuario/${id_usuario_a_editar}`, {method: "GET"})
+                fetch(`http://127.0.0.1:5000/verify_InfoID/${id_usuario_a_editar}/usuario`)
                 .then((res) => res.json())
-                .then(show_data)
+                .then(verify_InfoID)
                 .catch((error) => console.log("ERROR", error))
             }
         }
         
-        function show_data(data) {
+        function verify_InfoID(response) {
+            if (response["UserInfoID"] === 0) {
+                /*Primero verifico si se escribió manualmente la URL de la página editarUsuario desde otro lado.
+                Eso lo hago comparando la variable global del backend UserInfoID que vale por defecto 0.
+                Sólo se le da otro valor cuando se hace click en un usuario que está en la tabla de la otra página...*/
+                alert("No puedes entrar manualmente (cambiando la URL) a esta página...")
+                window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
+
+            } else if (response["ChangedParameter"] == true) {
+                /*Si ya está en la página editarUsuario, se verifica si se cambió la query-param en la URL.
+                Al ya estar seteada la variable global UserInfoID, se recarga la pagina con la ID de info que
+                realmente debe aparecer*/
+                alert("No se puede cambiar manualmente la id del usuario que se muestra...")
+                window.location.href = `http://localhost:8000/administrador/editarUsuario?id=${response["UserInfoID"]}&sessionID=${sessionID}`
+            
+            } else {
+                fetch(`http://127.0.0.1:5000/acciones_usuario/${id_usuario_a_editar}`, {method: "GET"})
+                .then((res) => res.json())
+                .then(show_user_data)
+                .catch((error) => console.log("ERROR", error))
+            }
+        }
+
+        function show_user_data(data) {
             if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el usuario con la id en los query params
                 alert(data["Mensaje"])
                 window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`

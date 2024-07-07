@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div class="t-div">  <!-- Usamos la clase t-div para darle margenes a la tabla -->
+    <div class="t-div">  <!-- Usamos la clase t-div para darle márgenes a la tabla -->
         <table class="table table-bordered" id="table" cellpadding="7">
             <tr class="table-dark">
                 <th>ID</th>
@@ -57,7 +57,7 @@
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
-        if (sessionID == "") {
+        if (sessionID == "") { //El backend no es capaz de detectar un path-param con ese valor, por eso se lo cambio
             sessionID = "null"
         }
         
@@ -70,7 +70,7 @@
             if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
             } else {
-                //Cuando se accede a la página o se recarga, el filtro por defecto es "all", es decir, todos los estados de los equipos
+                //Cuando se accede a la página desde otro lado o se recarga, el filtro por defecto es "all", es decir, todos los estados de los equipos
                 filter_table("all")
             }
         }
@@ -120,15 +120,21 @@
             equiposData = data["equipos"]
 
             for (let i = 0; i < equiposData.length; i++) {
+                //Para cada equipo creamos una fila (le ponemos algunos atributos) y le agregamos las columnas con la informacion correspondiente a la cual accedemos mediante keys de diccionario
                 equipo = document.createElement("tr")
-                equipo.setAttribute("style", "cursor: pointer") // Esto es para que cambie el cursor a la manito al ponerlo sobre la fila
-                equipo.onclick = function() {
+                
+                equipo.setAttribute("style", "cursor: pointer") //Esto es para que cambie el cursor a la manito al ponerlo sobre la fila
+                equipo.onclick = function() { //Usamos el onclick para que funcione como un link
+                    /*Este fetch sólo sirve para darle valor a la variable global DeviceInfoID del backend. Es para que la verificación en la otra página no tire ninguna alerta.
+                    No son necesarios los then() porque el endpoint no devuelve nada útil.
+                    Luego se redirige a la página de informaciónEquipo con las IDs correspondientes...*/
                     fetch(`http://127.0.0.1:5000/set_InfoID/${equiposData[i]["id"]}/equipo`)
                     .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
                 }
                 
-                if (equiposData[i]["estado"] == "En revisión/reparación") { //Dependiendo de el estado de el equipo usamnos la clase para cambiar el color de la linea en la tabla 
+                //Dependiendo de el estado de el equipo usamnos la clase para cambiar el color de la linea en la tabla
+                if (equiposData[i]["estado"] == "En revisión/reparación") { 
                     equipo.setAttribute("class", "revision")
                 } else if (equiposData[i]["estado"] == "Reparado") {
                     equipo.setAttribute("class", "reparado")
@@ -136,9 +142,8 @@
                     equipo.setAttribute("class", "no-reparado")
                 }
 
-                //Para cada equipo creamos una fila y le agregamos las columnas con la informacion correspondiente a la cual accedemos mediante keys de diccionario
                 columnID = document.createElement("td")
-                columnID.setAttribute("class", "ids-dates") // El ids-dates es para poner la fuente en negrita
+                columnID.setAttribute("class", "ids-dates") //El ids-dates es para poner la fuente en negrita y un poco más grande (en el CSS)
                 columnID.innerText = equiposData[i]["id"]
                 equipo.append(columnID)
 
@@ -163,20 +168,22 @@
                 equipo.append(columnCLIENTNAME)
 
                 columnDATE = document.createElement("td")
-                columnDATE.innerText = format_date(equiposData[i]["fecha_ingreso"]) //Usamos el format date para formatear la fecha y que se vea mejor, esta funcion esta implementada en auxiliar_function.js
+                columnDATE.innerText = format_date(equiposData[i]["fecha_ingreso"]) //Usamos el format_date para formatear la fecha y que se vea mejor, esta funcion esta implementada en auxiliar_function.js
                 columnDATE.setAttribute("class", "ids-dates")
                 equipo.append(columnDATE)
 
-                tabla.append(equipo) // Por ultimo agregamos la linea a la tabla
+                tabla.append(equipo) //Por último agregamos la fila a la tabla
             }
         }
 
         function goToAddDevice() {
-            window.location.href = `http://localhost:8000/tecnico/agregarEquipo?sessionID=${sessionID}` //Redireccionamos a la pagina agregar equipo, con el session id correspondiente 
+            //Redireccionamos a la pagina agregar equipo, con el session id correspondiente
+            window.location.href = `http://localhost:8000/tecnico/agregarEquipo?sessionID=${sessionID}`
         }
 
         function goToClientsList() {
-            window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}` //Redireccionamos a la pagina de la lista de los clientes, con el session id correspondiente 
+            //Redireccionamos a la pagina de la lista de los clientes, con el session id correspondiente
+            window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
         }
 
         function CLOSE_SESSION() {

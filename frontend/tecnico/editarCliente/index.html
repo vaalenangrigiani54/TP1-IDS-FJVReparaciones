@@ -69,15 +69,38 @@
             if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
             } else {
-                fetch(`http://127.0.0.1:5000/acciones_cliente/${id_cliente_a_editar}`, {method: "GET"})
+                fetch(`http://127.0.0.1:5000/verify_InfoID/${id_cliente_a_editar}/cliente`)
                 .then((res) => res.json())
-                .then(show_data)
+                .then(verify_InfoID)
                 .catch((error) => console.log("ERROR", error))
             }
         }
         
-        function show_data(data) {
-            if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el usuario con la id en los query params
+        function verify_InfoID(response) {
+            if (response["ClientInfoID"] === 0) {
+                /*Primero verifico si se escribió manualmente la URL de la página editarCliente desde otro lado.
+                Eso lo hago comparando la variable global del backend ClientInfoID que vale por defecto 0.
+                Sólo se le da otro valor cuando se hace click en un equipo que está en la tabla de la otra página...*/
+                alert("No puedes entrar manualmente (cambiando la URL) a esta página...")
+                window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+
+            } else if (response["ChangedParameter"] == true) {
+                /*Si ya está en la página editarCliente, se verifica si se cambió la query-param en la URL.
+                Al ya estar seteada la variable global ClientInfoID, se recarga la pagina con la ID de info que
+                realmente debe aparecer*/
+                alert("No se puede cambiar manualmente la id del cliente que se muestra...")
+                window.location.href = `http://localhost:8000/tecnico/editarCliente?id=${response["ClientInfoID"]}&sessionID=${sessionID}`
+
+            } else {
+                fetch(`http://127.0.0.1:5000/acciones_cliente/${id_cliente_a_editar}`, {method: "GET"})
+                .then((res) => res.json())
+                .then(show_client_data)
+                .catch((error) => console.log("ERROR", error))
+            }
+        }
+
+        function show_client_data(data) {
+            if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el cliente con la id en los query params
                 alert(data["Mensaje"])
                 window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
             } else {
@@ -90,12 +113,12 @@
         }
 
         function edit_client() {
-            //Obtenemos las cosas que edito el usuario del formulario
+            //Obtenemos las cosas que editó el usuario del formulario
             let elementos = document.getElementById("editClient").elements
             let nombreIngresado = elementos.nombre.value
             let emailIngresado = elementos.email.value
 
-            if (nombreIngresado == "" || emailIngresado == "") { // Verificamos si algun dato esta vacio al momento de editar el cliente
+            if (nombreIngresado == "" || emailIngresado == "") { //Verificamos si algun dato esta vacio al momento de editar el cliente
                 alert("Por favor, completa todos los campos.")
             } else if (!validate_email(emailIngresado)) {
                 alert("El correo electrónico ingresado no es válido.")

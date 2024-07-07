@@ -83,11 +83,11 @@
             let contraseniaIngresada = elementos.contrasenia.value
             let rangoIngresado = elementos.rango.value
             
-            if (nombreIngresado == "" || emailIngresado == "" || contraseniaIngresada == "") { //Verifica si alguno de los campos esta vacio
+            if (nombreIngresado == "" || emailIngresado == "" || contraseniaIngresada == "") { //Verifica si alguno de los campos está vacío
                 alert("Por favor, completa todos los campos.")
-            } else if (!(validate_email(emailIngresado))) {
+            } else if (!validate_email(emailIngresado)) {
                 alert("El correo electrónico ingresado no es válido.")
-            } else { //Si esta todo correcto hace un POST para agregar al nuevo usuario
+            } else { //Si está todo correcto hace un POST para agregar al nuevo usuario
                 fetch("http://127.0.0.1:5000/acciones_usuario/0", {
                     method: "POST",
                     headers: {
@@ -109,7 +109,8 @@
         function handle_response(data) {
             alert(data["Mensaje"])
 
-            if (data["Mensaje"] == "Usuario agregado con éxito") { //Si el usuario se agrego con exito hace la redireccion a la pagina del administrador
+            if (data["Mensaje"] == "Usuario agregado con éxito") { //Realiza una comparación exacta del mensaje
+                //Si el usuario se agregó con éxito hace la redireccion a la página del administrador
                 window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
             }
         }

@@ -56,7 +56,7 @@
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
-        if (sessionID == "") {
+        if (sessionID == "") { //El backend no es capaz de detectar un path-param con ese valor, por eso se lo cambio
             sessionID = "null"
         }
 
@@ -69,13 +69,13 @@
             if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginCliente"
             } else {
-                //Cuando se accede a la página o se recarga, el filtro por defecto es "all", es decir, todos los estados de los equipos
+                //Cuando se accede a la página desde otro lado o se recarga, el filtro por defecto es "all", es decir, todos los estados de los equipos
                 filter_table("all")
             }
         }
 
         function filter_table(statusFilter) {
-            //Elimino las filas de la tabla filtradas de la forma anterior
+            //Elimino las filas de la tabla filtradas de la forma anterior antes de agregar los datos con el nuevo filtro
             table = document.getElementById("table")
             rows = table.getElementsByTagName("tr")
 
@@ -119,7 +119,9 @@
             equiposData = data["equipos"]
 
             for (let i = 0; i < equiposData.length; i++) {
+                //Para cada equipo creamos una fila (le ponemos algunos atributos) y le agregamos las columnas con la informacion correspondiente a la cual accedemos mediante keys de diccionario
                 equipo = document.createElement("tr")
+                
                 equipo.setAttribute("style", "cursor: pointer")
                 equipo.onclick = function() {
                     fetch(`http://127.0.0.1:5000/set_InfoID/${equiposData[i]["id"]}/equipo`)
@@ -137,7 +139,7 @@
                 }
                 
                 columnID = document.createElement("td")
-                columnID.setAttribute("class", "ids-dates") // Le asignamos la clase ids-dates para poner la fuente en negrita
+                columnID.setAttribute("class", "ids-dates") // Le asignamos la clase ids-dates para poner la fuente en negrita y más grande (en el CSS)
                 columnID.innerText = equiposData[i]["id"]
                 equipo.append(columnID)
 
@@ -163,7 +165,7 @@
                 equipo.append(columnTECHNAME)
 
                 columnDATE = document.createElement("td")
-                columnDATE.innerText = format_date(equiposData[i]["fecha_ingreso"]) //Usamos el format date para formatear la fecha y que se vea mejor, esta funcion esta implementada en auxiliar_function.js
+                columnDATE.innerText = format_date(equiposData[i]["fecha_ingreso"]) //Usamos el format_date para formatear la fecha y que se vea mejor, esta funcion esta implementada en auxiliar_functions.js
                 columnDATE.setAttribute("class", "ids-dates")
                 equipo.append(columnDATE)
 

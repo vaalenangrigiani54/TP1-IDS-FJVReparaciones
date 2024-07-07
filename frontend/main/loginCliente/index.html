@@ -38,18 +38,20 @@
     </footer>
 
     <script>
-        //Esto manda a reiniciar las variables globales SESSION_ID a 0
+        //Esto manda a reiniciar las variables globales SESSION_ID a 0 (No devuelve nada útil, por eso no pongo then()'s)
         fetch("http://127.0.0.1:5000/reset_session").catch((error) => console.log(`ERROR: ${error}`))
         
         function login() {
+            //Obtengo los datos del formulario
             let elementos = document.getElementById("form_client").elements
             let emailIngresado = elementos.email.value
             let codigoIngresado = elementos.codigo.value
 
-            if (emailIngresado == "" || codigoIngresado == "") { // Verifica que no este ningun campo vacio
+            if (emailIngresado == "" || codigoIngresado == "") { //Verifica que ningun campo esté vacío
                 alert("Debes llenar todos los campos para continuar")
             } else {
-                fetch(`http://127.0.0.1:5000/loginCliente/${emailIngresado}/${codigoIngresado}`) // Envia los datos de el email y la contraseña al backend y este verifica si son correctos
+                //Se envían los datos del email y el código de ingreso al backend y este verifica si son correctos
+                fetch(`http://127.0.0.1:5000/loginCliente/${emailIngresado}/${codigoIngresado}`)
                 .then((res) => res.json())
                 .then(handle_response)
                 .catch((error) => console.log(`ERROR: ${error}`))
@@ -59,7 +61,7 @@
         function handle_response(data) {
             if (data.length == 0) { //En caso de que el backend no encuentre ninguna coincidencia con los datos previamente ingresados se devuelve la lista vacia
                 alert("El correo y/o el código de ingreso son incorrectos...")
-            } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo
+            } else if ("Mensaje" in data[0]) { //Por si ocurre algún otro fallo en la query
                 alert("Algo ha fallado. Vuelva a intentarlo más tarde")
             } else {
                 window.location.href = `http://localhost:8000/cliente?sessionID=${data[0]["id"]}`
