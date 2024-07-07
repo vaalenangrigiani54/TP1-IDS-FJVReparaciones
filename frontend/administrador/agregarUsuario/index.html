@@ -11,14 +11,14 @@
     <link rel="stylesheet" href="../../styles/general.css">
     <link rel="stylesheet" href="../../styles/informaciones.css">
     <link rel="stylesheet" href="../../styles/añadir-editar-forms.css">
-    <!-- se ponen como refencia un fuente google y bootstrap el cual se usa para todo el proyecto y a los estilos de los archivos css -->
+    <!-- Se ponen como refencia una fuente de Google y Bootstrap. A este último lo usamos para todo el proyecto y los estilos de los archivos CSS -->
 </head>
 <body>
     <img class="header" src="../../header.jpg" alt="Header, logo de la empresa">
     <div class="info-top-btns">
+        <!-- Se hace un botón para volver para atrás y otro para cerrar sesión -->
         <button class="btn btn-secondary" id="btn-go-back" onclick=GO_BACK()>Atrás</button>
         <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
-        <!-- se hacen dos botones uno para volver para atras y otro para cerrar sesion -->
     </div>
          
     <div class="div-form div-form-usuarios">
@@ -78,7 +78,7 @@
         }
 
         function add_user() {
-            //Obtiene los datos ingresados 
+            //Se obtienen los datos ingresados 
             let elementos = document.getElementById("addUser").elements
             let nombreIngresado = elementos.nombre.value
             let emailIngresado = elementos.email.value
@@ -89,7 +89,7 @@
                 alert("Por favor, completa todos los campos.")
             } else if (!validate_email(emailIngresado)) {
                 alert("El correo electrónico ingresado no es válido.")
-            } else { //Si está todo correcto hace un POST para agregar al nuevo usuario
+            } else { //Si está todo correcto se hace un POST para agregar al nuevo usuario
                 fetch("http://127.0.0.1:5000/acciones_usuario/0", {
                     method: "POST",
                     headers: {
