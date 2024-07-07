@@ -76,17 +76,18 @@
         }
 
         function add_user() {
+            //Obtiene los datos ingresados 
             let elementos = document.getElementById("addUser").elements
             let nombreIngresado = elementos.nombre.value
             let emailIngresado = elementos.email.value
             let contraseniaIngresada = elementos.contrasenia.value
             let rangoIngresado = elementos.rango.value
             
-            if (nombreIngresado == "" || emailIngresado == "" || contraseniaIngresada == "") {
+            if (nombreIngresado == "" || emailIngresado == "" || contraseniaIngresada == "") { //Verifica si alguno de los campos esta vacio
                 alert("Por favor, completa todos los campos.")
-            } else if (!validate_email(emailIngresado)) {
+            } else if (!(validate_email(emailIngresado))) {
                 alert("El correo electrónico ingresado no es válido.")
-            } else {
+            } else { //Si esta todo correcto hace un POST para agregar al nuevo usuario
                 fetch("http://127.0.0.1:5000/acciones_usuario/0", {
                     method: "POST",
                     headers: {
@@ -108,7 +109,7 @@
         function handle_response(data) {
             alert(data["Mensaje"])
 
-            if (data["Mensaje"] == "Usuario agregado con éxito") {
+            if (data["Mensaje"] == "Usuario agregado con éxito") { //Si el usuario se agrego con exito hace la redireccion a la pagina del administrador
                 window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
             }
         }
