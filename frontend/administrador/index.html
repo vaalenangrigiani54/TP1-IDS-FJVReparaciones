@@ -89,8 +89,8 @@
 
                 columnUSERNAME = document.createElement("td")
                 columnUSERNAME.innerText = usuariosData[i]["nombre_usuario"]
-                columnUSERNAME.setAttribute("class", "hrefs")
-                columnUSERNAME.onclick = function() {
+                columnUSERNAME.setAttribute("class", "hrefs") 
+                columnUSERNAME.onclick = function() { //Usamos el onclick para que funcione como un link
                     fetch(`http://127.0.0.1:5000/set_InfoID/${usuariosData[i]["id"]}/usuario`)
                     .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/administrador/informacionUsuario?id=${usuariosData[i]["id"]}&sessionID=${sessionID}`
@@ -107,7 +107,7 @@
 
                 date = usuariosData[i]["fecha_ingreso"] // Diccionario: "dia", "mes", "anio", "horas", "minutos"
                 columnDATE = document.createElement("td")
-                columnDATE.innerText = format_date(usuariosData[i]["fecha_ingreso"])
+                columnDATE.innerText = format_date(usuariosData[i]["fecha_ingreso"]) //Usamos el format date para formatear la fecha y que se vea mejor, esta funcion esta implementada en auxiliar_function.js
                 columnDATE.setAttribute("class", "ids-dates")
                 usuario.append(columnDATE)
 
