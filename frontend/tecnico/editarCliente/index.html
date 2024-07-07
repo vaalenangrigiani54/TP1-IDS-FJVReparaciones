@@ -19,10 +19,10 @@
         <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
 
-    <div class="div-form div-form-cliente">
+    <div class="div-form div-form-cliente"> <!--Usamos las clase div-form-cliente para personalizar el contenedor de el form-->
         <p class="form-title">Editar al cliente:<p></p>
         <form class="form" id="editClient">
-            <div class="label-inputs">
+            <div class="label-inputs"> <!--Usamos la clase label-inputs para acomodar uno al lado de el otro el label y el input de ese campo-->
                 <label class="label" for="nombre"><b>* Nombre completo:</b></label>
                 <input class="input" type="text" id="nombre" required>
             </div>
@@ -81,6 +81,7 @@
                 alert(data["Mensaje"])
                 window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
             } else {
+                //Obtenemos la informacion del backend y rellenamos los campos con esa info
                 let elementos = document.getElementById("editClient").elements
                 elementos.nombre.value = data["nombre_cliente"]
                 elementos.email.value = data["email"]
@@ -89,16 +90,17 @@
         }
 
         function edit_client() {
+            //Obtenemos las cosas que edito el usuario del formulario
             let elementos = document.getElementById("editClient").elements
             let nombreIngresado = elementos.nombre.value
             let emailIngresado = elementos.email.value
 
-            if (nombreIngresado == "" || emailIngresado == "") {
+            if (nombreIngresado == "" || emailIngresado == "") { // Verificamos si algun dato esta vacio al momento de editar el cliente
                 alert("Por favor, completa todos los campos.")
             } else if (!validate_email(emailIngresado)) {
                 alert("El correo electrónico ingresado no es válido.")
             } else {
-                fetch(`http://127.0.0.1:5000/acciones_cliente/${id_cliente_a_editar}`, {
+                fetch(`http://127.0.0.1:5000/acciones_cliente/${id_cliente_a_editar}`, { //Aqui si pasamos la id porque es importante saber cual es el equipo a editar
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
@@ -118,7 +120,7 @@
             alert(data["Mensaje"])
 
             if (data["Mensaje"] == "Cliente actualizado con éxito") {
-                window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
+                window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}` // Si el cliente se actualizo con exito te redirige a la pagina de la lista de clientes
             }
         }
 
