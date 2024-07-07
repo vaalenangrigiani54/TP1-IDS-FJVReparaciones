@@ -127,6 +127,7 @@
                     window.location.href = `http://localhost:8000/cliente/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
                 }
 
+                //Dependiendo de el estado de el equipo se le asigna la clase para cambiar el color de fondo de la fila
                 if (equiposData[i]["estado"] == "En revisión/reparación") {
                     equipo.setAttribute("class", "revision")
                 } else if (equiposData[i]["estado"] == "Reparado") {
@@ -136,7 +137,7 @@
                 }
                 
                 columnID = document.createElement("td")
-                columnID.setAttribute("class", "ids-dates")
+                columnID.setAttribute("class", "ids-dates") // Le asignamos la clase ids-dates para poner la fuente en negrita
                 columnID.innerText = equiposData[i]["id"]
                 equipo.append(columnID)
 
@@ -162,7 +163,7 @@
                 equipo.append(columnTECHNAME)
 
                 columnDATE = document.createElement("td")
-                columnDATE.innerText = format_date(equiposData[i]["fecha_ingreso"])
+                columnDATE.innerText = format_date(equiposData[i]["fecha_ingreso"]) //Usamos el format date para formatear la fecha y que se vea mejor, esta funcion esta implementada en auxiliar_function.js
                 columnDATE.setAttribute("class", "ids-dates")
                 equipo.append(columnDATE)
 
