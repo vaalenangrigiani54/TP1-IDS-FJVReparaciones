@@ -22,7 +22,7 @@
     <h3>Estos son los equipos que has mandado a revisar/arreglar desde que te inscribiste:</h3>
     <h3>(Haz click en cualquier equipo para ver su información y las observaciones)</h3>
 
-    <div class="tab-info" style="margin-top: 1em">
+    <div class="tab-info" style="margin-top: 1em; justify-content: center;">
         <div class="tab-btns">       
             <button name="Nuevo Ingreso" onclick=filter_table(name) style="width: 20em" class="btn btn-secondary btn-add" id="filterButton"></button>
         </div>
@@ -94,9 +94,9 @@
             //Luego de hacer la query con el filtro indicado, se debe poner en la variable "statusFilter" la siguiente clave de filtro cuando se va a hacer click en el botón
             if (statusFilter == "Nuevo Ingreso") {
                 filterBtn.innerText = "Mostrar: Nuevo ingreso"
-                filterBtn.setAttribute("name", "En revisión/reparación")
-            } else if (statusFilter == "En revisión/reparación") {
-                filterBtn.innerText = "Mostrar: En revisión/reparación"
+                filterBtn.setAttribute("name", "En revisión")
+            } else if (statusFilter == "En revisión") {
+                filterBtn.innerText = "Mostrar: En revisión"
                 filterBtn.setAttribute("name", "Reparado")
             } else if (statusFilter == "Reparado") {
                 filterBtn.innerText = "Mostrar: Reparados"

@@ -21,18 +21,11 @@
     <h2 id="bienvenida">BIENVENIDO/A:</h2> <!-- Esto se actualiza después en la función show_data() -->
 
     <div class="tab-info">
-        <h3></h3>
-        <div class="tab-btns">  
-            <button class="btn btn-warning btn-add" onclick=goToClientsList()>Ver la lista de clientes</button>     
-            <button class="btn btn-primary btn-add" id="addClient" onclick=goToAddClient()>Registrar un nuevo cliente</button>
-            <button class="btn btn-info btn-add" id="addClient" onclick=goToAddDevice()>Registrar un nuevo equipo</button>
-        </div>
-    </div>
-
-    <div class="tab-info">
         <h3>Haz click en un equipo para ver su información...</h3>
         <div class="tab-btns">       
-            <button name="Nuevo Ingreso" onclick=filter_table(name) style="width: 20em" class="btn btn-secondary btn-add" id="filterButton"></button>
+            <button name="Nuevo Ingreso" onclick=filter_table(name) style="width: 15em" class="btn btn-secondary btn-add" id="filterButton"></button>
+            <button class="btn btn-warning btn-add" onclick=goToClientsList()>Ver la lista de clientes</button>
+            <button class="btn btn-primary btn-add" id="addClient" onclick=goToAddDevice()>Registrar un nuevo equipo</button>
         </div>
     </div>
 
@@ -102,9 +95,9 @@
             //Luego de hacer la query con el filtro indicado, se debe poner en la variable "statusFilter" la siguiente clave de filtro cuando se va a hacer click en el botón
             if (statusFilter == "Nuevo Ingreso") {
                 filterBtn.innerText = "Mostrar: Nuevo ingreso"
-                filterBtn.setAttribute("name", "En revisión/reparación")
-            } else if (statusFilter == "En revisión/reparación") {
-                filterBtn.innerText = "Mostrar: En revisión/reparación"
+                filterBtn.setAttribute("name", "En revisión")
+            } else if (statusFilter == "En revisión") {
+                filterBtn.innerText = "Mostrar: En revisión"
                 filterBtn.setAttribute("name", "Reparado")
             } else if (statusFilter == "Reparado") {
                 filterBtn.innerText = "Mostrar: Reparados"
@@ -175,10 +168,6 @@
 
                 tabla.append(equipo)
             }
-        }
-
-        function goToAddClient() {
-            window.location.href = `http://localhost:8000/tecnico/agregarCliente?sessionID=${sessionID}`
         }
 
         function goToAddDevice() {

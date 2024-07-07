@@ -94,14 +94,14 @@
         function handle_response(data) {
             if (data["Mensaje"] == "SUCCESS") {
                 alert(data["MensajeCodigo"])
-                window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+                window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
             } else {
                 alert(data["Mensaje"])
             }
         }
 
         function GO_BACK() {
-            window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+            window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
         }
 
         function CLOSE_SESSION() {
