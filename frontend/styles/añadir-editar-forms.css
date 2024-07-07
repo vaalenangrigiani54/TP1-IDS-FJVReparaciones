@@ -1,9 +1,10 @@
+/*se usa para cambiar el color del container del form*/
 .div-form {
     background: rgb(255, 255, 220);
     border: .1em solid rgb(180, 180, 100);
     margin-top: 1em;
 }
-
+/*esta se usa para organizar los elementos del form*/
 .form {
     display: flex;
     flex-direction: column;
@@ -11,17 +12,17 @@
     width: 45em;
     height: 40em;
 }
-
+/*esto esta hecho para separar los labels de los inputs*/
 .label-inputs {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
+/*damos tamaño a los labels*/
 .label {
     font-size: 1.2em;
 }
-
+/*establecemos tamaños de los inputs ya sea para borde fuente y padding*/
 .input {
     font-size: 1.1em;
     border: .1em solid gray;
@@ -30,13 +31,13 @@
     padding-left: .5em;
     width: 20em;
 }
-
+/*le damos tamaño a la fuente al borde y el ancho del formulario select*/
 .form-select {
     font-size: 1.1em;
     border: .1em solid gray;
     width: 18em;
 }
-
+/*para la parte de las observaciones tenemos un text area el cual no se le puede cambiar el tamaño*/
 .textarea {
     resize: none;
     font-size: 1.1em;
@@ -47,24 +48,24 @@
     margin-top: .5em;
     margin-bottom: 1.7em;
 }
-
+/*remarco que fue un quilombo ordenar la pagina hasta que descubrimos el display flex*/
 .label-textarea {
     display: flex;
     flex-direction: column;
 }
-
+/*el boton de del formulario se le agregan la negrita y el tamaño en ems*/
 .form-button {
     font-size: 1.15em;
     font-weight: bold;
 }
-
+/*el justifiy content alinea los items alrededor del boton editclient que ya tiene peusto el display flex */
 #editClient {
     justify-content: space-around;
     width: 40em;
     height: 20em;
     font-size: 1.15em;
 }
-
+/*lo mismo que el comentario anterior*/
 #addClient {
     justify-content: space-around;
     width: 40em;

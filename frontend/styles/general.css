@@ -1,3 +1,6 @@
+/*overflow deja que el contenido del body se desplace verticalmente, 
+el display flex establece al cuerpo como contenedor flexible, el flex direction column 
+alinea verticalmente el contenido y se establece la altura minima*/
 body {
     overflow-y: auto;
     display: flex;
@@ -5,6 +8,7 @@ body {
     min-height: 100vh;
 }
 
+/*se establecen anchos y altos al 100% */
 .header {
     min-width: 100%;
     min-height: 100%;
@@ -18,7 +22,9 @@ h2 {
     font-family: Poppins, sans-serif;
     margin-top: .2em;
 }
-
+/* el display flex lo hace un contenedor flexible el justify
+content centra horizontalmente el contenido el align items centra verticalmente
+se establecen alturas y los tamaños de los bordes margenes y padding */
 .div-h2 {
     display: flex;
     justify-content: center;
@@ -49,6 +55,10 @@ h4 {
 }
 
 .div-form {
+    /*se hace un contenedor flexible, se alinea el contenido vertical y horizontalmente 
+    al centro con las primeras tres funciones. flex direction column hace que los elementos del formulario
+    se alineen 
+    */
     display: flex;
     justify-content: center;
     align-self: center;
@@ -60,7 +70,8 @@ h4 {
     padding: 2em;
     margin-top: 2em;
     margin-bottom: 2em;
-
+    /*se hace un contenedor flexible, se alinean los campos del formulario al centro 
+    y en una columna vertical(esto ultimo producido por el flex direction column) */
     .formularios {
         display: flex;
         align-items: center;
@@ -74,7 +85,7 @@ h4 {
         font-size: 2em;
         font-weight: bold;
     }
-
+    /*se establece color de fondo anchos y altos para bordes ,margenes y padding*/
     .form-input {
         background: white;
         width: 20em;
@@ -85,11 +96,9 @@ h4 {
         border-radius: 20px;
         padding-left: 20px;
         padding-right: 20px;
-        -webkit-transition: 0.4s;
-        -o-transition: 0.4s;
-        transition: 0.4s;
-    }
 
+    }
+    /*al boton de submit del formulario se le da tamaño en sus margenes*/
     .form-button {
         width: 12em;
         margin-top: -1.2m;
@@ -103,6 +112,7 @@ h4 {
     color: white;
     text-align: center;
     padding: .5em;
+    /*hace que el footer quede abjo del todo*/
     margin-top: auto;
 
     #info {
@@ -110,7 +120,7 @@ h4 {
         font-size: 1em;
     }
 }
-
+/*esto hace que el boton de incremento no se muestren*/
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
@@ -123,6 +133,8 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 table {
+    /*genralmente en esta parte del codigo se declaran fuentes con sus 
+    respectivos tamaños para la tabla que muestra la informacion */
     font-family: 'Roboto', sans-serif;
     font-size: 1.1em;
     text-align: center;
@@ -140,7 +152,7 @@ table {
     td.hrefs {
         font-size: 1.15em;
     }
-
+        /*esto forma parte de la decoracion hace que el elemento sea clickeable y subraya el texto */
     td.hrefs:hover {
         color: #0000FF;
         text-decoration: underline;
@@ -164,7 +176,7 @@ table {
     display: flex;
     justify-content: space-around;
 }
-
+/* el justify content hace que quede espacio entre los botones*/
 .info-top-btns {
     display: flex;
     justify-content: space-between;

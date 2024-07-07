@@ -1,3 +1,4 @@
+/*Lo utilizamos para organizar los elementos del container de informaciones y agregarle un borde*/
 .info-card {
     border: .1em solid rgb(200,200,200);
     align-self: center;
@@ -6,10 +7,12 @@
     min-height: 30em;
 }
 
+/* Quitamos el margin que tiene por defecto el h2 */
 .div-h2 {
     margin: 0;
 }
 
+/* Organizamos el los campos de el container de informacion*/
 .div-info {
     display: flex;
     flex-direction: column;
@@ -17,22 +20,26 @@
     padding-right: 7em;
 }
 
+/* Le asignamos un tamaño al card body de informaciones equipo */
 .info-equipo {
     display: flex;
     width: 65em;
 }
 
+/* Organizamos la informacion de los campos (label-input) */
 .div-data {
     display: flex;
     flex-direction: row;
     
 }
 
+/* Aumentamos el tamaño y le damos margen a los labels de los campos */
 .div-data-text {
     font-size: 1.2em;
     margin-right: .4em;
 }
 
+/* Decoramos el text-area de observaciones */
 .observaciones {
     flex: 1;
     padding: 1em;
@@ -41,6 +48,7 @@
     margin-left: 3em;
 }
 
+/* Ajustamos la posicion del boton de editar y le damos margen */
 .btn-edit {
     display: flex;
     justify-content: center;
@@ -48,11 +56,13 @@
     margin-bottom: 2em;
 }
 
+/* Le damos tamaños minimos a la carta de informacion del cliente */
 .card-client {
     min-width: 27em;
     min-height: 25em;
 }
 
+/* Le damos tamaños minimos a la carta de informacion del usuario */
 .card-user {
     max-width: 40em;
     min-height: 23em;
@@ -61,12 +71,14 @@
     margin-bottom: 2em;
 }
 
+/* Organizamos el contenido dentro de la carta del usuario */
 .card-user .card-content {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 }
 
+/* Ajustamos la posicion del texto en informacionUsuario y le cambiamos la fuente */
 #rango-big {
     display: flex;
     align-self: center;

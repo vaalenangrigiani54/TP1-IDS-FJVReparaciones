@@ -6,7 +6,8 @@ h3 {
 h2 {
     margin-left: .5em;
 }
-
+/*al boton añadir usuario, cliente y equipo se le da tamaño de margen,ancho y tamaño de fuente 
+tambien y con el justify flex end se lo alinea a la derecha y abajo del contenedor hecho*/
 .btn-add{
     width: 14em;
     font-size: 1.2em;
@@ -18,7 +19,8 @@ h2 {
     margin-bottom: .3em;
     margin-right: .7em;
 }
-
+/* se le da tamaño de margenes se lo alinea al centro y su contenido 
+tiene un espacio en el medio*/
 .tab-info {
     display: flex;
     justify-content: space-between;
