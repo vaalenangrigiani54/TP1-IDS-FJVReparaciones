@@ -51,12 +51,10 @@ Ademas de todo eso le dimos importancia a la seguridad del software y por lo tan
 `python3 backend/app.py` (en la terminal donde tienes activado el virtualenv)<br>
 `python3 -m http.server` (en la otra terminal donde abriste en el directorio frontend)<br>
 
-7. Una vez levantados los servidores, se debe volver a la base de datos porque se necesta crear el usuario administrador con el que nace todo lo demás:<br>
-  Para entrar a la base de datos creada: `sudo -u postgres psql fjvrep`<br>
-  Para crear el usuario administrador principal (Se debe copiar tal cual como aparece aquí abajo salvo tu nombre, email y contraseña):<br>
-  - `INSERT INTO usuarios (nombre_usuario, email, contrasenia, rango, fecha_ingreso) VALUES ('tu_nombre', 'tu_email', 'tu_contraseña', 'Administrador', NOW());`<br>
-  Por último es necesario crear un "usuario" que hace referencia a que fue eliminado:<br>
-  - `INSERT INTO usuarios (id, nombre_usuario, email, contrasenia, rango, fecha_ingreso) VALUES (-1, 'USUARIO ELIMINADO', '', '', '', NULL);`<br>
+7. Una vez levantados los servidores, se debe volver a la base de datos porque se necesta crear el usuario administrador con el que nace todo lo demás. Y por otra parte, también es necesario crear otro "usuario" que hace referencia a que fue eliminado (Se sugiere copiar los comandos exactamente como están aquí, salvo tu nombre, email y contraseña)<br>
+`sudo -u postgres psql fjvrep`<br>
+`INSERT INTO usuarios (nombre_usuario, email, contrasenia, rango, fecha_ingreso) VALUES ('tu_nombre', 'tu_email', 'tu_contraseña', 'Administrador', NOW());`<br>
+`INSERT INTO usuarios (id, nombre_usuario, email, contrasenia, rango, fecha_ingreso) VALUES (-1, 'USUARIO ELIMINADO', '', '', '', NULL);`<br>
 
 Una vez hechos todos esos pasos, ya puedes ingresar a nuestro software web abriendo tu navegador y entrando en [http://localhost:8000/main](http://localhost:8000/main)
 
