@@ -5,7 +5,7 @@ from database import *
 import random
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://user:password@localhost:5432/fjvrep"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://admin:admin@localhost:5432/fjvrep"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app)
 
@@ -221,6 +221,10 @@ def tecnico(id, statusFilter):
             equipos = Equipos.query.where(Equipos.id_tecnico == id).join(Clientes).add_columns(
                 Clientes.nombre_cliente
             ).order_by(desc(Equipos.fecha_ingreso)).all()
+        elif statusFilter == "En revisión":
+            equipos = Equipos.query.where(Equipos.id_tecnico == id, Equipos.estado == "En revisión/reparación").join(Clientes).add_columns(
+                Clientes.nombre_cliente
+            ).order_by(desc(Equipos.fecha_ingreso)).all()
         else:
             equipos = Equipos.query.where(Equipos.id_tecnico == id, Equipos.estado == statusFilter).join(Clientes).add_columns(
                 Clientes.nombre_cliente
@@ -266,6 +270,10 @@ def cliente(id, statusFilter):
         cliente = Clientes.query.where(Clientes.id == id).first()
         if statusFilter == "all":
             equipos = Equipos.query.where(Equipos.id_cliente == id).join(Usuarios).add_columns(
+                Usuarios.nombre_usuario
+            ).order_by(desc(Equipos.fecha_ingreso)).all()
+        elif statusFilter == "En revisión":
+            equipos = Equipos.query.where(Equipos.id_cliente == id, Equipos.estado == "En revisión/reparación").join(Usuarios).add_columns(
                 Usuarios.nombre_usuario
             ).order_by(desc(Equipos.fecha_ingreso)).all()
         else:
