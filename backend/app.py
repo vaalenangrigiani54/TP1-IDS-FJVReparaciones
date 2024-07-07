@@ -90,7 +90,7 @@ def verify_InfoID(id, opcion):
 
 
 # Por otra parte se necesita un endpoint auxiliar más para setear esa variable global que hace la verificación en el endpoint anterior
-# Este endpoint se invoca desde las páginas que pueden dirigir a las de información del usuario/cliente/equipo
+# Este endpoint se invoca desde las páginas que pueden dirigir a las de información/editar del usuario/cliente/equipo
 @app.route("/set_InfoID/<int:id>/<opcion>")
 def set_InfoID(id, opcion):
     global USER_INFO_ID, CLIENT_INFO_ID, DEVICE_INFO_ID
