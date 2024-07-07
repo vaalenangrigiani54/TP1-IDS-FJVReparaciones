@@ -32,7 +32,7 @@ Ademas de todo eso le dimos importancia a la seguridad del software y por lo tan
 ### Si es primera vez que vas a usar nuestro software web tienes que seguir estos pasos:
 1. Instalar postgresql, crear una base de datos y un usuario con los siguientes comandos <br>
   `sudo apt install postgresql` <br>
-  `sudo -u postgres createuser --createdb --pwprompt user` (luego escribe la contraseña: password) <br>
+  `sudo -u postgres createuser --createdb --pwprompt admin` (luego escribe la contraseña: admin) <br>
   `sudo -u postgres createdb --owner=user fjvrep` <br>
 
 2. Instalar python3 <br>
