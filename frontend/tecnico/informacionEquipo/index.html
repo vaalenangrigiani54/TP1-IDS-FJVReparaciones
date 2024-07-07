@@ -15,12 +15,12 @@
 <body>
     <img class="header" src="../../header.jpg" alt="Header, logo de la empresa">
     
-    <div class="info-top-btns">
+    <div class="info-top-btns"> <!--Esta clase se usa para acomodar los botones en el top de la pagina-->
         <button class="btn btn-secondary" id="btn-go-back" onclick=GO_BACK()>Atrás</button>
         <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
 
-    <div class="info-card card">
+    <div class="info-card card"> <!--Usamos bootstrap para hacer la card de la informacion del equipo-->
         <div class="card-header">
             <div class="div-h2 card-title">
                 <h2 id="titleInfo">Información del equipo #:</h2>
@@ -131,6 +131,7 @@
                 alert(data["Mensaje"])
                 window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
             } else {
+                //Obtenemos los datos del backend y los agregamos a la pagina en el campo correspondiente
                 document.getElementById("titleInfo").innerText = `Información del equipo #${data["id"]}:`
                 document.getElementById("cliente").innerText = data["nombre_cliente"]
                 document.getElementById("equipo").innerText = data["tipo_equipo"]
@@ -144,7 +145,7 @@
         }
 
         function goToEditDevice() {
-            fetch(`http://127.0.0.1:5000/set_deviceInfoID/${id_equipo_info}`)
+            fetch(`http://127.0.0.1:5000/set_deviceInfoID/${id_equipo_info}`) // Se encarga de registrar la id del equipo que vamos a editar para no poder cambiar de equipo desde la URL
                 .catch((error) => console.log(`ERROR: ${error}`))
             window.location.href = `http://localhost:8000/tecnico/editarEquipo?id=${id_equipo_info}&sessionID=${sessionID}`
         }
