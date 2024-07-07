@@ -90,6 +90,7 @@
                 alert(data["Mensaje"])
                 window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
             } else {
+                //Si encuentra el usuario rellena los campos del form con los datos que el backend regresa
                 let elementos = document.getElementById("editUser").elements
                 elementos.nombre.value = data["nombre_usuario"]
                 elementos.email.value = data["email"]
@@ -99,17 +100,18 @@
         }
 
         function edit_user() {
+            //Obtiene los datos que el usuario edito
             let elementos = document.getElementById("editUser").elements
             let nombreIngresado = elementos.nombre.value
             let emailIngresado = elementos.email.value
             let contraseniaIngresada = elementos.contrasenia.value
             let rangoIngresado = elementos.rango.value
             
-            if (nombreIngresado == "" || emailIngresado == "" || contraseniaIngresada == "") {
+            if (nombreIngresado == "" || emailIngresado == "" || contraseniaIngresada == "") { //Verifica si hay algun campo vacio
                 alert("Por favor, completa todos los campos.")
-            } else if (!validate_email(emailIngresado)) {
+            } else if (!validate_email(emailIngresado)) { //Verifica si el email ingresado es correcto, esta funcion esta implementada en auxiliar_functions.js
                 alert("El correo electrónico ingresado no es válido.")
-            } else {
+            } else { //Si esta todo correcto hace un PUT con los datos editados para actualizar la informacion de ese usuario
                 fetch(`http://127.0.0.1:5000/acciones_usuario/${id_usuario_a_editar}`, {
                     method: "PUT",
                     headers: {
@@ -131,7 +133,7 @@
         function handle_response(data) {
             alert(data["Mensaje"])
 
-            if (data["Mensaje"] == "Usuario actualizado con éxito") {
+            if (data["Mensaje"] == "Usuario actualizado con éxito") { //Si el usuario se actualiza con exito hace una redireccion a la pagina del administrador
                 window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
             }
         }
