@@ -20,7 +20,7 @@
         <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
 
-    <div class="div-form ">
+    <div class="div-form "> <!--Usamos div-form para hacer el contenedor de el form-->
         <p class="form-title">Editar la información del equipo:<p></p>
         <form class="form" id="editDevice">
             <div class="label-inputs">
@@ -129,12 +129,13 @@
                 elementos.modelo.value = data["modelo"]
                 elementos.serie.value = data["num_serie"]
                 elementos.estado.value = data["estado"]
-                if (data["observaciones"] != "-")
+                if (data["observaciones"] != "-") // Verificamos si se ha modificado las observaciones, si se modificaron se rellena con los datos, sino dejamos el campo vacio
                     elementos.observaciones.value = data["observaciones"]
             }
         }
 
         function edit_device() {
+            //Toma los elementos ya modificados por el usuario
             let elementos = document.getElementById("editDevice").elements
             let emailIngresado = elementos.client_email.value
             let equipoIngresado = elementos.equipo.value
@@ -144,7 +145,7 @@
             let estadoIngresado = elementos.estado.value
             let observacionIngresada = elementos.observaciones.value
 
-            if (emailIngresado == "" || marcaIngresada == "" || modeloIngresado == "" || serieIngresada == "") {
+            if (emailIngresado == "" || marcaIngresada == "" || modeloIngresado == "" || serieIngresada == "") { // Verifica si hay algun campo vacio
                 alert("Por favor, completa todos los campos.")
             } else if (!validate_email(emailIngresado)) {
                 alert("El correo electrónico ingresado no es válido.")
@@ -173,7 +174,7 @@
         function handle_response(data) {
             alert(data["Mensaje"])
 
-            if (data["Mensaje"] == "Equipo actualizado con éxito") {
+            if (data["Mensaje"] == "Equipo actualizado con éxito") { // Si el equipo se actualiza con exito te redirige a la informacion del equipo
                 window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${id_equipo_a_editar}&sessionID=${sessionID}`
             }
         }
