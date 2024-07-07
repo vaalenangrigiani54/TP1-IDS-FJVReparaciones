@@ -20,7 +20,7 @@
         <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
 
-    <div class="div-form ">
+    <div class="div-form">
         <p class="form-title">Agregar un nuevo equipo:<p></p>
         <form class="form" id="addDevice">
             <div class="label-inputs">
@@ -92,12 +92,12 @@
             let modeloIngresado = elementos.modelo.value
             let serieIngresada = elementos.serie.value
             
-            if (emailIngresado == "" || marcaIngresada == "" || modeloIngresado == "" || serieIngresada == "" ) {
+            if (emailIngresado == "" || marcaIngresada == "" || modeloIngresado == "" || serieIngresada == "" ) {  // Verificamos si al menos uno de los datos es vacio
                 alert("Por favor, completa todos los campos.")
             } else if (!validate_email(emailIngresado)) {
                 alert("El correo electrónico ingresado no es válido.")
             } else {
-                fetch(`http://127.0.0.1:5000/acciones_equipo/0`, {
+                fetch(`http://127.0.0.1:5000/acciones_equipo/0`, { // Pongo id 0 porque el metodo POST no necesita el id de un equipo
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -120,7 +120,7 @@
         function handle_response(data) {
             alert(data["Mensaje"])
 
-            if (data["Mensaje"] == "Equipo agregado con éxito") {
+            if (data["Mensaje"] == "Equipo agregado con éxito") { // Si el equipo se agrego con exito te redirige a la pagina del tecnico donde estan todos los equipos
                 window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
             }
         }
