@@ -21,22 +21,15 @@
     <h2 id="bienvenida">BIENVENIDO/A:</h2> <!-- Esto se actualiza después en la función show_data() -->
 
     <div class="tab-info">
-        <h3></h3>
-        <div class="tab-btns">  
-            <button class="btn btn-warning btn-add" onclick=goToClientsList()>Ver la lista de clientes</button>     
-            <button class="btn btn-primary btn-add" id="addClient" onclick=goToAddClient()>Registrar un nuevo cliente</button>
-            <button class="btn btn-info btn-add" id="addClient" onclick=goToAddDevice()>Registrar un nuevo equipo</button>
-        </div>
-    </div>
-
-    <div class="tab-info">
         <h3>Haz click en un equipo para ver su información...</h3>
         <div class="tab-btns">       
-            <button name="Nuevo Ingreso" onclick=filter_table(name) style="width: 20em" class="btn btn-secondary btn-add" id="filterButton"></button>
+            <button name="Nuevo Ingreso" onclick=filter_table(name) style="width: 15em" class="btn btn-secondary btn-add" id="filterButton"></button>  <!-- Esto se inicializa en name = nuevo ingreso por que es el filtro siguiente, el filtro por defecto es ftodos-->
+            <button class="btn btn-warning btn-add" onclick=goToClientsList()>Ver la lista de clientes</button>    <!-- Los botones estan hechos con bootstrap y se les hacen algunas modificaciones en el css-->
+            <button class="btn btn-primary btn-add" id="addClient" onclick=goToAddDevice()>Registrar un nuevo equipo</button>
         </div>
     </div>
 
-    <div class="t-div">
+    <div class="t-div">  <!-- Usamos la clase t-div para darle márgenes a la tabla -->
         <table class="table table-bordered" id="table" cellpadding="7">
             <tr class="table-dark">
                 <th>ID</th>
@@ -64,7 +57,7 @@
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
-        if (sessionID == "") {
+        if (sessionID == "") { //El backend no es capaz de detectar un path-param con ese valor, por eso se lo cambio
             sessionID = "null"
         }
         
@@ -77,13 +70,13 @@
             if (login["Logged"] == false) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
             } else {
-                //Cuando se accede a la página o se recarga, el filtro por defecto es "all", es decir, todos los estados de los equipos
+                //Cuando se accede a la página desde otro lado o se recarga, el filtro por defecto es "all", es decir, todos los estados de los equipos
                 filter_table("all")
             }
         }
 
         function filter_table(statusFilter) {
-            //Elimino las filas de la tabla filtradas de la forma anterior
+            //Elimino las filas de la tabla filtradas de la forma anterior antes de agregar los datos con el nuevo filtro
             table = document.getElementById("table")
             rows = table.getElementsByTagName("tr")
 
@@ -102,9 +95,9 @@
             //Luego de hacer la query con el filtro indicado, se debe poner en la variable "statusFilter" la siguiente clave de filtro cuando se va a hacer click en el botón
             if (statusFilter == "Nuevo Ingreso") {
                 filterBtn.innerText = "Mostrar: Nuevo ingreso"
-                filterBtn.setAttribute("name", "En revisión/reparación")
-            } else if (statusFilter == "En revisión/reparación") {
-                filterBtn.innerText = "Mostrar: En revisión/reparación"
+                filterBtn.setAttribute("name", "En revisión")
+            } else if (statusFilter == "En revisión") {
+                filterBtn.innerText = "Mostrar: En revisión"
                 filterBtn.setAttribute("name", "Reparado")
             } else if (statusFilter == "Reparado") {
                 filterBtn.innerText = "Mostrar: Reparados"
@@ -120,22 +113,28 @@
 
         function show_data(data) {
             bienvenido = document.getElementById("bienvenida")
-            bienvenido.innerText = `BIENVENIDO/A: ${data["session_username"]}`
+            bienvenido.innerText = `BIENVENIDO/A: ${data["session_username"]}` //Tomamos el nombre del usuario que inicia sesion y lo ponemos en la pagina
 
             // Agrego los equipos que el técnico administra
             tabla = document.getElementById("table")
             equiposData = data["equipos"]
 
             for (let i = 0; i < equiposData.length; i++) {
+                //Para cada equipo creamos una fila (le ponemos algunos atributos) y le agregamos las columnas con la informacion correspondiente a la cual accedemos mediante keys de diccionario
                 equipo = document.createElement("tr")
-                equipo.setAttribute("style", "cursor: pointer")
-                equipo.onclick = function() {
+                
+                equipo.setAttribute("style", "cursor: pointer") //Esto es para que cambie el cursor a la manito al ponerlo sobre la fila
+                equipo.onclick = function() { //Usamos el onclick para que funcione como un link
+                    /*Este fetch sólo sirve para darle valor a la variable global DeviceInfoID del backend. Es para que la verificación en la otra página no tire ninguna alerta.
+                    No son necesarios los then() porque el endpoint no devuelve nada útil.
+                    Luego se redirige a la página de informaciónEquipo con las IDs correspondientes...*/
                     fetch(`http://127.0.0.1:5000/set_InfoID/${equiposData[i]["id"]}/equipo`)
                     .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
                 }
                 
-                if (equiposData[i]["estado"] == "En revisión/reparación") {
+                //Dependiendo de el estado de el equipo usamnos la clase para cambiar el color de la linea en la tabla
+                if (equiposData[i]["estado"] == "En revisión/reparación") { 
                     equipo.setAttribute("class", "revision")
                 } else if (equiposData[i]["estado"] == "Reparado") {
                     equipo.setAttribute("class", "reparado")
@@ -144,7 +143,7 @@
                 }
 
                 columnID = document.createElement("td")
-                columnID.setAttribute("class", "ids-dates")
+                columnID.setAttribute("class", "ids-dates") //El ids-dates es para poner la fuente en negrita y un poco más grande (en el CSS)
                 columnID.innerText = equiposData[i]["id"]
                 equipo.append(columnID)
 
@@ -169,23 +168,21 @@
                 equipo.append(columnCLIENTNAME)
 
                 columnDATE = document.createElement("td")
-                columnDATE.innerText = format_date(equiposData[i]["fecha_ingreso"])
+                columnDATE.innerText = format_date(equiposData[i]["fecha_ingreso"]) //Usamos el format_date para formatear la fecha y que se vea mejor, esta funcion esta implementada en auxiliar_function.js
                 columnDATE.setAttribute("class", "ids-dates")
                 equipo.append(columnDATE)
 
-                tabla.append(equipo)
+                tabla.append(equipo) //Por último agregamos la fila a la tabla
             }
         }
 
-        function goToAddClient() {
-            window.location.href = `http://localhost:8000/tecnico/agregarCliente?sessionID=${sessionID}`
-        }
-
         function goToAddDevice() {
+            //Redireccionamos a la pagina agregar equipo, con el session id correspondiente
             window.location.href = `http://localhost:8000/tecnico/agregarEquipo?sessionID=${sessionID}`
         }
 
         function goToClientsList() {
+            //Redireccionamos a la pagina de la lista de los clientes, con el session id correspondiente
             window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
         }
 

@@ -17,13 +17,13 @@
     <div class="info-top-btns">
         <button class="btn btn-secondary" id="btn-go-back" onclick=GO_BACK()>Atrás</button>
         <button id="btn-cerrar-sesion" class="btn btn-danger" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
-    </div>
+    </div><br>
 
-    <h2>Información de todos los clientes inscriptos</h2>
-
-    <div class="tab-info">
+    <div class="tab-info"> <!--Esta clase se usa para organizar el h2 y los botones-->
+        <h2>Información de todos los clientes inscriptos:</h2>
         <div class="tab-btns">       
-            <button name="fecha antiguos" onclick=order_table(name) style="width: 20em" class="btn btn-primary btn-add" id="orderButton" ></button>
+            <button name="fecha antiguos" onclick=order_table(name) style="width: 18em" class="btn btn-secondary btn-add" id="orderButton"></button>
+            <button class="btn btn-primary btn-add" id="addClient" onclick=goToAddClient()>Registrar un nuevo cliente</button>
         </div>
     </div>
 
@@ -92,16 +92,16 @@
             
             //Luego de hacer la query con el ordenamiento indicado, se debe poner en la veriable "orderKEY" la siguiente clave de ordenamiento cuando se va a hacer click en el botón
             if (orderKEY == "nombre A-Z") {
-                orderBtn.innerText = "Ordenado por nombre A-Z"
+                orderBtn.innerText = "Ordenado por: Nombre (A-Z)"
                 orderBtn.setAttribute("name", "nombre Z-A")
             } else if (orderKEY == "nombre Z-A") {
-                orderBtn.innerText = "Ordenado por nombre Z-A"
+                orderBtn.innerText = "Ordenado por: Nombre (Z-A)"
                 orderBtn.setAttribute("name", "fecha recientes")
             } else if (orderKEY == "fecha recientes") {
-                orderBtn.innerText = "Ordenado por los más recientes"
+                orderBtn.innerText = "Ordenado por: Más recientes"
                 orderBtn.setAttribute("name", "fecha antiguos")
             } else if (orderKEY == "fecha antiguos") {
-                orderBtn.innerText = "Ordenado por los más antiguos"
+                orderBtn.innerText = "Ordenado por: Más antiguos"
                 orderBtn.setAttribute("name", "nombre A-Z")
             }
         }
@@ -143,6 +143,11 @@
                 buttonEDIT.setAttribute("class", "btn btn-warning")
                 buttonEDIT.innerText = "Editar cliente"
                 buttonEDIT.onclick = function() {
+                    /*Este fetch sólo sirve para darle valor a la variable global ClientInfoID del backend. Es para que la verificación en la otra página no tire ninguna alerta.
+                    No son necesarios los then() porque el endpoint no devuelve nada útil.
+                    Luego se redirige a la página de editarCliente con las IDs correspondientes...*/
+                    fetch(`http://127.0.0.1:5000/set_InfoID/${clientesData[i]["id"]}/cliente`)
+                    .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href=`http://localhost:8000/tecnico/editarCliente?id=${clientesData[i]["id"]}&sessionID=${sessionID}`
                 }
                 
@@ -150,7 +155,7 @@
                 buttonDELETE.setAttribute("class", "btn btn-danger")
                 buttonDELETE.innerText = "Eliminar cliente"
                 buttonDELETE.onclick = function() {
-                    if (confirm(`¿Estás seguro que deseas eliminar al cliente ${clientesData[i]["nombre_cliente"]}?`)) {
+                    if (confirm(`¿Estás seguro que deseas eliminar al cliente ${clientesData[i]["nombre_cliente"]}?\nSe eliminarán todos sus equipos relacionados...`)) {
                         fetch(`http://127.0.0.1:5000/acciones_cliente/${clientesData[i]["id"]}`, {method: "DELETE"})
                         .then(function() {
                             alert("Cliente eliminado con éxito")
@@ -166,6 +171,10 @@
 
                 tabla.append(cliente)
             }
+        }
+
+        function goToAddClient() {
+            window.location.href = `http://localhost:8000/tecnico/agregarCliente?sessionID=${sessionID}`
         }
 
         function CLOSE_SESSION() {

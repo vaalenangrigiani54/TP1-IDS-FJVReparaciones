@@ -51,7 +51,7 @@
     <script>
         let sessionID = new URLSearchParams(window.location.search).get("sessionID")
         
-        if (sessionID == "") {
+        if (sessionID == "") { //El backend no es capaz de detectar un path-param con ese valor, por eso se lo cambio
             sessionID = "null"
         }
 
@@ -80,6 +80,7 @@
             usuariosData = data["usuarios"]
 
             for (let i = 0; i < usuariosData.length; i++) {
+                //Para cada usuario creamos una fila y le agregamos las columnas con la informacion correspondiente a la cual accedemos mediante keys de diccionario
                 usuario = document.createElement("tr")
 
                 columnID = document.createElement("td")
@@ -89,8 +90,11 @@
 
                 columnUSERNAME = document.createElement("td")
                 columnUSERNAME.innerText = usuariosData[i]["nombre_usuario"]
-                columnUSERNAME.setAttribute("class", "hrefs")
-                columnUSERNAME.onclick = function() {
+                columnUSERNAME.setAttribute("class", "hrefs") //La clase 'hrefs' es para que se ponga azul y subrayado cuando se pasa el cursor por encima (en el CSS)
+                columnUSERNAME.onclick = function() { //Usamos el onclick para que funcione como un link
+                    /*Este fetch sólo sirve para darle valor a la variable global UserInfoID del backend. Es para que la verificación en la otra página no tire ninguna alerta.
+                    No son necesarios los then() porque el endpoint no devuelve nada útil.
+                    Luego se redirige a la página de informaciónUsuario con las IDs correspondientes...*/
                     fetch(`http://127.0.0.1:5000/set_InfoID/${usuariosData[i]["id"]}/usuario`)
                     .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/administrador/informacionUsuario?id=${usuariosData[i]["id"]}&sessionID=${sessionID}`
@@ -107,7 +111,7 @@
 
                 date = usuariosData[i]["fecha_ingreso"] // Diccionario: "dia", "mes", "anio", "horas", "minutos"
                 columnDATE = document.createElement("td")
-                columnDATE.innerText = format_date(usuariosData[i]["fecha_ingreso"])
+                columnDATE.innerText = format_date(usuariosData[i]["fecha_ingreso"]) // Usamos el format_date para formatear la fecha y que se vea mejor, esta funcion esta implementada en auxiliar_function.js
                 columnDATE.setAttribute("class", "ids-dates")
                 usuario.append(columnDATE)
 
@@ -123,7 +127,10 @@
                     buttonEDIT.setAttribute("class", "btn btn-warning")
                     buttonEDIT.innerText = "Editar usuario"
                     buttonEDIT.onclick = function() {
-                        location.href=`editarUsuario?id=${usuariosData[i]["id"]}&sessionID=${sessionID}`
+                        // Esto es lo mismo que cuando se va a la página informacionUsuario
+                        fetch(`http://127.0.0.1:5000/set_InfoID/${usuariosData[i]["id"]}/usuario`)
+                        .catch((error) => console.log(`ERROR: ${error}`))
+                        window.location.href = `http://localhost:8000/administrador/editarUsuario?id=${usuariosData[i]["id"]}&sessionID=${sessionID}`
                     }
                     
                     buttonDELETE = document.createElement("button")
@@ -145,7 +152,7 @@
                 }
                 usuario.append(columnBUTTONS)
 
-                tabla.append(usuario)
+                tabla.append(usuario) //Por último agregamos la fila a la tabla
             }
         }
 

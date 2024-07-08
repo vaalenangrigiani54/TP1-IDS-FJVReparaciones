@@ -91,14 +91,20 @@
         }
 
         function verify_InfoID(response) {
-            if (response["ChangedParameter"] == true) {
-                if (response["UserInfoID"] === 0) { //Esto pasa porque se intentó entrar manualmente desde la página principal del administrador
-                    alert("No puedes entrar manualmente (cambiando la URL) a esta página...")
-                    window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
-                } else {
-                    alert("No se puede cambiar manualmente la id del usuario que se muestra...")
-                    window.location.href = `http://localhost:8000/administrador/informacionUsuario?id=${response["UserInfoID"]}&sessionID=${sessionID}`
-                }
+            if (response["UserInfoID"] === 0) {
+                /*Primero verifico si se escribió manualmente la URL de la página informacionUsuario desde otro lado.
+                Eso lo hago comparando la variable global del backend UserInfoID que vale por defecto 0.
+                Sólo se le da otro valor cuando se hace click en un usuario que está en la tabla de la otra página...*/
+                alert("No puedes entrar manualmente (cambiando la URL) a esta página...")
+                window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
+
+            } else if (response["ChangedParameter"] == true) {
+                /*Si ya está en la página informaconUsuario, se verifica si se cambió la query-param en la URL.
+                Al ya estar seteada la variable global UserInfoID, se recarga la pagina con la ID de info que
+                realmente debe aparecer*/
+                alert("No se puede cambiar manualmente la id del usuario que se muestra...")
+                window.location.href = `http://localhost:8000/administrador/informacionUsuario?id=${response["UserInfoID"]}&sessionID=${sessionID}`
+            
             } else {
                 fetch(`http://127.0.0.1:5000/acciones_usuario/${id_usuario_info}`, {method: "GET"})
                 .then((res) => res.json())
@@ -112,6 +118,7 @@
                 alert(data["Mensaje"])
                 window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
             } else {
+                //Obtenemos los datos del backend y los agregamos a la pagina en el campo correspondiente
                 document.getElementById("titleInfo").innerText = `Información del usuario #${data["id"]}:`
                 document.getElementById("nombre").innerText = data["nombre_usuario"]
                 document.getElementById("email").innerText = data["email"]
@@ -119,9 +126,10 @@
 
                 infoRango = document.getElementById("rango-big")
                 
+                //Verifica si el usuario que queremos ver a detalle es un administrador o un técnico
                 if (data["rango"] == "Administrador") {
                     infoRango.innerText = "Este usuario es un administrador."
-                } else {
+                } else { // Si es un técnico, se obtienen los datos como si estuvieramos en la pagina del tecnico
                     infoRango.innerText = "Este usuario es un técnico. Estos son los equipos que él administra:"
 
                     fetch(`http://127.0.0.1:5000/tecnico/${id_usuario_info}`)
@@ -132,7 +140,7 @@
             }
         }
 
-        function show_devices_table(data) { // Esto solo si la información es de un técnico
+        function show_devices_table(data) { // Esto sólo si la información es de un técnico
             //Agrego los encabezados de la tabla
             tabla = document.getElementById("table")
             tabla.setAttribute("border", 1)

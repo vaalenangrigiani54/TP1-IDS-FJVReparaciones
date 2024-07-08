@@ -19,7 +19,7 @@
         <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
 
-    <div class="div-form div-form-cliente">
+    <div class="div-form div-form-cliente">  <!--Usamos los divs para poder acomodar mejor los inputs del formulario con flex-->
         <p class="form-title">Inscribir a un nuevo cliente: <p></p>
         <form class="form add-form" id="addClient">
             <div class="label-inputs">
@@ -70,12 +70,12 @@
             let nombreIngresado = elementos.nombre.value
             let emailIngresado = elementos.email.value
 
-            if (nombreIngresado == "" || emailIngresado == "") {
+            if (nombreIngresado == "" || emailIngresado == "") { //Verificamos que el email y el nombre esten vacios 
                 alert("Por favor, completa todos los campos.")
-            } else if (!validate_email(emailIngresado)) {
+            } else if (!validate_email(emailIngresado)) { // Verificamos que el email ingresado sea correcto
                 alert("El correo electrónico ingresado no es válido.")
-            } else {
-                fetch("http://127.0.0.1:5000/acciones_cliente/0", {
+            } else { //Si todos los datos son correctos enviamos la informacion al backend para agregar al usuario
+                fetch("http://127.0.0.1:5000/acciones_cliente/0", { 
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -92,16 +92,16 @@
         }
 
         function handle_response(data) {
-            if (data["Mensaje"] == "SUCCESS") {
+            if (data["Mensaje"] == "SUCCESS") { // Si se agrego correctamente al cliente te redirecciona a la lista de los clientes, sino te salta un alert con el mensaje de error
                 alert(data["MensajeCodigo"])
-                window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+                window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
             } else {
                 alert(data["Mensaje"])
             }
         }
 
         function GO_BACK() {
-            window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+            window.location.href = `http://localhost:8000/tecnico/listaClientes?sessionID=${sessionID}`
         }
 
         function CLOSE_SESSION() {

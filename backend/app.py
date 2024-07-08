@@ -5,7 +5,7 @@ from database import *
 import random
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://vaalen782:2147483647@localhost:5432/tp1_ids"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://admin:admin@localhost:5432/fjvrep"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 CORS(app)
 
@@ -90,7 +90,7 @@ def verify_InfoID(id, opcion):
 
 
 # Por otra parte se necesita un endpoint auxiliar más para setear esa variable global que hace la verificación en el endpoint anterior
-# Este endpoint se invoca desde las páginas que pueden dirigir a las de información del usuario/cliente/equipo
+# Este endpoint se invoca desde las páginas que pueden dirigir a las de información/editar del usuario/cliente/equipo
 @app.route("/set_InfoID/<int:id>/<opcion>")
 def set_InfoID(id, opcion):
     global USER_INFO_ID, CLIENT_INFO_ID, DEVICE_INFO_ID
@@ -221,6 +221,10 @@ def tecnico(id, statusFilter):
             equipos = Equipos.query.where(Equipos.id_tecnico == id).join(Clientes).add_columns(
                 Clientes.nombre_cliente
             ).order_by(desc(Equipos.fecha_ingreso)).all()
+        elif statusFilter == "En revisión":
+            equipos = Equipos.query.where(Equipos.id_tecnico == id, Equipos.estado == "En revisión/reparación").join(Clientes).add_columns(
+                Clientes.nombre_cliente
+            ).order_by(desc(Equipos.fecha_ingreso)).all()
         else:
             equipos = Equipos.query.where(Equipos.id_tecnico == id, Equipos.estado == statusFilter).join(Clientes).add_columns(
                 Clientes.nombre_cliente
@@ -266,6 +270,10 @@ def cliente(id, statusFilter):
         cliente = Clientes.query.where(Clientes.id == id).first()
         if statusFilter == "all":
             equipos = Equipos.query.where(Equipos.id_cliente == id).join(Usuarios).add_columns(
+                Usuarios.nombre_usuario
+            ).order_by(desc(Equipos.fecha_ingreso)).all()
+        elif statusFilter == "En revisión":
+            equipos = Equipos.query.where(Equipos.id_cliente == id, Equipos.estado == "En revisión/reparación").join(Usuarios).add_columns(
                 Usuarios.nombre_usuario
             ).order_by(desc(Equipos.fecha_ingreso)).all()
         else:

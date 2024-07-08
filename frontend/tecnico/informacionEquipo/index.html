@@ -15,12 +15,12 @@
 <body>
     <img class="header" src="../../header.jpg" alt="Header, logo de la empresa">
     
-    <div class="info-top-btns">
+    <div class="info-top-btns"> <!--Esta clase se usa para acomodar los botones en el top de la pagina-->
         <button class="btn btn-secondary" id="btn-go-back" onclick=GO_BACK()>Atrás</button>
         <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
 
-    <div class="info-card card">
+    <div class="info-card card"> <!--Usamos bootstrap para hacer la card de la informacion del equipo-->
         <div class="card-header">
             <div class="div-h2 card-title">
                 <h2 id="titleInfo">Información del equipo #:</h2>
@@ -110,14 +110,20 @@
         }
 
         function verify_InfoID(response) {
-            if (response["ChangedParameter"] == true) {
-                if (response["DeviceInfoID"] === 0) { //Esto pasa porque se intentó entrar manualmente desde la página principal del técnico
-                    alert("No puedes entrar manualmente (cambiando la URL) a esta página...")
-                    window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
-                } else {
-                    alert("No se puede cambiar manualmente la id del equipo que se muestra...")
-                    window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${response["DeviceInfoID"]}&sessionID=${sessionID}`
-                }
+            if (response["DeviceInfoID"] === 0) {
+                /*Primero verifico si se escribió manualmente la URL de la página informacionEquipo desde otro lado.
+                Eso lo hago comparando la variable global del backend DeviceInfoID que vale por defecto 0.
+                Sólo se le da otro valor cuando se hace click en un equipo que está en la tabla de la otra página...*/
+                alert("No puedes entrar manualmente (cambiando la URL) a esta página...")
+                window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+
+            } else if (response["ChangedParameter"] == true) {
+                /*Si ya está en la página informacionEquipo, se verifica si se cambió la query-param en la URL.
+                Al ya estar seteada la variable global DeviceInfoID, se recarga la pagina con la ID de info que
+                realmente debe aparecer*/
+                alert("No se puede cambiar manualmente la id del equipo que se muestra...")
+                window.location.href = `http://localhost:8000/tecnico/informacionEquipo?id=${response["DeviceInfoID"]}&sessionID=${sessionID}`
+
             } else {
                 fetch(`http://127.0.0.1:5000/acciones_equipo/${id_equipo_info}`, {method: "GET"})
                 .then((res) => res.json())
@@ -127,10 +133,11 @@
         }
 
         function show_device_data(data) {
-            if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el usuario con la id en los query params
+            if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el equipo con la id en los query params
                 alert(data["Mensaje"])
                 window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
             } else {
+                //Obtenemos los datos del backend y los agregamos a la pagina en el campo correspondiente
                 document.getElementById("titleInfo").innerText = `Información del equipo #${data["id"]}:`
                 document.getElementById("cliente").innerText = data["nombre_cliente"]
                 document.getElementById("equipo").innerText = data["tipo_equipo"]
@@ -144,8 +151,6 @@
         }
 
         function goToEditDevice() {
-            fetch(`http://127.0.0.1:5000/set_deviceInfoID/${id_equipo_info}`)
-                .catch((error) => console.log(`ERROR: ${error}`))
             window.location.href = `http://localhost:8000/tecnico/editarEquipo?id=${id_equipo_info}&sessionID=${sessionID}`
         }
 

@@ -11,14 +11,16 @@
     <link rel="stylesheet" href="../../styles/general.css">
     <link rel="stylesheet" href="../../styles/informaciones.css">
     <link rel="stylesheet" href="../../styles/añadir-editar-forms.css">
+    <!-- Se ponen como refencia una fuente de Google y Bootstrap. A este último lo usamos para todo el proyecto y los estilos de los archivos CSS -->
 </head>
 <body>
     <img class="header" src="../../header.jpg" alt="Header, logo de la empresa">
     <div class="info-top-btns">
+        <!-- Se hace un botón para volver para atrás y otro para cerrar sesión -->
         <button class="btn btn-secondary" id="btn-go-back" onclick=GO_BACK()>Atrás</button>
         <button class="btn btn-danger" id="btn-cerrar-sesion" onclick=CLOSE_SESSION()>Cerrar Sesión</button>
     </div>
-    
+         
     <div class="div-form div-form-usuarios">
         <p class="form-title">Agregar un nuevo usuario al sistema:<p></p>
         <form class="form" id="addUser">
@@ -76,17 +78,18 @@
         }
 
         function add_user() {
+            //Se obtienen los datos ingresados 
             let elementos = document.getElementById("addUser").elements
             let nombreIngresado = elementos.nombre.value
             let emailIngresado = elementos.email.value
             let contraseniaIngresada = elementos.contrasenia.value
             let rangoIngresado = elementos.rango.value
             
-            if (nombreIngresado == "" || emailIngresado == "" || contraseniaIngresada == "") {
+            if (nombreIngresado == "" || emailIngresado == "" || contraseniaIngresada == "") { //Verifica si alguno de los campos está vacío
                 alert("Por favor, completa todos los campos.")
             } else if (!validate_email(emailIngresado)) {
                 alert("El correo electrónico ingresado no es válido.")
-            } else {
+            } else { //Si está todo correcto se hace un POST para agregar al nuevo usuario
                 fetch("http://127.0.0.1:5000/acciones_usuario/0", {
                     method: "POST",
                     headers: {
@@ -108,7 +111,8 @@
         function handle_response(data) {
             alert(data["Mensaje"])
 
-            if (data["Mensaje"] == "Usuario agregado con éxito") {
+            if (data["Mensaje"] == "Usuario agregado con éxito") { //Realiza una comparación exacta del mensaje
+                //Si el usuario se agregó con éxito hace la redireccion a la página del administrador
                 window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
             }
         }
