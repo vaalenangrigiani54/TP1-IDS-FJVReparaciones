@@ -58,6 +58,7 @@ Se debe hacer esto porque el usuario 'admin' es el que va a crear al primer admi
 Una vez hecho eso, el usuario 'admin' se va y se debe volver a iniciar sesión con el nuevo usuario creado.<br>
 
 ¡Eso es todo! Ya puedes usar nuestro software web dirigiéndote a [http://localhost:8000/main](http://localhost:8000/main)
+
 ---
 ### Cada vez que vayas a usar nuestro software web tienes que seguir estos pasos:
 
