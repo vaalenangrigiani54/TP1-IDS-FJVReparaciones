@@ -41,7 +41,7 @@
                 <label class="label" for="rango"><b>Seleccione el rango del usuario:</b></label>
                 <select class="form-select" id="rango">
                     <option value="Administrador">Administrador</option>
-                    <option value="Técnico">Técnico</option>
+                    <option value="Técnico" selected>Técnico</option>
                 </select>
             </div>
         </form>
@@ -64,6 +64,10 @@
         
         if (sessionID == "") {
             sessionID = "null"
+        } else if (sessionID == 1) { //Este es el usuario 'admin'. No puede agregar técnicos.
+            rangos = document.getElementById("rango")
+            rangos.selectedIndex = 0 //Selecciona la opción "Administrador"
+            rangos.setAttribute("disabled", true)
         }
 
         fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/administrador`)
@@ -111,8 +115,11 @@
         function handle_response(data) {
             alert(data["Mensaje"])
 
-            if (data["Mensaje"] == "Usuario agregado con éxito") { //Realiza una comparación exacta del mensaje
-                //Si el usuario se agregó con éxito hace la redireccion a la página del administrador
+            if (data["MensajeID"] == 1) { //Realiza una comparación de la ID del mensaje obtenido del backend
+                //Si 'admin' fue el usuario que agregó, se debe redirigir a loginUsuario para iniciar sesión con el nuevo usuario
+                window.location.href = "http://localhost:8000/main/loginUsuario"
+            } else if (data["MensajeID"] == 2) {
+                //Si el usuario se agregó con éxito, y no fue el usuario 'admin', se redirige a la página del administrador
                 window.location.href = `http://localhost:8000/administrador?sessionID=${sessionID}`
             }
         }
