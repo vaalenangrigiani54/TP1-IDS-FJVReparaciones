@@ -132,7 +132,7 @@
                 } else { // Si es un técnico, se obtienen los datos como si estuvieramos en la pagina del tecnico
                     infoRango.innerText = "Este usuario es un técnico. Estos son los equipos que él administra:"
 
-                    fetch(`http://127.0.0.1:5000/tecnico/${id_usuario_info}`)
+                    fetch(`http://127.0.0.1:5000/tecnico/${id_usuario_info}/all`)
                     .then((res) => res.json())
                     .then(show_devices_table)
                     .catch((error) => console.log(`ERROR: ${error}`))

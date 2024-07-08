@@ -387,7 +387,7 @@ def acciones_usuario(id):
                     db.session.delete(admin)
                     db.session.commit()
                     ADMIN_SESSION_ID = 0 # Se debe hacer esto porque se eliminó un usuario que estaba en sesión
-                    mensaje = {"Mensaje": "Administrador agregado con éxito. Ahora debes iniciar sesión con ese usuario.\n'admin' ha sido eliminado...", "MensajeID": 1}
+                    mensaje = {"Mensaje": "Administrador agregado con éxito.\nAhora debes iniciar sesión con ese usuario.\n'admin' ha sido eliminado...", "MensajeID": 1}
                 else:
                     mensaje = {"Mensaje": "Usuario agregado con éxito", "MensajeID": 2}
                 
@@ -586,7 +586,7 @@ def acciones_equipo(id):
             
             if len(Clientes.query.where(Clientes.email == email_cliente).all()) == 0:
                 return {"Mensaje": "El email del cliente ingresado no existe..."}
-            elif estado == "Nuevo Ingreso" and observaciones != "-":
+            elif estado == "Nuevo Ingreso" and len(list(observaciones)) > 1:
                 return {"Mensaje": "No puedes agregar observaciones si el equipo está en nuevo ingreso..."}
             else:
                 id_cliente = Clientes.query.where(Clientes.email == email_cliente).first().id
