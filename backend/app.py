@@ -372,14 +372,26 @@ def acciones_usuario(id):
             nuevo_email = data.get("email")
             nueva_contrasenia = data.get("contrasenia")
             nuevo_rango = data.get("rango")
-        
-            if len(Usuarios.query.where(Usuarios.email == nuevo_email).all()) > 0:
-                return {"Mensaje": "El correo ingresado ya existe. Pruebe con otro distinto..."}
-            else:
+
+            mensaje = {"Mensaje": "El correo ingresado ya existe. Pruebe con otro distinto...", "MensajeID": 0}
+            
+            if len(Usuarios.query.where(Usuarios.email == nuevo_email).all()) == 0:
                 usuario = Usuarios(nombre_usuario = nuevo_nombre, email = nuevo_email, contrasenia = nueva_contrasenia, rango = nuevo_rango)
                 db.session.add(usuario)
                 db.session.commit()
-                return {"Mensaje": "Usuario agregado con éxito"}
+                
+                # Si el usuario "admin" fue el que creó al primer administrador, entonces se debe eliminar automáticamente
+                global ADMIN_SESSION_ID
+                if ADMIN_SESSION_ID == 1:
+                    admin = Usuarios.query.where(Usuarios.id == 1).first()
+                    db.session.delete(admin)
+                    db.session.commit()
+                    ADMIN_SESSION_ID = 0 # Se debe hacer esto porque se eliminó un usuario que estaba en sesión
+                    mensaje = {"Mensaje": "Administrador agregado con éxito. Ahora debes iniciar sesión con ese usuario.\n'admin' ha sido eliminado...", "MensajeID": 1}
+                else:
+                    mensaje = {"Mensaje": "Usuario agregado con éxito", "MensajeID": 2}
+                
+            return mensaje
             
         elif request.method == "PUT": # Para actualizar el usuario
             data = request.json
@@ -600,6 +612,31 @@ def acciones_equipo(id):
 # Arranque del backend y la base de datos
 if __name__ == "__main__":
     db.init_app(app)
+    
     with app.app_context():
         db.create_all()
+        # Cuando se crean por primera vez las tablas, se necesitan tener predefinidos estos 2 "usuarios" porque sino la base de datos no puede "crecer"
+        if len(Usuarios.query.all()) < 2:
+            # Este se va a usar cuando se elimine un usuario que tenga equipos administrados (en la columna id_tecnico se pone -1)
+            usuarioEliminado = Usuarios(
+                id = -1,
+                nombre_usuario = "USUARIO ELIMINADO",
+                email = "",
+                contrasenia = "",
+                rango = "",
+                fecha_ingreso = None
+            )
+            # Por otra parte, se necesita acceder con este usuario para que pueda agregar a otros administradores y luego ser eliminado
+            # Una vez que este usuario haya creado al primer administrador real, se elimina automáticamente
+            primerUsuario = Usuarios(
+                nombre_usuario = "admin",
+                email = "admin",
+                contrasenia = "admin",
+                rango = "Administrador",
+                fecha_ingreso = None
+            )
+            db.session.add(usuarioEliminado)
+            db.session.add(primerUsuario)
+            db.session.commit()
+    
     app.run(host="127.0.0.1", port=5000, debug=True)

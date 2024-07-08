@@ -20,7 +20,7 @@
 
     <h2 id="bienvenida">BIENVENIDO/A:</h2> <!-- Esto se actualiza después en la función show_data() -->
     <div class="tab-info">
-        <h3>Haz click en el nombre de un usuario para ver su información...</h3>
+        <h3 id="hazclicken">Haz click en el nombre de un usuario para ver su información...</h3>
         <button id="addUser" class="btn btn-primary btn-add" onclick=goToAddUser()>Añadir un nuevo usuario</button>
     </div>
     
@@ -53,6 +53,8 @@
         
         if (sessionID == "") { //El backend no es capaz de detectar un path-param con ese valor, por eso se lo cambio
             sessionID = "null"
+        } else if (sessionID == 1) {
+            document.getElementById("hazclicken").innerText = "Debes crear al primer usuario administrador para poder continuar con la página web >>>"
         }
 
         fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/administrador`)
