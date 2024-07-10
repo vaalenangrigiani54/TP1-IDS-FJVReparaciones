@@ -307,9 +307,9 @@ def listaClientes(ordenamiento):
     
     try: # Estos strings son estáticos pero sirven como referencia
         if ordenamiento == "nombre A-Z":
-            clientesQuery = Clientes.query.order_by(Clientes.nombre_cliente)
+            clientesQuery = Clientes.query.order_by(func.lower(Clientes.nombre_cliente))
         elif ordenamiento == "nombre Z-A":
-            clientesQuery = Clientes.query.order_by(desc(Clientes.nombre_cliente))
+            clientesQuery = Clientes.query.order_by(desc(func.lower(Clientes.nombre_cliente)))
         elif ordenamiento == "fecha antiguos":
             clientesQuery = Clientes.query.order_by(Clientes.fecha_inscripcion)
         elif ordenamiento == "fecha recientes":
