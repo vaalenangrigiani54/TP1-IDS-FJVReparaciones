@@ -54,25 +54,21 @@
 
     <script src="../auxiliar_functions.js" type="text/javascript">//Importo esto para poder formatear las fechas</script>
     <script>
-        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
-        
-        if (sessionID == "") { //El backend no es capaz de detectar un path-param con ese valor, por eso se lo cambio
-            sessionID = "null"
-        }
+        const sessionID = new URLSearchParams(window.location.search).get("sessionID")
 
-        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/cliente`)
-        .then((res) => res.json())
-        .then(verify_session)
-        .catch((error) => console.log(`ERROR: ${error}`))
-
-        function verify_session(login) {
-            if (login["Logged"] == false) {
+        get_loggedID("cliente").then(function(response) {
+            if ("ERROR" in response) { // Por si ocurre algún fallo en el servidor
+                alert(response["ERROR"])
+                window.location.href = "http://localhost:8000/main"
+            } else if (response["SessionID"] === 0) {
                 window.location.href = "http://localhost:8000/main/loginCliente"
+            } else if (response["SessionID"] != sessionID) {
+                window.location.href = `http://localhost:8000/cliente?sessionID=${response["SessionID"]}`
             } else {
                 //Cuando se accede a la página desde otro lado o se recarga, el filtro por defecto es "all", es decir, todos los estados de los equipos
                 filter_table("all")
             }
-        }
+        })
 
         function filter_table(statusFilter) {
             //Elimino las filas de la tabla filtradas de la forma anterior antes de agregar los datos con el nuevo filtro
