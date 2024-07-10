@@ -40,26 +40,19 @@ def reset_session():
 
 
 
-# Endpoint auxiliar para verificar si el usuario inició sesión o no
+# Endpoint auxiliar para devolver la ID que realmente inició sesión
 # Se debe hacer fetch() al mismo en todas las páginas
-@app.route("/verify_session/<id>/<rango>")
-def verify_session(id, rango):
+@app.route("/get_sessionID/<rango>")
+def verify_session(rango):
     global ADMIN_SESSION_ID, TECH_SESSION_ID, CLIENT_SESSION_ID
-    response = {"Logged": False}
+    response = {"SessionID": 0}
     
-    try: # Hago esto porque si se pone texto manualmente en el query-param, debe pasar y hacer como que no inició sesión (que es lo lógico)
-        if int(id) > 0:
-            if rango == "administrador":
-                if int(id) == ADMIN_SESSION_ID:
-                    response["Logged"] = True
-            elif rango == "tecnico":
-                if int(id) == TECH_SESSION_ID:
-                    response["Logged"] = True
-            elif rango == "cliente":
-                if int(id) == CLIENT_SESSION_ID:
-                    response["Logged"] = True
-    except: # La funcion int() no pudo convertir a entero una cadena de caracteres pasada en id
-        pass
+    if rango == "administrador":
+        response["SessionID"] = ADMIN_SESSION_ID
+    elif rango == "tecnico":
+        response["SessionID"] = TECH_SESSION_ID
+    elif rango == "cliente":
+        response["SessionID"] = CLIENT_SESSION_ID
     
     return response
 
