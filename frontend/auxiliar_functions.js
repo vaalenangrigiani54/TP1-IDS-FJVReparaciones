@@ -1,4 +1,24 @@
 /**
+ * @brief Función para verificar el inicio de sesión de un usuario/cliente
+ * @pre Un entero y una cadena de caracteres previamente asignados
+ * @returns Diccionario con la clave "SessionID" la cual da la ID del usuario que realmente inició sesión
+ * @throws Diccionario con la clave "ERROR" y el mensaje
+*/
+async function get_loggedID(sessionID, range) {
+    if (sessionID == "") {
+        sessionID = "null"
+    }
+    
+    try {
+        return (await fetch(`http://127.0.0.1:5000/get_sessionID/${range}`)).json()
+    } catch {
+        return {"ERROR": "Hubo un problema con el servidor. Vuelva a intentarlo más tarde..."}
+    }
+}
+
+
+
+/**
  * @brief Función auxiliar para validar el email
  * @pre Una cadena de caracteres previamente declarada y asignada
  * @post Retorna un valor de verdad diciendo si hay un sólo caracter de @ o no
