@@ -56,34 +56,30 @@
         </p>
     </footer>
 
-    <script src="../../auxiliar_functions.js" type="text/javascript">//Importo esto para poder validar el email</script>
+    <script src="../../auxiliar_functions.js" type="text/javascript"></script>
     <script>
-        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
+        const sessionID = new URLSearchParams(window.location.search).get("sessionID")
         let id_usuario_a_editar = new URLSearchParams(window.location.search).get("id")
-
-        if (sessionID == "") {
-            sessionID = "null"
-        }
 
         if (id_usuario_a_editar == "") {
             id_usuario_a_editar = "null"
         }
 
-        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/administrador`)
-        .then((res) => res.json())
-        .then(verify_session)
-        .catch((error) => console.log(`ERROR: ${error}`))
-
-        function verify_session(login) {
-            if (login["Logged"] == false) {
+        get_loggedID("administrador").then(function(response) {
+            if ("ERROR" in response) { // Por si ocurre algún fallo en el servidor
+                alert(response["ERROR"])
+                window.location.href = "http://localhost:8000/main"
+            } else if (response["SessionID"] === 0) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
+            } else if (response["SessionID"] != sessionID) {
+                window.location.href = `http://localhost:8000/administrador/editarUsuario?id=${id_usuario_a_editar}&sessionID=${response["SessionID"]}`
             } else {
                 fetch(`http://127.0.0.1:5000/verify_InfoID/${id_usuario_a_editar}/usuario`)
                 .then((res) => res.json())
                 .then(verify_InfoID)
                 .catch((error) => console.log("ERROR", error))
             }
-        }
+        })
         
         function verify_InfoID(response) {
             if (response["UserInfoID"] === 0) {

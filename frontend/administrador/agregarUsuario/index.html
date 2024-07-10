@@ -58,28 +58,24 @@
         </p>
     </footer>
 
-    <script src="../../auxiliar_functions.js" type="text/javascript">//Importo esto para poder validar el email</script>
+    <script src="../../auxiliar_functions.js" type="text/javascript"></script>
     <script>
-        let sessionID = new URLSearchParams(window.location.search).get("sessionID")
-        
-        if (sessionID == "") {
-            sessionID = "null"
-        } else if (sessionID == 1) { //Este es el usuario 'admin'. No puede agregar técnicos.
-            rangos = document.getElementById("rango")
-            rangos.selectedIndex = 0 //Selecciona la opción "Administrador"
-            rangos.setAttribute("disabled", true)
-        }
+        const sessionID = new URLSearchParams(window.location.search).get("sessionID")
 
-        fetch(`http://127.0.0.1:5000/verify_session/${sessionID}/administrador`)
-        .then((res) => res.json())
-        .then(verify_session)
-        .catch((error) => console.log(`ERROR: ${error}`))
-
-        function verify_session(login) {
-            if (login["Logged"] == false) {
+        get_loggedID("administrador").then(function(response) {
+            if ("ERROR" in response) { // Por si ocurre algún fallo en el servidor
+                alert(response["ERROR"])
+                window.location.href = "http://localhost:8000/main"
+            } else if (response["SessionID"] === 0) {
                 window.location.href = "http://localhost:8000/main/loginUsuario"
+            } else if (response["SessionID"] != sessionID) {
+                window.location.href = `http://localhost:8000/administrador/agregarUsuario?sessionID=${response["SessionID"]}`
+            } else if (sessionID == 1) { //Este es el usuario 'admin'. No puede agregar técnicos.
+                rangos = document.getElementById("rango")
+                rangos.selectedIndex = 0 //Selecciona la opción "Administrador"
+                rangos.setAttribute("disabled", true)
             }
-        }
+        })
 
         function add_user() {
             //Se obtienen los datos ingresados 

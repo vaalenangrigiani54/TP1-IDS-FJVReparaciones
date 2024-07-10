@@ -4,7 +4,7 @@
  * @returns Diccionario con la clave "SessionID" la cual da la ID del usuario que realmente inició sesión
  * @throws Diccionario con la clave "ERROR" y el mensaje
 */
-async function get_loggedID(sessionID, range) {
+async function get_loggedID(range) {
     if (sessionID == "") {
         sessionID = "null"
     }
