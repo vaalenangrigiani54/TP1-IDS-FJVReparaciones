@@ -38,8 +38,9 @@
     </footer>
 
     <script>
-        //Esto manda a reiniciar las variables globales de session_id a 0
+        //Estos fetch()'s reinician todas las variables globales a 0 (No devuelven nada útil, por eso no pongo then()'s)
         fetch("http://127.0.0.1:5000/reset_session").catch((error) => console.log(`ERROR: ${error}`))
+        fetch("http://127.0.0.1:5000/reset_infoID").catch((error) => console.log(`ERROR: ${error}`))
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

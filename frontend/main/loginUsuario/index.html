@@ -36,8 +36,9 @@
     </footer>
     
     <script>
-        //Esto manda a reiniciar las variables globales SESSION_ID a 0 (No devuelve nada útil, por eso no pongo then()'s)
+        //Estos fetch()'s reinician todas las variables globales a 0 (No devuelven nada útil, por eso no pongo then()'s)
         fetch("http://127.0.0.1:5000/reset_session").catch((error) => console.log(`ERROR: ${error}`))
+        fetch("http://127.0.0.1:5000/reset_infoID").catch((error) => console.log(`ERROR: ${error}`))
         
         function login() {
             //Obtengo los datos del formulario

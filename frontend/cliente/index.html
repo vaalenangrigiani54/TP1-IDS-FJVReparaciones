@@ -55,6 +55,7 @@
     <script src="../auxiliar_functions.js" type="text/javascript"></script>
     <script>
         const sessionID = new URLSearchParams(window.location.search).get("sessionID")
+        fetch("http://127.0.0.1:5000/reset_infoID").catch((error) => console.log(`ERROR: ${error}`))
 
         get_loggedID("cliente").then(function(response) {
             if ("ERROR" in response) { // Por si ocurre algún fallo en el servidor
@@ -120,7 +121,7 @@
                 
                 equipo.setAttribute("style", "cursor: pointer")
                 equipo.onclick = function() {
-                    fetch(`http://127.0.0.1:5000/set_InfoID/${equiposData[i]["id"]}/equipo`)
+                    fetch(`http://127.0.0.1:5000/set_infoID/${equiposData[i]["id"]}/equipo`)
                     .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/cliente/informacionEquipo?id=${equiposData[i]["id"]}&sessionID=${sessionID}`
                 }

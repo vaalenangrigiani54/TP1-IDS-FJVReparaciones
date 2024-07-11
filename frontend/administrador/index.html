@@ -50,6 +50,7 @@
     <script src="../auxiliar_functions.js" type="text/javascript"></script>
     <script>
         const sessionID = new URLSearchParams(window.location.search).get("sessionID")
+        fetch("http://127.0.0.1:5000/reset_infoID").catch((error) => console.log(`ERROR: ${error}`))
 
         get_loggedID("administrador").then(function(response) {
             if ("ERROR" in response) { // Por si ocurre algún fallo en el servidor
@@ -95,7 +96,7 @@
                     /*Este fetch sólo sirve para darle valor a la variable global UserInfoID del backend. Es para que la verificación en la otra página no tire ninguna alerta.
                     No son necesarios los then() porque el endpoint no devuelve nada útil.
                     Luego se redirige a la página de informaciónUsuario con las IDs correspondientes...*/
-                    fetch(`http://127.0.0.1:5000/set_InfoID/${usuariosData[i]["id"]}/usuario`)
+                    fetch(`http://127.0.0.1:5000/set_infoID/${usuariosData[i]["id"]}/usuario`)
                     .catch((error) => console.log(`ERROR: ${error}`))
                     window.location.href = `http://localhost:8000/administrador/informacionUsuario?id=${usuariosData[i]["id"]}&sessionID=${sessionID}`
                 }
@@ -128,7 +129,7 @@
                     buttonEDIT.innerText = "Editar usuario"
                     buttonEDIT.onclick = function() {
                         // Esto es lo mismo que cuando se va a la página informacionUsuario
-                        fetch(`http://127.0.0.1:5000/set_InfoID/${usuariosData[i]["id"]}/usuario`)
+                        fetch(`http://127.0.0.1:5000/set_infoID/${usuariosData[i]["id"]}/usuario`)
                         .catch((error) => console.log(`ERROR: ${error}`))
                         window.location.href = `http://localhost:8000/administrador/editarUsuario?id=${usuariosData[i]["id"]}&sessionID=${sessionID}`
                     }
