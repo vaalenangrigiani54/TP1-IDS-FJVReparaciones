@@ -1,16 +1,28 @@
 /**
  * @brief Función para verificar el inicio de sesión de un usuario/cliente
- * @pre Un entero y una cadena de caracteres previamente asignados
+ * @pre Una cadena de caracteres previamente asignada
  * @returns Diccionario con la clave "SessionID" la cual da la ID del usuario que realmente inició sesión
  * @throws Diccionario con la clave "ERROR" y el mensaje
 */
 async function get_loggedID(range) {
-    if (sessionID == "") {
-        sessionID = "null"
-    }
-    
     try {
         return (await fetch(`http://127.0.0.1:5000/get_sessionID/${range}`)).json()
+    } catch {
+        return {"ERROR": "Hubo un problema con el servidor. Vuelva a intentarlo más tarde..."}
+    }
+}
+
+
+
+/**
+ * @brief Función para verificar la ID de información/edición de un usuario/equipo/cliente
+ * @pre Una cadena de caracteres previamente asignada
+ * @returns Diccionario con la clave "InfoID" la cual da la ID del usuario/cliente/equipo que se está mostrando
+ * @throws Diccionario con la clave "ERROR" y el mensaje
+*/
+async function get_infoID(option) {
+    try {
+        return (await fetch(`http://127.0.0.1:5000/get_infoID/${option}`)).json()
     } catch {
         return {"ERROR": "Hubo un problema con el servidor. Vuelva a intentarlo más tarde..."}
     }
