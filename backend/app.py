@@ -18,7 +18,7 @@ ADMIN_SESSION_ID = 0
 TECH_SESSION_ID = 0
 CLIENT_SESSION_ID = 0
 
-# Estas variable global sirve como control para no cambiar manualmente los query params de la id de información del usuario/cliente/equipo
+# Estas variable globales sirven como control para no cambiar manualmente los query params de la id de información del usuario/cliente/equipo
 USER_INFO_ID = 0
 CLIENT_INFO_ID = 0
 DEVICE_INFO_ID = 0
@@ -26,24 +26,32 @@ DEVICE_INFO_ID = 0
 
 
 
-# Endpoint auxiliar para resetear las variables globales cuando se cierra sesión
+# Endpoint auxiliar para resetear las variables globales SESSION_ID cuando se cierra sesión
 @app.route("/reset_session")
 def reset_session():
-    global ADMIN_SESSION_ID, TECH_SESSION_ID, CLIENT_SESSION_ID, USER_INFO_ID, CLIENT_INFO_ID, DEVICE_INFO_ID
+    global ADMIN_SESSION_ID, TECH_SESSION_ID, CLIENT_SESSION_ID
     ADMIN_SESSION_ID = 0
     TECH_SESSION_ID = 0
     CLIENT_SESSION_ID = 0
+    return {"Mensaje": "SESSION RESET"}
+
+
+
+# Endpoint auxiliar para resetear las variables globales INFO_ID cuando se cambia de página
+@app.route("/reset_infoID")
+def reset_infoID():
+    global USER_INFO_ID, CLIENT_INFO_ID, DEVICE_INFO_ID
     USER_INFO_ID = 0
     CLIENT_INFO_ID = 0
     DEVICE_INFO_ID = 0
-    return {"Mensaje": "SESSION RESET"}
+    return {"Mensaje": "INFO IDS RESET"}
 
 
 
 # Endpoint auxiliar para devolver la ID que realmente inició sesión
 # Se debe hacer fetch() al mismo en todas las páginas
 @app.route("/get_sessionID/<rango>")
-def verify_session(rango):
+def get_sessionID(rango):
     global ADMIN_SESSION_ID, TECH_SESSION_ID, CLIENT_SESSION_ID
     response = {"SessionID": 0}
     
@@ -58,25 +66,19 @@ def verify_session(rango):
 
 
 
-# Endpoint auxiliar para verificar que no se cambien los query params de la id de información de un usuario/cliente/equipo
+# Endpoint auxiliar para devolver la ID de información/edición de un usuario/cliente/equipo
 # Se debe hacer fetch() al mismo en todas las páginas que muestren información
-@app.route("/verify_InfoID/<id>/<opcion>")
-def verify_InfoID(id, opcion):
+@app.route("/get_infoID/<opcion>")
+def get_infoID(opcion):
     global USER_INFO_ID, CLIENT_INFO_ID, DEVICE_INFO_ID
-    response = {"ChangedParameter": True, "UserInfoID": USER_INFO_ID, "ClientInfoID": CLIENT_INFO_ID, "DeviceInfoID": DEVICE_INFO_ID}
+    response = {"InfoID": 0}
     
-    try: # Acá es lo mismo que en el endpoint anterior. Se debe evitar que se escriba texto
-        if opcion == "usuario":
-            if int(id) == USER_INFO_ID and int(id) > 0:
-                response["ChangedParameter"] = False
-        elif opcion == "cliente":
-            if int(id) == CLIENT_INFO_ID and int(id) > 0:
-                response["ChangedParameter"] = False
-        elif opcion == "equipo":
-            if int(id) == DEVICE_INFO_ID and int(id) > 0:
-                response["ChangedParameter"] = False
-    except:
-        pass
+    if opcion == "usuario":
+        response["InfoID"] = USER_INFO_ID
+    elif opcion == "cliente":
+        response["InfoID"] = CLIENT_INFO_ID
+    elif opcion == "equipo":
+        response["InfoID"] = DEVICE_INFO_ID
     
     return response
 
@@ -84,8 +86,8 @@ def verify_InfoID(id, opcion):
 
 # Por otra parte se necesita un endpoint auxiliar más para setear esa variable global que hace la verificación en el endpoint anterior
 # Este endpoint se invoca desde las páginas que pueden dirigir a las de información/editar del usuario/cliente/equipo
-@app.route("/set_InfoID/<int:id>/<opcion>")
-def set_InfoID(id, opcion):
+@app.route("/set_infoID/<int:id>/<opcion>")
+def set_infoID(id, opcion):
     global USER_INFO_ID, CLIENT_INFO_ID, DEVICE_INFO_ID
     
     if opcion == "usuario":
@@ -98,7 +100,9 @@ def set_InfoID(id, opcion):
     return {"Mensaje": "INFO ID SET"}
 
 
+
 #======================================================================================================================================================#
+
 
 
 # Endpoint para verificar el inicio de sesión de un usuario
@@ -166,9 +170,6 @@ def data_client(email, codigo):
 # Se obtienen todos los usuarios.
 @app.route("/administrador/<int:id>")
 def administrador(id):
-    global USER_INFO_ID
-    USER_INFO_ID = 0
-    
     try:
         data = {"session_username": "", "usuarios": ["Acá va primero mi usuario"]} # Reservo la primera posición en la lista para el usuario de la sesión
         usuarios = Usuarios.query.where(Usuarios.id != -1).order_by(Usuarios.id).all()
@@ -202,14 +203,9 @@ def administrador(id):
 # Se obtienen todos los equipos que administra cierto técnico.
 @app.route("/tecnico/<id>/<statusFilter>")
 def tecnico(id, statusFilter):
-    global CLIENT_INFO_ID, DEVICE_INFO_ID
-    CLIENT_INFO_ID = 0
-    DEVICE_INFO_ID = 0
-    
     try:
         data = {"session_username": "", "equipos": []}
     
-        usuario = Usuarios.query.where(Usuarios.id == id).first()
         if statusFilter == "all":
             equipos = Equipos.query.where(Equipos.id_tecnico == id).join(Clientes).add_columns(
                 Clientes.nombre_cliente
@@ -223,6 +219,7 @@ def tecnico(id, statusFilter):
                 Clientes.nombre_cliente
             ).order_by(desc(Equipos.fecha_ingreso)).all()
 
+        usuario = Usuarios.query.where(Usuarios.id == id).first()
         data["session_username"] = usuario.nombre_usuario
         
         for (equipo, nombre_cliente) in equipos:
@@ -254,13 +251,9 @@ def tecnico(id, statusFilter):
 # Se obtienen todos los equipos que cierto cliente llevó a arreglar.
 @app.route("/cliente/<id>/<statusFilter>")
 def cliente(id, statusFilter):
-    global DEVICE_INFO_ID
-    DEVICE_INFO_ID = 0
-    
     try:
         data = {"session_clientname": "", "equipos": []}
 
-        cliente = Clientes.query.where(Clientes.id == id).first()
         if statusFilter == "all":
             equipos = Equipos.query.where(Equipos.id_cliente == id).join(Usuarios).add_columns(
                 Usuarios.nombre_usuario
@@ -274,6 +267,7 @@ def cliente(id, statusFilter):
                 Usuarios.nombre_usuario
             ).order_by(desc(Equipos.fecha_ingreso)).all()
         
+        cliente = Clientes.query.where(Clientes.id == id).first()
         data["session_clientname"] = cliente.nombre_cliente
         
         for (equipo, nombre_tecnico) in equipos:
@@ -335,9 +329,10 @@ def listaClientes(ordenamiento):
 
 
 
+#============================================================================================================================#
+# Los siguientes endpoints, a diferencia de los otros, obtienen informaciones de UN SOLO USUARIO/CLIENTE/EQUIPO, no de todos #
+#============================================================================================================================#
 
-
-# Los siguientes endpoints, a diferencia de los otros, obtienen informaciones de UN SOLO USUARIO, no de todos
 
 
 # Endpoint para consultar/agregar/modificar/eliminar a un usuario de la empresa
