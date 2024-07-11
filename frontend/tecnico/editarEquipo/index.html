@@ -79,11 +79,7 @@
     <script src="../../auxiliar_functions.js" type="text/javascript"></script>
     <script>
         const sessionID = new URLSearchParams(window.location.search).get("sessionID")
-        let id_equipo_a_editar = new URLSearchParams(window.location.search).get("id")
-
-        if (id_equipo_a_editar == "") {
-            id_equipo_a_editar = "null"
-        }
+        const id_equipo_a_editar = new URLSearchParams(window.location.search).get("id")
 
         get_loggedID("tecnico").then(function(response) {
             if ("ERROR" in response) { // Por si ocurre algún fallo en el servidor
@@ -94,35 +90,23 @@
             } else if (response["SessionID"] != sessionID) {
                 window.location.href = `http://localhost:8000/tecnico/editarEquipo?id=${id_equipo_a_editar}&sessionID=${response["SessionID"]}`
             } else {
-                fetch(`http://127.0.0.1:5000/verify_InfoID/${id_equipo_a_editar}/equipo`)
-                .then((res) => res.json())
-                .then(verify_InfoID)
-                .catch((error) => console.log("ERROR", error))
+                get_infoID("equipo").then(function(response2) {
+                    if ("ERROR" in response2) {
+                        alert(response2["ERROR"])
+                        window.location.href = "http://localhost:8000/main"
+                    } else if (response2["InfoID"] === 0) {
+                        window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
+                    } else if (response2["InfoID"] != id_equipo_a_editar) {
+                        window.location.href = `http://localhost:8000/tecnico/editarEquipo?id=${response2["InfoID"]}&sessionID=${sessionID}`
+                    } else {
+                        fetch(`http://127.0.0.1:5000/acciones_equipo/${id_equipo_a_editar}`, {method: "GET"})
+                        .then((res) => res.json())
+                        .then(show_device_data)
+                        .catch((error) => console.log("ERROR", error))
+                    }
+                })
             }
         })
-
-        function verify_InfoID(response) {
-            if (response["DeviceInfoID"] === 0) {
-                /*Primero verifico si se escribió manualmente la URL de la página editarEquipo desde otro lado.
-                Eso lo hago comparando la variable global del backend DeviceInfoID que vale por defecto 0.
-                Sólo se le da otro valor cuando se hace click en un equipo que está en la tabla de la otra página...*/
-                alert("No puedes entrar manualmente (cambiando la URL) a esta página...")
-                window.location.href = `http://localhost:8000/tecnico?sessionID=${sessionID}`
-
-            } else if (response["ChangedParameter"] == true) {
-                /*Si ya está en la página editarEquipo, se verifica si se cambió la query-param en la URL.
-                Al ya estar seteada la variable global DeviceInfoID, se recarga la pagina con la ID de info que
-                realmente debe aparecer*/
-                alert("No se puede cambiar manualmente la id del equipo que se muestra...")
-                window.location.href = `http://localhost:8000/tecnico/editarEquipo?id=${response["DeviceInfoID"]}&sessionID=${sessionID}`
-
-            } else {
-                fetch(`http://127.0.0.1:5000/acciones_equipo/${id_equipo_a_editar}`, {method: "GET"})
-                .then((res) => res.json())
-                .then(show_device_data)
-                .catch((error) => console.log("ERROR", error))
-            }
-        }
 
         function show_device_data(data) {
             if ("Mensaje" in data) { //Esto viene de un error en el backend al no poder encontrar el equipo con la id en los query params
